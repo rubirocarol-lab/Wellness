@@ -2,23 +2,76 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="Wellness Hub"/>
 <title>Wellness Hub</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/htm@3/dist/htm.js"></script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:#f5f5f0;min-height:100vh}
+body{font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:#f5f5f0;color:#1a1a1a;min-height:100vh}
 input,select,button,textarea{font-family:inherit}
-input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(0,0,0,0.4)!important}
+.app{max-width:700px;margin:0 auto;padding-bottom:80px}
+.header{padding:1.25rem 1rem 0}
+.header h1{font-size:20px;font-weight:500}
+.header p{font-size:13px;color:#666;margin-top:2px}
+.tabs{display:flex;gap:6px;padding:.75rem 1rem;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap;padding:6px 12px;border-radius:20px;border:0.5px solid rgba(0,0,0,0.2);background:#fff;color:#666;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.tab.active{background:#1a1a1a;color:#fff;border-color:transparent}
+.content{padding:0 1rem}
+.card{background:#fff;border:0.5px solid rgba(0,0,0,0.1);border-radius:12px;padding:14px 18px;margin-bottom:12px}
+.card-title{font-size:15px;font-weight:500;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:12px}
+.metric{background:#f8f8f5;border-radius:8px;padding:12px 14px}
+.metric .lbl{font-size:12px;color:#666;margin-bottom:2px}
+.metric .val{font-size:19px;font-weight:500}
+.metric .unit{font-size:12px;color:#666}
+input[type=text],input[type=number],input[type=date],input[type=time],select,textarea{
+  width:100%;padding:8px 10px;border-radius:8px;border:0.5px solid rgba(0,0,0,0.2);
+  font-size:14px;background:#fff;color:#1a1a1a;outline:none}
+input:focus,select:focus,textarea:focus{border-color:rgba(0,0,0,0.5)}
+.btn{padding:8px 14px;border-radius:8px;border:0.5px solid rgba(0,0,0,0.2);background:#fff;
+  color:#1a1a1a;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;flex-shrink:0}
+.btn:hover{background:#f5f5f0}
+.btn.primary{background:#1a1a1a;color:#fff;border-color:transparent}
+.btn.primary:hover{opacity:.85}
+.btn.danger{color:#A32D2D;border-color:#F7C1C1}
+.btn.small{padding:5px 10px;font-size:12px}
+.pbar{height:8px;background:#eee;border-radius:4px;overflow:hidden;margin-top:4px}
+.pfill{height:100%;border-radius:4px;transition:width .3s}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500}
+.tag.green{background:#EAF3DE;color:#3B6D11}
+.tag.amber{background:#FAEEDA;color:#854F0B}
+.tag.blue{background:#E6F1FB;color:#185FA5}
+.tag.pink{background:#FBEAF0;color:#993556}
+.tag.purple{background:#EEEDFE;color:#534AB7}
+.tag.red{background:#FCEBEB;color:#A32D2D}
+.ai-box{background:#f8f8f5;border-radius:8px;padding:10px 12px;margin-top:8px;font-size:13px;line-height:1.6;color:#555;white-space:pre-wrap}
+.chip{padding:5px 12px;border-radius:20px;border:0.5px solid rgba(0,0,0,0.2);background:#fff;color:#666;font-size:13px;cursor:pointer;white-space:nowrap}
+.chip.active{background:#1a1a1a;color:#fff;border-color:transparent}
+.toggle{width:40px;height:22px;border-radius:11px;background:#ddd;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:#1D9E75}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggle.on::after{transform:translateX(18px)}
+.food-row,.entry-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid rgba(0,0,0,0.08)}
+.food-row:last-child,.entry-row:last-child{border-bottom:none}
+.hidden{display:none!important}
+.flex{display:flex;gap:8px}
+.verified{font-size:11px;background:#EAF3DE;color:#3B6D11;padding:1px 6px;border-radius:8px;flex-shrink:0}
 </style>
 </head>
 <body>
-<div id="root"></div>
+<div class="app">
+  <div class="header">
+    <h1>Wellness Hub</h1>
+    <p id="today-str"></p>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div class="content" id="content"></div>
+</div>
+
 <script>
 // -- BUILT-IN FOOD DATABASE (700+ foods) --
 // cal/pro/carb/fat per 100g or 100ml | itemG = weight of 1 item | cupG = weight of 1 cup
@@ -424,39 +477,58 @@ const FOOD_DB = [
   { name: "Pea Protein Powder", cal: 360, pro: 75, carb: 5, fat: 4 },
 ];
 
-</script>
-<script>
-const html = htm.bind(React.createElement);
-const {useState,useCallback,useEffect} = React;
+const UNIT_OPTIONS=[
+  {v:"g",l:"grams (g)"},{v:"kg",l:"kilograms (kg)"},{v:"ml",l:"millilitres (ml)"},
+  {v:"l",l:"litres (l)"},{v:"cup",l:"cup (~240ml)"},{v:"tbsp",l:"tablespoon (~15ml)"},
+  {v:"tsp",l:"teaspoon (~5ml)"},{v:"oz",l:"ounces (oz)"},{v:"lb",l:"pounds (lb)"},
+  {v:"item",l:"item / piece"},{v:"slice",l:"slice"},{v:"portion",l:"portion"}
+];
 
-const STORAGE_KEY = "wellness_hub_v4";
-const TODAY = new Date().toISOString().split("T")[0];
+const BODY_AREAS=["Chest","Back","Shoulders","Arms / Biceps / Triceps","Core / Abs",
+  "Glutes / Booty","Legs / Quads / Hamstrings","Calves","Full Body","Cardio / Endurance","Flexibility / Mobility"];
 
-const defaultState = {
-  date: TODAY, foods: [], water: 0, steps: 0, stepHistory: [],
-  habits: {water:false, devotion:false, sleep:0, bedtime:"", wakeTime:""},
-  goals: {calories:2000, water:2500, steps:10000, sleep:8, protein:150, monthlySteps:300000},
-  programs: [], workoutSessions: [], weightLog: [], goalWeight:null, heightCm:null,
-  cycle:{periodDates:[], ovulationDates:[], symptoms:{}, avgCycleLength:28, avgPeriodDuration:5}
+const SYMPTOM_LIST=["Cramps","Bloating","Spotting","Heavy flow","Light flow","Breast tenderness",
+  "Headache","Fatigue","Mood swings","Nausea","Back pain","Acne","Food cravings",
+  "Increased libido","Clear/stretchy discharge","Pelvic pain","Constipation","Insomnia"];
+
+const STORAGE_KEY="wellness_hub_v5";
+const TODAY=new Date().toISOString().split("T")[0];
+
+const TABS=[
+  {id:"nutrition",label:"Nutrition",icon:"ti-salad"},
+  {id:"workouts",label:"Workouts",icon:"ti-barbell"},
+  {id:"steps",label:"Steps",icon:"ti-shoe"},
+  {id:"habits",label:"Habits",icon:"ti-checklist"},
+  {id:"goals",label:"Goals",icon:"ti-target"},
+  {id:"weight",label:"Weight",icon:"ti-scale"},
+  {id:"cycle",label:"Cycle",icon:"ti-moon"}
+];
+
+let state={
+  date:TODAY,foods:[],water:0,steps:0,stepHistory:[],
+  habits:{water:false,devotion:false,sleep:0,bedtime:"",wakeTime:""},
+  goals:{calories:2000,water:2500,steps:10000,sleep:8,protein:150,monthlySteps:300000},
+  programs:[],workoutSessions:[],weightLog:[],goalWeight:null,heightCm:null,
+  cycle:{periodDates:[],ovulationDates:[],symptoms:{},avgCycleLength:28,avgPeriodDuration:5}
 };
+
+let activeTab="nutrition";
 
 function loadState(){
   try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return defaultState;
-    const s = JSON.parse(raw);
-    if(s.date !== TODAY) return {...defaultState,...s,date:TODAY,foods:[],water:0,steps:0,habits:{water:false,devotion:false,sleep:0,bedtime:"",wakeTime:""}};
-    return {...defaultState,...s};
-  }catch{return defaultState;}
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const s=JSON.parse(raw);
+    if(s.date!==TODAY){
+      s.date=TODAY;s.foods=[];s.water=0;s.steps=0;
+      s.habits={water:false,devotion:false,sleep:0,bedtime:"",wakeTime:""};
+    }
+    state={...state,...s};
+  }catch(e){}
 }
 
-async function callAI(prompt){
-  const r = await fetch("https://api.anthropic.com/v1/messages",{
-    method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})
-  });
-  const d = await r.json();
-  return d.content.map(b=>b.text||"").join("");
+function save(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}
 }
 
 function smartToGrams(qty,unit,food){
@@ -472,970 +544,984 @@ function smartToGrams(qty,unit,food){
 }
 
 function searchLocalDB(query){
-  const q = query.toLowerCase().trim();
-  const words = q.split(/\s+/).filter(w=>w.length>1);
-  const scored = FOOD_DB.map(food=>{
-    const name = food.name.toLowerCase();
+  const q=query.toLowerCase().trim();
+  const words=q.split(/\s+/).filter(w=>w.length>1);
+  return FOOD_DB.map(food=>{
+    const name=food.name.toLowerCase();
     let score=0;
     words.forEach(w=>{if(name.startsWith(w))score+=3;else if(name.includes(w))score+=1;});
-    return {food,score};
-  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
-  return scored.slice(0,6).map(x=>x.food);
+    return{food,score};
+  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,6).map(x=>x.food);
 }
 
-const UNIT_OPTIONS=[
-  {value:"g",label:"grams (g)"},{value:"kg",label:"kilograms (kg)"},
-  {value:"ml",label:"millilitres (ml)"},{value:"l",label:"litres (l)"},
-  {value:"cup",label:"cup (~240ml)"},{value:"tbsp",label:"tablespoon (~15ml)"},
-  {value:"tsp",label:"teaspoon (~5ml)"},{value:"oz",label:"ounces (oz)"},
-  {value:"lb",label:"pounds (lb)"},{value:"item",label:"item / piece"},
-  {value:"slice",label:"slice"},{value:"portion",label:"portion"}
-];
+async function callAI(prompt){
+  const r=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})
+  });
+  const d=await r.json();
+  return(d.content||[]).map(b=>b.text||"").join("");
+}
 
-const BODY_AREAS=[
-  {id:"chest",label:"Chest"},{id:"back",label:"Back"},{id:"shoulders",label:"Shoulders"},
-  {id:"arms",label:"Arms / Biceps / Triceps"},{id:"core",label:"Core / Abs"},
-  {id:"glutes",label:"Glutes / Booty"},{id:"legs",label:"Legs / Quads / Hamstrings"},
-  {id:"calves",label:"Calves"},{id:"fullbody",label:"Full Body"},
-  {id:"cardio",label:"Cardio / Endurance"},{id:"flexibility",label:"Flexibility / Mobility"}
-];
+// ── HELPERS ────────────────────────────────────────────────────────────────────
+function el(tag,attrs={},children=[]){
+  const e=document.createElement(tag);
+  Object.entries(attrs).forEach(([k,v])=>{
+    if(k==="style"&&typeof v==="object") Object.assign(e.style,v);
+    else if(k.startsWith("on")&&typeof v==="function") e.addEventListener(k.slice(2).toLowerCase(),v);
+    else if(k==="class") e.className=v;
+    else if(k==="html") e.innerHTML=v;
+    else e.setAttribute(k,v);
+  });
+  children.forEach(c=>{
+    if(c===null||c===undefined||c===false) return;
+    if(typeof c==="string"||typeof c==="number") e.appendChild(document.createTextNode(c));
+    else if(c instanceof Node) e.appendChild(c);
+    else if(Array.isArray(c)) c.forEach(cc=>cc&&e.appendChild(typeof cc==="string"?document.createTextNode(cc):cc));
+  });
+  return e;
+}
 
-const SYMPTOM_LIST=["Cramps","Bloating","Spotting","Heavy flow","Light flow",
-  "Breast tenderness","Headache","Fatigue","Mood swings","Nausea","Back pain",
-  "Acne","Food cravings","Increased libido","Clear/stretchy discharge",
-  "Pelvic pain","Constipation","Insomnia"];
-
-// UI Primitives
-function Card({children,style}){
-  return html`<div style=${{background:"var(--color-background-primary,#fff)",border:"0.5px solid rgba(0,0,0,0.1)",borderRadius:12,padding:"14px 18px",marginBottom:12,...style}}>${children}</div>`;
-}
-function CT({icon,children}){
-  return html`<p style=${{fontSize:15,fontWeight:500,display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
-    <i class=${"ti "+icon} aria-hidden="true"></i>${children}</p>`;
-}
-function Btn({children,onClick,primary,danger,small,style,disabled}){
-  const s={padding:small?"5px 10px":"8px 14px",borderRadius:8,
-    border:danger?"0.5px solid #F7C1C1":"0.5px solid rgba(0,0,0,0.2)",
-    background:primary?"var(--color-text-primary,#1a1a1a)":"var(--color-background-primary,#fff)",
-    color:primary?"var(--color-background-primary,#fff)":danger?"#A32D2D":"var(--color-text-primary,#1a1a1a)",
-    fontSize:small?12:14,cursor:disabled?"default":"pointer",opacity:disabled?0.5:1,
-    display:"inline-flex",alignItems:"center",gap:5,whiteSpace:"nowrap",flexShrink:0,...style};
-  return html`<button onClick=${onClick} disabled=${disabled} style=${s}>${children}</button>`;
-}
-function Inp({value,onChange,type="text",placeholder,style,onKeyDown,min,max,step}){
-  const s={padding:"8px 10px",borderRadius:8,border:"0.5px solid rgba(0,0,0,0.2)",
-    fontSize:14,background:"var(--color-background-primary,#fff)",
-    color:"var(--color-text-primary,#1a1a1a)",width:"100%",...style};
-  return html`<input value=${value} onChange=${onChange} type=${type} placeholder=${placeholder}
-    onKeyDown=${onKeyDown} min=${min} max=${max} step=${step} style=${s}/>`;
-}
-function Sel({value,onChange,children,style}){
-  const s={padding:"8px 10px",borderRadius:8,border:"0.5px solid rgba(0,0,0,0.2)",
-    fontSize:14,background:"var(--color-background-primary,#fff)",
-    color:"var(--color-text-primary,#1a1a1a)",...style};
-  return html`<select value=${value} onChange=${onChange} style=${s}>${children}</select>`;
-}
-function PBar({value,max,color="#1D9E75"}){
+function pbar(value,max,color="#1D9E75"){
   const pct=Math.min(100,max>0?Math.round(value/max*100):0);
-  return html`<div style=${{height:8,background:"#eee",borderRadius:4,overflow:"hidden",marginTop:4}}>
-    <div style=${{height:"100%",width:pct+"%",background:color,borderRadius:4,transition:"width 0.3s"}}></div>
-  </div>`;
-}
-function MCard({label,value,unit,color}){
-  return html`<div style=${{background:"#f8f8f5",borderRadius:8,padding:"12px 14px"}}>
-    <p style=${{fontSize:12,color:"#666",marginBottom:2}}>${label}</p>
-    <p style=${{fontSize:19,fontWeight:500,color:color||"var(--color-text-primary,#1a1a1a)"}}>${value}</p>
-    <p style=${{fontSize:12,color:"#666"}}>${unit}</p>
-  </div>`;
-}
-function Toggle({on,onClick}){
-  return html`<button onClick=${onClick} style=${{width:40,height:22,borderRadius:11,
-    background:on?"#1D9E75":"#ddd",border:"none",cursor:"pointer",position:"relative",
-    transition:"background 0.2s",flexShrink:0}}>
-    <span style=${{position:"absolute",top:3,left:3,width:16,height:16,borderRadius:"50%",
-      background:"#fff",transition:"transform 0.2s",transform:on?"translateX(18px)":"none",display:"block"}}></span>
-  </button>`;
-}
-function Tag({children,color="green"}){
-  const c={green:["#EAF3DE","#3B6D11"],amber:["#FAEEDA","#854F0B"],blue:["#E6F1FB","#185FA5"],
-    pink:["#FBEAF0","#993556"],purple:["#EEEDFE","#534AB7"],teal:["#E1F5EE","#0F6E56"],red:["#FCEBEB","#A32D2D"]};
-  const [bg,text]=(c[color]||c.green);
-  return html`<span style=${{background:bg,color:text,fontSize:11,fontWeight:500,padding:"2px 8px",borderRadius:10}}>${children}</span>`;
-}
-function AIBox({text,loading}){
-  if(!text&&!loading) return null;
-  return html`<div style=${{background:"#f8f8f5",borderRadius:8,padding:"10px 12px",marginTop:8,
-    fontSize:13,lineHeight:1.6,color:"#555",whiteSpace:"pre-wrap"}}>${loading?"Thinking...":text}</div>`;
-}
-function Chip({label,active,onClick}){
-  return html`<button onClick=${onClick} style=${{padding:"5px 12px",borderRadius:20,
-    border:"0.5px solid "+(active?"var(--color-text-primary,#1a1a1a)":"rgba(0,0,0,0.2)"),
-    background:active?"var(--color-text-primary,#1a1a1a)":"var(--color-background-primary,#fff)",
-    color:active?"var(--color-background-primary,#fff)":"#666",
-    fontSize:13,cursor:"pointer",whiteSpace:"nowrap"}}>${label}</button>`;
+  return el("div",{class:"pbar"},[el("div",{class:"pfill",style:{width:pct+"%",background:color}})]);
 }
 
-const TABS=[
-  {id:"nutrition",label:"Nutrition",icon:"ti-salad"},
-  {id:"workouts",label:"Workouts",icon:"ti-barbell"},
-  {id:"steps",label:"Steps",icon:"ti-shoe"},
-  {id:"habits",label:"Habits",icon:"ti-checklist"},
-  {id:"goals",label:"Goals",icon:"ti-target"},
-  {id:"weight",label:"Weight",icon:"ti-scale"},
-  {id:"cycle",label:"Cycle",icon:"ti-moon"}
-];
+function mcard(label,value,unit,color){
+  return el("div",{class:"metric"},[
+    el("div",{class:"lbl"},[label]),
+    el("div",{class:"val",style:{color:color||""}},[String(value)]),
+    el("div",{class:"unit"},[unit])
+  ]);
+}
+
+function cardTitle(icon,text){
+  return el("div",{class:"card-title"},[el("i",{class:"ti "+icon,"aria-hidden":"true"}),text]);
+}
+
+function btn(text,onClick,cls=""){
+  return el("button",{class:"btn "+(cls||""),onClick},[text]);
+}
+
+function tag(text,color="green"){
+  return el("span",{class:"tag "+color},[text]);
+}
+
+function chip(text,active,onClick){
+  return el("button",{class:"chip"+(active?" active":""),onClick},[text]);
+}
+
+function toggle(on,onClick){
+  return el("button",{class:"toggle"+(on?" on":""),onClick});
+}
+
+function aiBox(text,loading){
+  if(!text&&!loading) return null;
+  return el("div",{class:"ai-box"},[loading?"Thinking...":text]);
+}
+
+function unitSelect(value,onChange){
+  const s=el("select",{onChange});
+  UNIT_OPTIONS.forEach(o=>{
+    const opt=el("option",{value:o.v},[o.l]);
+    if(o.v===value) opt.selected=true;
+    s.appendChild(opt);
+  });
+  return s;
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function render(){
+  // Tabs
+  const tabsEl=document.getElementById("tabs");
+  tabsEl.innerHTML="";
+  TABS.forEach(t=>{
+    tabsEl.appendChild(el("button",{
+      class:"tab"+(activeTab===t.id?" active":""),
+      onClick:()=>{activeTab=t.id;render();}
+    },[el("i",{class:"ti "+t.icon,"aria-hidden":"true"}),t.label]));
+  });
+
+  const content=document.getElementById("content");
+  content.innerHTML="";
+  if(activeTab==="nutrition") content.appendChild(renderNutrition());
+  else if(activeTab==="workouts") content.appendChild(renderWorkouts());
+  else if(activeTab==="steps") content.appendChild(renderSteps());
+  else if(activeTab==="habits") content.appendChild(renderHabits());
+  else if(activeTab==="goals") content.appendChild(renderGoals());
+  else if(activeTab==="weight") content.appendChild(renderWeight());
+  else if(activeTab==="cycle") content.appendChild(renderCycle());
+}
 
 // ── NUTRITION ──────────────────────────────────────────────────────────────────
-function NutritionTab({state,setState}){
-  const [query,setQuery]=useState("");
-  const [results,setResults]=useState([]);
-  const [searching,setSearching]=useState(false);
-  const [aiText,setAiText]=useState("");
-  const [aiLoading,setAiLoading]=useState(false);
-  const [aiFood,setAiFood]=useState(null);
-  const [servingQty,setServingQty]=useState({});
-  const [servingUnit,setServingUnit]=useState({});
-  const [manName,setManName]=useState("");
-  const [manQty,setManQty]=useState("");
-  const [manUnit,setManUnit]=useState("g");
-  const [manCals,setManCals]=useState("");
-  const [manProt,setManProt]=useState("");
-  const [manCarbs,setManCarbs]=useState("");
-  const [manFat,setManFat]=useState("");
-  const [manFibre,setManFibre]=useState("");
-  const [waterInput,setWaterInput]=useState("");
-
+function renderNutrition(){
+  const div=el("div");
   const totalCals=state.foods.reduce((s,f)=>s+(f.calories||0),0);
   const totalProt=state.foods.reduce((s,f)=>s+(f.protein||0),0);
   const totalCarbs=state.foods.reduce((s,f)=>s+(f.carbs||0),0);
   const totalFat=state.foods.reduce((s,f)=>s+(f.fat||0),0);
   const totalFibre=state.foods.reduce((s,f)=>s+(f.fibre||0),0);
+
+  // Calorie card
+  const calCard=el("div",{class:"card"});
+  calCard.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:6}},[
+    el("p",{style:{fontSize:15,fontWeight:500}},["Calories"]),
+    el("p",{style:{fontSize:13,color:"#666"}},[el("span",{style:{fontSize:22,fontWeight:600,color:"#D85A30"}},[String(totalCals)])," / "+state.goals.calories+" kcal"])
+  ]));
+  calCard.appendChild(pbar(totalCals,state.goals.calories,"#D85A30"));
+  const rem=state.goals.calories-totalCals;
+  calCard.appendChild(el("p",{style:{fontSize:11,color:"#666",marginTop:3}},[rem>0?rem+" kcal remaining":((-rem)+" kcal over goal")]));
+  div.appendChild(calCard);
+
+  // Macros card
+  const macroCard=el("div",{class:"card"});
+  macroCard.appendChild(cardTitle("ti-chart-pie","Macros Breakdown"));
   const protCals=totalProt*4,carbCals=totalCarbs*4,fatCals=totalFat*9;
-  const totalMacroCals=protCals+carbCals+fatCals||1;
-  const protSplit=Math.round(protCals/totalMacroCals*100);
-  const carbSplit=Math.round(carbCals/totalMacroCals*100);
-  const fatSplit=Math.round(fatCals/totalMacroCals*100);
+  const tot=protCals+carbCals+fatCals||1;
+  const pS=Math.round(protCals/tot*100),cS=Math.round(carbCals/tot*100),fS=Math.round(fatCals/tot*100);
+  if(tot>1){
+    const bar=el("div",{style:{display:"flex",height:10,borderRadius:5,overflow:"hidden",marginBottom:10,gap:2}});
+    bar.appendChild(el("div",{style:{width:pS+"%",background:"#534AB7",borderRadius:"5px 0 0 5px"}}));
+    bar.appendChild(el("div",{style:{width:cS+"%",background:"#BA7517"}}));
+    bar.appendChild(el("div",{style:{width:fS+"%",background:"#1D9E75",borderRadius:"0 5px 5px 0"}}));
+    macroCard.appendChild(bar);
+  }
+  [{label:"Protein",val:totalProt,goal:state.goals.protein||150,unit:"g",color:"#534AB7",split:pS},
+   {label:"Carbs",val:totalCarbs,goal:null,unit:"g",color:"#BA7517",split:cS},
+   {label:"Fat",val:totalFat,goal:null,unit:"g",color:"#1D9E75",split:fS},
+   {label:"Fibre",val:totalFibre,goal:25,unit:"g",color:"#0F6E56",split:null}
+  ].forEach(m=>{
+    const row=el("div",{style:{marginBottom:10}});
+    const hdr=el("div",{style:{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:2}});
+    const dot=el("span",{style:{width:10,height:10,borderRadius:"50%",background:m.color,display:"inline-block",marginRight:6}});
+    const lbl=el("span",{},[dot,m.label,m.split!==null?el("span",{style:{fontSize:11,color:"#666",marginLeft:4}},[" ("+m.split+"%)"]):""].filter(Boolean));
+    const val=el("span",{style:{color:"#666"}},[el("strong",{style:{color:m.color}},[m.val.toFixed(1)+m.unit]),m.goal?" / "+m.goal+m.unit+" goal":""]);
+    hdr.appendChild(lbl);hdr.appendChild(val);row.appendChild(hdr);
+    if(m.goal) row.appendChild(pbar(m.val,m.goal,m.color));
+    else row.appendChild(el("div",{style:{height:6,background:m.color,borderRadius:3,opacity:0.25,marginTop:4}}));
+    macroCard.appendChild(row);
+  });
+  div.appendChild(macroCard);
+
+  // Search card
+  const searchCard=el("div",{class:"card"});
+  searchCard.appendChild(cardTitle("ti-search","Search Food Database"));
+  searchCard.appendChild(el("p",{style:{fontSize:12,color:"#666",marginBottom:8}},["400+ foods including Kenyan & African staples. AI fallback if not found."]));
+  const searchRow=el("div",{class:"row",style:{marginBottom:8}});
+  const searchInp=el("input",{type:"text",placeholder:"e.g. ugali, chapati, chicken, avocado..."});
+  const resultsDiv=el("div");
+  const aiResultDiv=el("div");
 
   async function doSearch(){
-    if(!query.trim()) return;
-    setSearching(true);setResults([]);setAiText("");setAiFood(null);
-    const local=searchLocalDB(query);
+    const q=searchInp.value.trim();
+    if(!q) return;
+    resultsDiv.innerHTML="";aiResultDiv.innerHTML="";
+    const local=searchLocalDB(q);
     if(local.length){
-      setResults(local.map(f=>({...f,fromDB:true})));
-      const u={},q={};
-      local.forEach(f=>{u[f.name]=f.itemG?"item":"g";q[f.name]=f.itemG?"1":"100";});
-      setServingUnit(u);setServingQty(q);
+      local.forEach(food=>{
+        const defUnit=food.itemG?"item":"g";
+        const defQty=food.itemG?"1":"100";
+        const row=el("div",{style:{padding:"10px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}});
+        const hdr=el("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:4}});
+        hdr.appendChild(el("p",{style:{fontSize:14,fontWeight:500}},[food.name]));
+        hdr.appendChild(el("span",{class:"verified"},["Verified"]));
+        row.appendChild(hdr);
+        row.appendChild(el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},[food.cal+" kcal · "+food.pro+"g protein per 100g"]));
+        if(food.note) row.appendChild(el("p",{style:{fontSize:11,color:"#534AB7",marginBottom:6}},[food.note]));
+        const addRow=el("div",{class:"row"});
+        const qtyInp=el("input",{type:"number",value:defQty,style:{width:60}});
+        const unitSel=el("select");
+        UNIT_OPTIONS.forEach(o=>{
+          const opt=document.createElement("option");
+          opt.value=o.v;opt.textContent=o.l;
+          if(o.v===defUnit) opt.selected=true;
+          unitSel.appendChild(opt);
+        });
+        const estSpan=el("span",{style:{fontSize:13,color:"#D85A30",fontWeight:600}});
+        function updateEst(){
+          const g=smartToGrams(parseFloat(qtyInp.value)||100,unitSel.value,food);
+          estSpan.textContent=Math.round(food.cal*g/100)+" kcal";
+        }
+        qtyInp.addEventListener("input",updateEst);
+        unitSel.addEventListener("change",updateEst);
+        updateEst();
+        const addBtn=btn("+ Add","",{"class":"btn primary small"});
+        addBtn.addEventListener("click",()=>{
+          const g=smartToGrams(parseFloat(qtyInp.value)||100,unitSel.value,food);
+          const f=parseFloat(qtyInp.value)||100;
+          const factor=g/100;
+          const unitLabel=(unitSel.value==="item"&&food.note)?food.note:`${qtyInp.value} ${unitSel.value}`;
+          state.foods.push({name:food.name,calories:Math.round(food.cal*factor),protein:Math.round(food.pro*factor*10)/10,carbs:Math.round(food.carb*factor*10)/10,fat:Math.round(food.fat*factor*10)/10,serving:unitLabel});
+          save();render();
+        });
+        addRow.appendChild(qtyInp);addRow.appendChild(unitSel);addRow.appendChild(estSpan);addRow.appendChild(addBtn);
+        row.appendChild(addRow);
+        resultsDiv.appendChild(row);
+      });
     } else {
-      setAiLoading(true);
+      aiResultDiv.innerHTML="";
+      const loading=el("div",{class:"ai-box"},["Searching..."]);
+      aiResultDiv.appendChild(loading);
       try{
-        const r=await callAI(`You are a nutrition database. Per 100g for "${query}": 1 sentence description. End with: CALORIES:[n] PROTEIN:[n] CARBS:[n] FAT:[n]`);
+        const r=await callAI(`Nutrition database. Per 100g for "${q}": 1 sentence. End with: CALORIES:[n] PROTEIN:[n] CARBS:[n] FAT:[n]`);
         const parse=k=>{const m=r.match(new RegExp(k+":[\\d.]+","i"));return m?parseFloat(m[0].split(":")[1]):0;};
-        setAiText(r.replace(/CALORIES:[\d.]+/ig,"").replace(/PROTEIN:[\d.]+/ig,"").replace(/CARBS:[\d.]+/ig,"").replace(/FAT:[\d.]+/ig,"").trim());
-        setAiFood({name:query,calories:Math.round(parse("CALORIES")),protein:Math.round(parse("PROTEIN")*10)/10,carbs:Math.round(parse("CARBS")*10)/10,fat:Math.round(parse("FAT")*10)/10,qty:"100g"});
-      }catch{setAiText("Not found. Try manual entry below.");}
-      setAiLoading(false);
+        const text=r.replace(/CALORIES:[\d.]+/ig,"").replace(/PROTEIN:[\d.]+/ig,"").replace(/CARBS:[\d.]+/ig,"").replace(/FAT:[\d.]+/ig,"").trim();
+        const cals=Math.round(parse("CALORIES"));
+        aiResultDiv.innerHTML="";
+        aiResultDiv.appendChild(el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["AI estimate (per 100g):"]));
+        aiResultDiv.appendChild(el("div",{class:"ai-box"},[text]));
+        const addAiBtn=btn(`+ Add AI estimate (${cals} kcal)`,"","btn primary");
+        addAiBtn.style.marginTop="8px";
+        addAiBtn.addEventListener("click",()=>{
+          state.foods.push({name:q,calories:cals,protein:Math.round(parse("PROTEIN")*10)/10,carbs:Math.round(parse("CARBS")*10)/10,fat:Math.round(parse("FAT")*10)/10,serving:"100g"});
+          save();render();
+        });
+        aiResultDiv.appendChild(addAiBtn);
+      }catch(e){aiResultDiv.innerHTML="<div class='ai-box'>Not found. Use manual entry below.</div>";}
     }
-    setSearching(false);
   }
 
-  function addFromDB(p){
-    const key=p.fromDB?p.name:p.product_name;
-    const rawQty=parseFloat(servingQty[key]||"100")||100;
-    const unit=servingUnit[key]||"g";
-    const grams=smartToGrams(rawQty,unit,p.fromDB?p:null);
-    const factor=grams/100;
-    const food=p.fromDB?{
-      name:p.name,calories:Math.round(p.cal*factor),protein:Math.round(p.pro*factor*10)/10,
-      carbs:Math.round(p.carb*factor*10)/10,fat:Math.round(p.fat*factor*10)/10,
-      serving:(unit==="item"&&p.note)?p.note:`${rawQty} ${unit}`
-    }:{
-      name:p.product_name+(p.brands?` (${p.brands})`:""),
-      calories:Math.round((p.nutriments["energy-kcal_100g"]||p.nutriments["energy-kcal"]||0)*factor),
-      protein:Math.round((p.nutriments.proteins_100g||0)*factor*10)/10,
-      carbs:Math.round((p.nutriments.carbohydrates_100g||0)*factor*10)/10,
-      fat:Math.round((p.nutriments.fat_100g||0)*factor*10)/10,serving:`${rawQty} ${unit}`
-    };
-    setState(s=>({...s,foods:[...s.foods,food]}));
-    setResults([]);setQuery("");
+  searchInp.addEventListener("keydown",e=>{if(e.key==="Enter")doSearch();});
+  const searchBtn=btn("Search","","btn primary");
+  searchBtn.addEventListener("click",doSearch);
+  searchRow.appendChild(searchInp);searchRow.appendChild(searchBtn);
+  searchCard.appendChild(searchRow);searchCard.appendChild(resultsDiv);searchCard.appendChild(aiResultDiv);
+  div.appendChild(searchCard);
+
+  // Manual entry
+  const manCard=el("div",{class:"card"});
+  manCard.appendChild(cardTitle("ti-pencil","Manual Entry"));
+  const nameInp=el("input",{type:"text",placeholder:"Food name"});
+  const qtyInp=el("input",{type:"number",placeholder:"Qty",style:{width:65}});
+  const unitSel=el("select");
+  UNIT_OPTIONS.forEach(o=>{const opt=document.createElement("option");opt.value=o.v;opt.textContent=o.l;unitSel.appendChild(opt);});
+  const calsInp=el("input",{type:"number",placeholder:"kcal"});
+  const protInp=el("input",{type:"number",placeholder:"protein g"});
+  const carbInp=el("input",{type:"number",placeholder:"carbs g"});
+  const fatInp=el("input",{type:"number",placeholder:"fat g"});
+  const fibInp=el("input",{type:"number",placeholder:"fibre g"});
+  const r1=el("div",{class:"row",style:{marginBottom:8}});
+  r1.appendChild(el("div",{style:{flex:"2 1 140px"}},[nameInp]));
+  r1.appendChild(el("div",{style:{flex:"0 0 65px"}},[qtyInp]));
+  r1.appendChild(el("div",{style:{flex:"1 1 120px"}},[unitSel]));
+  const r2=el("div",{class:"row",style:{marginBottom:8}});
+  [calsInp,protInp,carbInp,fatInp,fibInp].forEach(i=>{const w=el("div",{style:{flex:"1 1 60px"}});w.appendChild(i);r2.appendChild(w);});
+  const addManBtn=btn("+ Add","","btn primary");
+  addManBtn.addEventListener("click",()=>{
+    if(!nameInp.value.trim()) return;
+    state.foods.push({name:nameInp.value,calories:parseInt(calsInp.value)||0,protein:parseFloat(protInp.value)||0,carbs:parseFloat(carbInp.value)||0,fat:parseFloat(fatInp.value)||0,fibre:parseFloat(fibInp.value)||0,serving:`${qtyInp.value} ${unitSel.value}`});
+    save();render();
+  });
+  r2.appendChild(addManBtn);
+  manCard.appendChild(r1);manCard.appendChild(r2);
+  div.appendChild(manCard);
+
+  // Water
+  const waterCard=el("div",{class:"card"});
+  waterCard.appendChild(cardTitle("ti-droplet","Water Intake"));
+  const waterRow=el("div",{class:"row",style:{marginBottom:10}});
+  const waterInp=el("input",{type:"number",placeholder:"ml"});
+  function addWater(ml){state.water+=ml;save();render();}
+  [250,500,750].forEach(ml=>{const b=btn("+"+ml+"ml","","btn");b.addEventListener("click",()=>addWater(ml));waterRow.appendChild(b);});
+  const custBtn=btn("+","","btn primary");
+  custBtn.addEventListener("click",()=>{const v=parseInt(waterInp.value)||0;if(v>0){addWater(v);waterInp.value="";}});
+  waterRow.insertBefore(waterInp,waterRow.firstChild);waterRow.appendChild(custBtn);
+  waterCard.appendChild(waterRow);
+  waterCard.appendChild(pbar(state.water,state.goals.water,"#1D9E75"));
+  waterCard.appendChild(el("p",{style:{fontSize:12,color:"#666",marginTop:4}},[state.water.toLocaleString()+" / "+state.goals.water.toLocaleString()+" ml"]));
+  div.appendChild(waterCard);
+
+  // Food log
+  const logCard=el("div",{class:"card"});
+  logCard.appendChild(cardTitle("ti-list","Today's Food Log"));
+  if(!state.foods.length){
+    logCard.appendChild(el("p",{style:{fontSize:13,color:"#666"}},["Nothing logged yet."]));
+  } else {
+    state.foods.forEach((f,i)=>{
+      const row=el("div",{class:"food-row"+(i===state.foods.length-1?" last":"")});
+      const info=el("div");
+      info.appendChild(el("p",{style:{fontSize:14,fontWeight:500}},[f.name]));
+      info.appendChild(el("p",{style:{fontSize:12,color:"#666"}},[(f.serving?f.serving+" · ":"")+f.calories+" kcal · "+f.protein+"g P · "+f.carbs+"g C · "+f.fat+"g F"+(f.fibre?" · "+f.fibre+"g fibre":"")]));
+      const delBtn=el("button",{class:"btn danger small"},["x"]);
+      delBtn.addEventListener("click",()=>{state.foods.splice(i,1);save();render();});
+      row.appendChild(info);row.appendChild(delBtn);
+      logCard.appendChild(row);
+    });
   }
-
-  function addManual(){
-    if(!manName.trim()) return;
-    setState(s=>({...s,foods:[...s.foods,{name:manName,calories:parseInt(manCals)||0,
-      protein:parseFloat(manProt)||0,carbs:parseFloat(manCarbs)||0,fat:parseFloat(manFat)||0,
-      fibre:parseFloat(manFibre)||0,serving:`${manQty} ${manUnit}`}]}));
-    setManName("");setManQty("");setManCals("");setManProt("");setManCarbs("");setManFat("");setManFibre("");
-  }
-
-  function addWater(ml){setState(s=>({...s,water:s.water+ml}));}
-  function addWaterCustom(){const v=parseInt(waterInput)||0;if(v>0){addWater(v);setWaterInput("");}}
-
-  return html`<div>
-    <${Card}>
-      <p style=${{fontSize:15,fontWeight:500,marginBottom:6}}>Calories</p>
-      <div style=${{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:4}}>
-        <span style=${{fontSize:24,fontWeight:600,color:"#D85A30"}}>${totalCals}</span>
-        <span style=${{fontSize:13,color:"#666"}}>/ ${state.goals.calories} kcal</span>
-      </div>
-      <${PBar} value=${totalCals} max=${state.goals.calories} color="#D85A30"/>
-      <p style=${{fontSize:11,color:"#666",marginTop:3}}>${state.goals.calories-totalCals>0?`${state.goals.calories-totalCals} kcal remaining`:`${totalCals-state.goals.calories} kcal over goal`}</p>
-    <//>
-    <${Card}>
-      <${CT} icon="ti-chart-pie">Macros Breakdown<//>
-      ${totalMacroCals>1&&html`<div style=${{display:"flex",height:10,borderRadius:5,overflow:"hidden",marginBottom:10,gap:2}}>
-        <div style=${{width:protSplit+"%",background:"#534AB7",borderRadius:"5px 0 0 5px"}}></div>
-        <div style=${{width:carbSplit+"%",background:"#BA7517"}}></div>
-        <div style=${{width:fatSplit+"%",background:"#1D9E75",borderRadius:"0 5px 5px 0"}}></div>
-      </div>`}
-      ${[{label:"Protein",value:totalProt,goal:state.goals.protein||150,unit:"g",color:"#534AB7",split:protSplit},
-         {label:"Carbs",value:totalCarbs,goal:null,unit:"g",color:"#BA7517",split:carbSplit},
-         {label:"Fat",value:totalFat,goal:null,unit:"g",color:"#1D9E75",split:fatSplit},
-         {label:"Fibre",value:totalFibre,goal:25,unit:"g",color:"#0F6E56",split:null}
-      ].map(m=>html`<div key=${m.label} style=${{marginBottom:10}}>
-        <div style=${{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:2}}>
-          <span style=${{display:"flex",alignItems:"center",gap:6}}>
-            <span style=${{width:10,height:10,borderRadius:"50%",background:m.color,display:"inline-block"}}></span>
-            ${m.label}${m.split!==null?html` <span style=${{fontSize:11,color:"#666"}}>(${m.split}%)</span>`:""}
-          </span>
-          <span style=${{color:"#666"}}><strong style=${{color:m.color}}>${m.value.toFixed(1)}${m.unit}</strong>${m.goal?` / ${m.goal}${m.unit} goal`:""}</span>
-        </div>
-        ${m.goal?html`<${PBar} value=${m.value} max=${m.goal} color=${m.color}/>`
-          :html`<div style=${{height:6,background:m.color,borderRadius:3,opacity:0.25,marginTop:4}}></div>`}
-      </div>`)}
-    <//>
-    <${Card}>
-      <${CT} icon="ti-search">Search Food Database<//>
-      <p style=${{fontSize:12,color:"#666",marginBottom:8}}>Local database of 400+ foods including Kenyan & African staples. AI fallback if not found.</p>
-      <div style=${{display:"flex",gap:8,marginBottom:8}}>
-        <${Inp} value=${query} onChange=${e=>setQuery(e.target.value)} placeholder="e.g. ugali, chapati, chicken breast, avocado..." onKeyDown=${e=>e.key==="Enter"&&doSearch()}/>
-        <${Btn} onClick=${doSearch} primary=${true} disabled=${searching}>${searching?"...":"Search"}<//>
-      </div>
-      ${results.map((p,i)=>{
-        const isLocal=p.fromDB;
-        const key=isLocal?p.name:p.product_name;
-        const kcal=isLocal?p.cal:Math.round(p.nutriments?.["energy-kcal_100g"]||p.nutriments?.["energy-kcal"]||0);
-        const qty=servingQty[key]!==undefined?servingQty[key]:(isLocal&&p.itemG?"1":"100");
-        const unit=servingUnit[key]!==undefined?servingUnit[key]:(isLocal&&p.itemG?"item":"g");
-        const estCals=Math.round(kcal*smartToGrams(parseFloat(qty)||100,unit,isLocal?p:null)/100);
-        return html`<div key=${i} style=${{padding:"10px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}}>
-          <div style=${{display:"flex",justifyContent:"space-between",marginBottom:4}}>
-            <p style=${{fontSize:14,fontWeight:500}}>${key}</p>
-            ${isLocal&&html`<span style=${{fontSize:11,background:"#EAF3DE",color:"#3B6D11",padding:"1px 6px",borderRadius:8}}>Verified</span>`}
-          </div>
-          <p style=${{fontSize:12,color:"#666",marginBottom:6}}>${kcal} kcal \u00b7 ${isLocal?p.pro:(p.nutriments?.proteins_100g||0).toFixed(1)}g protein per 100g</p>
-          ${isLocal&&p.note&&html`<p style=${{fontSize:11,color:"#534AB7",marginBottom:6}}>${p.note}</p>`}
-          <div style=${{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
-            <${Inp} type="number" value=${qty} onChange=${e=>setServingQty(q=>({...q,[key]:e.target.value}))} placeholder="Qty" style=${{width:60}}/>
-            <${Sel} value=${unit} onChange=${e=>setServingUnit(u=>({...u,[key]:e.target.value}))} style=${{flex:1,minWidth:120}}>
-              ${UNIT_OPTIONS.map(o=>html`<option key=${o.value} value=${o.value}>${o.label}</option>`)}
-            <//>
-            <span style=${{fontSize:13,color:"#D85A30",fontWeight:600}}>${estCals} kcal</span>
-            <${Btn} onClick=${()=>addFromDB(p)} primary=${true} small=${true}>+ Add<//>
-          </div>
-        </div>`;
-      })}
-      ${(aiText||aiLoading)&&html`<div>
-        <p style=${{fontSize:12,color:"#666",marginTop:8}}>AI estimate (per 100g):</p>
-        <${AIBox} text=${aiText} loading=${aiLoading}/>
-        ${aiFood&&!aiLoading&&html`<${Btn} onClick=${()=>{setState(s=>({...s,foods:[...s.foods,aiFood]}));setQuery("");setAiText("");setAiFood(null);}} primary=${true} style=${{marginTop:8}}>+ Add AI estimate (${aiFood.calories} kcal)<//>`}
-      </div>`}
-    <//>
-    <${Card}>
-      <${CT} icon="ti-pencil">Manual Entry<//>
-      <div style=${{display:"flex",flexWrap:"wrap",gap:8,marginBottom:8}}>
-        <${Inp} value=${manName} onChange=${e=>setManName(e.target.value)} placeholder="Food name" style=${{flex:"2 1 140px"}}/>
-        <${Inp} value=${manQty} onChange=${e=>setManQty(e.target.value)} type="number" placeholder="Qty" style=${{flex:"0 0 60px"}}/>
-        <${Sel} value=${manUnit} onChange=${e=>setManUnit(e.target.value)} style=${{flex:"1 1 110px"}}>
-          ${UNIT_OPTIONS.map(o=>html`<option key=${o.value} value=${o.value}>${o.label}</option>`)}
-        <//>
-      </div>
-      <div style=${{display:"flex",flexWrap:"wrap",gap:8,marginBottom:8}}>
-        <${Inp} value=${manCals} onChange=${e=>setManCals(e.target.value)} type="number" placeholder="kcal" style=${{flex:"1 1 60px"}}/>
-        <${Inp} value=${manProt} onChange=${e=>setManProt(e.target.value)} type="number" placeholder="protein g" style=${{flex:"1 1 60px"}}/>
-        <${Inp} value=${manCarbs} onChange=${e=>setManCarbs(e.target.value)} type="number" placeholder="carbs g" style=${{flex:"1 1 60px"}}/>
-        <${Inp} value=${manFat} onChange=${e=>setManFat(e.target.value)} type="number" placeholder="fat g" style=${{flex:"1 1 60px"}}/>
-        <${Inp} value=${manFibre} onChange=${e=>setManFibre(e.target.value)} type="number" placeholder="fibre g" style=${{flex:"1 1 60px"}}/>
-        <${Btn} onClick=${addManual} primary=${true}>+ Add<//>
-      </div>
-    <//>
-    <${Card}>
-      <${CT} icon="ti-droplet">Water Intake<//>
-      <div style=${{display:"flex",gap:8,marginBottom:10,flexWrap:"wrap"}}>
-        <${Inp} value=${waterInput} onChange=${e=>setWaterInput(e.target.value)} type="number" placeholder="ml" style=${{flex:"1 1 80px"}}/>
-        <${Btn} onClick=${()=>addWater(250)}>+250ml<//>
-        <${Btn} onClick=${()=>addWater(500)}>+500ml<//>
-        <${Btn} onClick=${()=>addWater(750)}>+750ml<//>
-        <${Btn} onClick=${addWaterCustom} primary=${true}>+<//> 
-      </div>
-      <${PBar} value=${state.water} max=${state.goals.water} color="#1D9E75"/>
-      <p style=${{fontSize:12,color:"#666",marginTop:4}}>${state.water.toLocaleString()} / ${state.goals.water.toLocaleString()} ml</p>
-    <//>
-    <${Card}>
-      <${CT} icon="ti-list">Today's Food Log<//>
-      ${!state.foods.length?html`<p style=${{fontSize:13,color:"#666"}}>Nothing logged yet.</p>`:
-        state.foods.map((f,i)=>html`<div key=${i} style=${{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 0",borderBottom:i<state.foods.length-1?"0.5px solid rgba(0,0,0,0.08)":"none"}}>
-          <div>
-            <p style=${{fontSize:14,fontWeight:500}}>${f.name}</p>
-            <p style=${{fontSize:12,color:"#666"}}>${f.serving?f.serving+' \u00b7 ':''} ${f.calories} kcal \u00b7 ${f.protein}g P \u00b7 ${f.carbs}g C \u00b7 ${f.fat}g F${f.fibre?` \u00b7 ${f.fibre}g fibre`:''}</p>
-          </div>
-          <${Btn} onClick=${()=>setState(s=>({...s,foods:s.foods.filter((_,j)=>j!==i)}))} danger=${true} small=${true}>x<//>
-        </div>`)}
-    <//>
-  </div>`;
+  div.appendChild(logCard);
+  return div;
 }
 
 // ── WORKOUTS ───────────────────────────────────────────────────────────────────
-function WorkoutsTab({state,setState}){
-  const [view,setView]=useState("programs");
-  const [exSearch,setExSearch]=useState("");const [exResult,setExResult]=useState("");const [exLoading,setExLoading]=useState(false);
-  const [progName,setProgName]=useState("");const [activeProg,setActiveProg]=useState(null);
-  const [exName,setExName]=useState("");const [exSets,setExSets]=useState("");
-  const [sessionProg,setSessionProg]=useState(null);const [sessionSets,setSessionSets]=useState({});const [sessionNotes,setSessionNotes]=useState("");
-  const [histFilter,setHistFilter]=useState(null);
-  const [selAreas,setSelAreas]=useState([]);const [fitLevel,setFitLevel]=useState("intermediate");const [equipment,setEquipment]=useState("gym");
-  const [suggestResult,setSuggestResult]=useState("");const [suggestLoading,setSuggestLoading]=useState(false);
+let workoutView="programs";
+let activeProg=null;
+let sessionProg=null;
+let sessionSets={};
+let sessionNotes="";
 
+function renderWorkouts(){
+  if(workoutView==="suggest") return renderWorkoutSuggest();
+  if(workoutView==="history") return renderWorkoutHistory();
+  if(workoutView==="session") return renderWorkoutSession();
+  return renderWorkoutPrograms();
+}
+
+function renderWorkoutPrograms(){
+  const div=el("div");
+  const btns=el("div",{class:"row",style:{marginBottom:12}});
+  const sb=btn("Suggest a workout","","btn");sb.style.flex="1";sb.style.justifyContent="center";sb.addEventListener("click",()=>{workoutView="suggest";render();});
+  const hb=btn("History ("+((state.workoutSessions||[]).length)+")","","btn");hb.style.flex="1";hb.style.justifyContent="center";hb.addEventListener("click",()=>{workoutView="history";render();});
+  btns.appendChild(sb);btns.appendChild(hb);div.appendChild(btns);
+
+  // Exercise search
+  const exCard=el("div",{class:"card"});
+  exCard.appendChild(cardTitle("ti-search","Exercise Info"));
+  const exRow=el("div",{class:"row",style:{marginBottom:8}});
+  const exInp=el("input",{type:"text",placeholder:"e.g. hip thrust, pull-up, deadlift..."});
+  const exResult=el("div");
   async function searchEx(){
-    if(!exSearch.trim())return;setExLoading(true);setExResult("");
-    try{const r=await callAI(`Fitness coach. Describe "${exSearch}": muscles worked, 2-3 form tips, common mistake. 4-5 sentences.`);setExResult(r);}
-    catch{setExResult("Could not fetch.");}setExLoading(false);
+    const q=exInp.value.trim();if(!q)return;
+    exResult.innerHTML="<div class='ai-box'>Thinking...</div>";
+    try{const r=await callAI(`Fitness coach. Describe "${q}": muscles worked, 2-3 form tips, common mistake. 4-5 sentences.`);exResult.innerHTML="<div class='ai-box'>"+r+"</div><a href='https://www.youtube.com/results?search_query="+encodeURIComponent(q+" proper form tutorial")+"' target='_blank' style='display:inline-flex;align-items:center;gap:6px;margin-top:8px;color:#185FA5;font-size:13px;text-decoration:none;'>Watch on YouTube</a>";}
+    catch{exResult.innerHTML="<div class='ai-box'>Could not fetch.</div>";}
   }
-  async function getSuggestions(){
-    if(!selAreas.length)return;setSuggestLoading(true);setSuggestResult("");
-    const areas=selAreas.map(id=>BODY_AREAS.find(a=>a.id===id)?.label).join(", ");
-    try{const r=await callAI(`Personal trainer. Workout targeting: ${areas}. Level: ${fitLevel}. Equipment: ${equipment==="gym"?"full gym":equipment==="home"?"bodyweight":"bands/dumbbells"}. Give 6-8 exercises with sets, reps and brief notes.`);setSuggestResult(r);}
-    catch{setSuggestResult("Could not generate.");}setSuggestLoading(false);
-  }
-  function createProg(){if(!progName.trim())return;const p={id:Date.now().toString(),name:progName,exercises:[]};setState(s=>({...s,programs:[...s.programs,p]}));setProgName("");setActiveProg(p.id);}
-  function addEx(progId){if(!exName.trim())return;setState(s=>({...s,programs:s.programs.map(p=>p.id===progId?{...p,exercises:[...p.exercises,{name:exName,sets:exSets,ytQuery:encodeURIComponent(exName+" proper form tutorial")}]}:p)}));setExName("");setExSets("");}
-  function startSession(prog){const init={};prog.exercises.forEach((_,i)=>{init[i]=[{reps:"",weight:""}];});setSessionProg(prog);setSessionSets(init);setSessionNotes("");setView("session");}
-  function saveSession(){if(!sessionProg)return;const exercises=sessionProg.exercises.map((e,i)=>({name:e.name,sets:(sessionSets[i]||[]).filter(s=>s.reps||s.weight)}));setState(s=>({...s,workoutSessions:[...(s.workoutSessions||[]),{id:Date.now().toString(),date:TODAY,programName:sessionProg.name,programId:sessionProg.id,exercises,notes:sessionNotes}]}));setView("programs");setSessionProg(null);}
-  function getPB(name){const all=[];(state.workoutSessions||[]).forEach(sess=>sess.exercises.forEach(ex=>{if(ex.name===name)ex.sets.forEach(s=>{if(s.weight)all.push({weight:parseFloat(s.weight),reps:parseInt(s.reps)||0,date:sess.date});});}));return all.length?all.reduce((b,s)=>s.weight>(b?.weight||0)?s:b,null):null;}
+  exInp.addEventListener("keydown",e=>{if(e.key==="Enter")searchEx();});
+  const exBtn=btn("Search","","btn primary");exBtn.addEventListener("click",searchEx);
+  exRow.appendChild(exInp);exRow.appendChild(exBtn);
+  exCard.appendChild(exRow);exCard.appendChild(exResult);div.appendChild(exCard);
 
+  // Programs
+  const progCard=el("div",{class:"card"});
+  progCard.appendChild(cardTitle("ti-layout-list","Workout Programs"));
+  const newRow=el("div",{class:"row",style:{marginBottom:12}});
+  const nameInp=el("input",{type:"text",placeholder:"New program name..."});
+  const createBtn=btn("Create","","btn primary");
+  createBtn.addEventListener("click",()=>{
+    if(!nameInp.value.trim())return;
+    const p={id:Date.now().toString(),name:nameInp.value,exercises:[]};
+    state.programs.push(p);activeProg=p.id;nameInp.value="";save();render();
+  });
+  newRow.appendChild(nameInp);newRow.appendChild(createBtn);progCard.appendChild(newRow);
+
+  if(!state.programs.length){
+    progCard.appendChild(el("p",{style:{fontSize:13,color:"#666"}},["No programs yet."]));
+  } else {
+    state.programs.forEach(p=>{
+      const pDiv=el("div");
+      const pRow=el("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}});
+      const pInfo=el("div",[]);
+      pInfo.appendChild(el("p",{style:{fontSize:14,fontWeight:500}},[p.name]));
+      pInfo.appendChild(el("p",{style:{fontSize:12,color:"#666"}},[p.exercises.length+" exercise(s)"]));
+      const pBtns=el("div",{style:{display:"flex",gap:6}});
+      const startBtn=el("button",{class:"btn small",style:{background:"#EAF3DE",color:"#3B6D11",border:"0.5px solid #C0DD97"}},["Start"]);
+      startBtn.addEventListener("click",()=>{
+        sessionProg=p;sessionNotes="";
+        sessionSets={};p.exercises.forEach((_,i)=>{sessionSets[i]=[{reps:"",weight:""}];});
+        workoutView="session";render();
+      });
+      const editBtn=btn("Edit","","btn small");editBtn.addEventListener("click",()=>{activeProg=activeProg===p.id?null:p.id;render();});
+      const delBtn=btn("x","","btn danger small");delBtn.addEventListener("click",()=>{state.programs=state.programs.filter(x=>x.id!==p.id);if(activeProg===p.id)activeProg=null;save();render();});
+      pBtns.appendChild(startBtn);pBtns.appendChild(editBtn);pBtns.appendChild(delBtn);
+      pRow.appendChild(pInfo);pRow.appendChild(pBtns);pDiv.appendChild(pRow);
+
+      if(activeProg===p.id){
+        const editDiv=el("div",{style:{padding:"10px 0 4px"}});
+        const addRow=el("div",{class:"row",style:{marginBottom:10}});
+        const exNameInp=el("input",{type:"text",placeholder:"Exercise name"});exNameInp.style.flex="2 1 140px";
+        const exSetsInp=el("input",{type:"text",placeholder:"e.g. 3x10"});exSetsInp.style.flex="1 1 90px";
+        const addExBtn=btn("+ Add","","btn primary small");
+        addExBtn.addEventListener("click",()=>{
+          if(!exNameInp.value.trim())return;
+          p.exercises.push({name:exNameInp.value,sets:exSetsInp.value,ytQuery:encodeURIComponent(exNameInp.value+" proper form tutorial")});
+          exNameInp.value="";exSetsInp.value="";save();render();
+        });
+        addRow.appendChild(exNameInp);addRow.appendChild(exSetsInp);addRow.appendChild(addExBtn);editDiv.appendChild(addRow);
+        p.exercises.forEach((e,i)=>{
+          const eRow=el("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"6px 0",borderBottom:"0.5px solid rgba(0,0,0,0.06)"}});
+          const eInfo=el("div",[]);
+          eInfo.appendChild(el("p",{style:{fontSize:13,fontWeight:500}},[e.name]));
+          eInfo.appendChild(el("p",{style:{fontSize:12,color:"#666"}},[e.sets||"No template"]));
+          const eBtns=el("div",{style:{display:"flex",gap:8,alignItems:"center"}});
+          const ytLink=el("a",{href:"https://www.youtube.com/results?search_query="+e.ytQuery,target:"_blank",style:{fontSize:12,color:"#185FA5",textDecoration:"none"}},["Watch"]);
+          const eDelBtn=btn("x","","btn danger small");eDelBtn.addEventListener("click",()=>{p.exercises.splice(i,1);save();render();});
+          eBtns.appendChild(ytLink);eBtns.appendChild(eDelBtn);eRow.appendChild(eInfo);eRow.appendChild(eBtns);editDiv.appendChild(eRow);
+        });
+        pDiv.appendChild(editDiv);
+      }
+      progCard.appendChild(pDiv);
+    });
+  }
+  div.appendChild(progCard);
+  return div;
+}
+
+function renderWorkoutSuggest(){
+  const div=el("div");
+  const backBtn=btn("Back","","btn");backBtn.addEventListener("click",()=>{workoutView="programs";render();});
+  div.appendChild(el("div",{class:"row",style:{marginBottom:12}},[backBtn,el("p",{style:{fontWeight:500,fontSize:15}},["Workout Suggestions"])]));
+  const card=el("div",{class:"card"});
+  card.appendChild(cardTitle("ti-target","Target Body Areas"));
+  const areaDiv=el("div",{style:{display:"flex",flexWrap:"wrap",gap:8,marginBottom:12}});
+  let selAreas=[];
+  BODY_AREAS.forEach(a=>{
+    const c=el("button",{class:"chip"},[ a]);
+    c.addEventListener("click",()=>{
+      if(selAreas.includes(a)){selAreas=selAreas.filter(x=>x!==a);c.classList.remove("active");}
+      else{selAreas.push(a);c.classList.add("active");}
+    });
+    areaDiv.appendChild(c);
+  });
+  card.appendChild(areaDiv);
+  const optRow=el("div",{class:"row",style:{marginBottom:12}});
+  const levelSel=el("select");
+  [["beginner","Beginner"],["intermediate","Intermediate"],["advanced","Advanced"]].forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;if(v==="intermediate")o.selected=true;levelSel.appendChild(o);});
+  const eqSel=el("select");
+  [["gym","Full gym"],["home","Home / bodyweight"],["minimal","Bands / dumbbells"]].forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;levelSel.appendChild(o);});
+  optRow.appendChild(el("div",{style:{flex:"1 1 130px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Fitness level"]),levelSel]));
+  optRow.appendChild(el("div",{style:{flex:"1 1 130px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Equipment"]),eqSel]));
+  card.appendChild(optRow);
+  const result=el("div");
+  const sugBtn=btn("Suggest workout","","btn primary");
+  sugBtn.addEventListener("click",async()=>{
+    if(!selAreas.length)return;
+    result.innerHTML="<div class='ai-box'>Generating...</div>";
+    const eq=eqSel.value==="gym"?"full gym":eqSel.value==="home"?"bodyweight":"bands/dumbbells";
+    try{const r=await callAI(`Personal trainer. Workout for: ${selAreas.join(", ")}. Level: ${levelSel.value}. Equipment: ${eq}. Give 6-8 exercises with sets, reps and brief notes.`);result.innerHTML="<div class='ai-box'>"+r+"</div>";}
+    catch{result.innerHTML="<div class='ai-box'>Could not generate.</div>";}
+  });
+  card.appendChild(sugBtn);card.appendChild(result);div.appendChild(card);
+  return div;
+}
+
+function renderWorkoutHistory(){
+  const div=el("div");
+  const backBtn=btn("Back","","btn");backBtn.addEventListener("click",()=>{workoutView="programs";render();});
+  div.appendChild(el("div",{class:"row",style:{marginBottom:12}},[backBtn,el("p",{style:{fontWeight:500,fontSize:15}},["Session History"])]));
   const sessions=state.workoutSessions||[];
+  if(!sessions.length){div.appendChild(el("p",{style:{fontSize:13,color:"#666"}},["No sessions yet."]));return div;}
+  [...sessions].reverse().forEach(sess=>{
+    const card=el("div",{class:"card"});
+    card.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:8}},[
+      el("div",[el("p",{style:{fontSize:15,fontWeight:500}},[sess.programName]),el("p",{style:{fontSize:12,color:"#666"}},[sess.date])]),
+      tag(sess.exercises.length+" exercises","purple")
+    ]));
+    sess.exercises.forEach(ex=>{
+      card.appendChild(el("p",{style:{fontSize:13,fontWeight:500,marginTop:6}},[ex.name]));
+      const setsDiv=el("div",{style:{display:"flex",gap:6,flexWrap:"wrap",marginTop:4}});
+      ex.sets.forEach((s,j)=>{setsDiv.appendChild(el("span",{style:{fontSize:12,background:"#f0f0ec",borderRadius:6,padding:"2px 8px"}},["Set "+(j+1)+": "+s.reps+" reps"+(s.weight?" @ "+s.weight+"kg":"")]));});
+      card.appendChild(setsDiv);
+    });
+    if(sess.notes) card.appendChild(el("p",{style:{fontSize:12,color:"#666",fontStyle:"italic",marginTop:6}},[sess.notes]));
+    div.appendChild(card);
+  });
+  return div;
+}
 
-  if(view==="suggest") return html`<div>
-    <div style=${{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
-      <${Btn} onClick=${()=>setView("programs")}>Back<//>
-      <p style=${{fontWeight:500,fontSize:15}}>Workout Suggestions</p>
-    </div>
-    <${Card}>
-      <${CT} icon="ti-target">Target Body Areas<//>
-      <div style=${{display:"flex",flexWrap:"wrap",gap:8,marginBottom:12}}>
-        ${BODY_AREAS.map(a=>html`<${Chip} key=${a.id} label=${a.label} active=${selAreas.includes(a.id)} onClick=${()=>setSelAreas(prev=>prev.includes(a.id)?prev.filter(x=>x!==a.id):[...prev,a.id])}/>`)}
-      </div>
-      <div style=${{display:"flex",flexWrap:"wrap",gap:10,marginBottom:12}}>
-        <div style=${{flex:"1 1 130px"}}>
-          <p style=${{fontSize:12,color:"#666",marginBottom:4}}>Fitness level</p>
-          <${Sel} value=${fitLevel} onChange=${e=>setFitLevel(e.target.value)} style=${{width:"100%"}}>
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="advanced">Advanced</option>
-          <//>
-        </div>
-        <div style=${{flex:"1 1 130px"}}>
-          <p style=${{fontSize:12,color:"#666",marginBottom:4}}>Equipment</p>
-          <${Sel} value=${equipment} onChange=${e=>setEquipment(e.target.value)} style=${{width:"100%"}}>
-            <option value="gym">Full gym</option>
-            <option value="home">Home / bodyweight</option>
-            <option value="minimal">Bands / dumbbells</option>
-          <//>
-        </div>
-      </div>
-      <${Btn} onClick=${getSuggestions} primary=${true} disabled=${!selAreas.length||suggestLoading}>${suggestLoading?"Generating...":"Suggest workout"}<//>
-      <${AIBox} text=${suggestResult} loading=${suggestLoading}/>
-    <//>
-  </div>`;
+function renderWorkoutSession(){
+  if(!sessionProg){workoutView="programs";render();return el("div");}
+  const div=el("div");
+  const backBtn=btn("Back","","btn");backBtn.addEventListener("click",()=>{workoutView="programs";render();});
+  div.appendChild(el("div",{class:"row",style:{marginBottom:12}},[backBtn,el("p",{style:{fontWeight:500,fontSize:15}},["Logging: "+sessionProg.name])]));
 
-  if(view==="history") return html`<div>
-    <div style=${{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
-      <${Btn} onClick=${()=>setView("programs")}>Back<//>
-      <p style=${{fontWeight:500,fontSize:15}}>Session History</p>
-    </div>
-    <div style=${{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>
-      <${Chip} label="All" active=${!histFilter} onClick=${()=>setHistFilter(null)}/>
-      ${state.programs.map(p=>html`<${Chip} key=${p.id} label=${p.name} active=${histFilter===p.id} onClick=${()=>setHistFilter(p.id)}/>`)}
-    </div>
-    ${!(histFilter?sessions.filter(s=>s.programId===histFilter):sessions).length?
-      html`<p style=${{fontSize:13,color:"#666"}}>No sessions yet.</p>`:
-      [...(histFilter?sessions.filter(s=>s.programId===histFilter):sessions)].reverse().map(sess=>html`<${Card} key=${sess.id}>
-        <div style=${{display:"flex",justifyContent:"space-between",marginBottom:8}}>
-          <div><p style=${{fontSize:15,fontWeight:500}}>${sess.programName}</p><p style=${{fontSize:12,color:"#666"}}>${sess.date}</p></div>
-          <${Tag} color="purple">${sess.exercises.length} exercises<//>
-        </div>
-        ${sess.exercises.map((ex,i)=>html`<div key=${i} style=${{marginBottom:8}}>
-          <p style=${{fontSize:13,fontWeight:500}}>${ex.name}</p>
-          <div style=${{display:"flex",gap:6,flexWrap:"wrap",marginTop:4}}>
-            ${ex.sets.map((s,j)=>html`<span key=${j} style=${{fontSize:12,background:"#f0f0ec",borderRadius:6,padding:"2px 8px"}}>Set ${j+1}: ${s.reps} reps${s.weight?" @ "+s.weight+"kg":""}</span>`)}
-          </div>
-        </div>`)}
-        ${sess.notes&&html`<p style=${{fontSize:12,color:"#666",fontStyle:"italic",marginTop:6}}>${sess.notes}</p>`}
-      <//>`)}
-  </div>`;
+  sessionProg.exercises.forEach((ex,i)=>{
+    // Find PB
+    let pb=null;
+    (state.workoutSessions||[]).forEach(sess=>sess.exercises.forEach(e=>{if(e.name===ex.name)e.sets.forEach(s=>{if(s.weight&&(!pb||parseFloat(s.weight)>pb.weight))pb={weight:parseFloat(s.weight),reps:parseInt(s.reps)||0,date:sess.date};});}));
+    const card=el("div",{class:"card"});
+    const hdr=el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}});
+    const nameDiv=el("div",[el("p",{style:{fontSize:15,fontWeight:500}},[ex.name])]);
+    if(pb) nameDiv.appendChild(el("p",{style:{fontSize:12,color:"#534AB7"}},["PB: "+pb.weight+"kg x "+pb.reps+" reps ("+pb.date+")"]));
+    const ytLink=el("a",{href:"https://www.youtube.com/results?search_query="+ex.ytQuery,target:"_blank",style:{fontSize:12,color:"#185FA5",textDecoration:"none"}},["Watch"]);
+    hdr.appendChild(nameDiv);hdr.appendChild(ytLink);card.appendChild(hdr);
 
-  if(view==="session"&&sessionProg) return html`<div>
-    <div style=${{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
-      <${Btn} onClick=${()=>setView("programs")}>Back<//>
-      <p style=${{fontWeight:500,fontSize:15}}>Logging: ${sessionProg.name}</p>
-    </div>
-    ${sessionProg.exercises.map((ex,i)=>{
-      const pb=getPB(ex.name);
-      return html`<${Card} key=${i}>
-        <div style=${{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
-          <div>
-            <p style=${{fontSize:15,fontWeight:500}}>${ex.name}</p>
-            ${pb&&html`<p style=${{fontSize:12,color:"#534AB7"}}>PB: ${pb.weight}kg x ${pb.reps} reps (${pb.date})</p>`}
-          </div>
-          <a href=${"https://www.youtube.com/results?search_query="+ex.ytQuery} target="_blank" style=${{fontSize:12,color:"#185FA5",textDecoration:"none"}}>Watch</a>
-        </div>
-        <div style=${{display:"grid",gridTemplateColumns:"1fr 1fr 28px",gap:6,marginBottom:4}}>
-          <p style=${{fontSize:11,color:"#666"}}>Reps</p><p style=${{fontSize:11,color:"#666"}}>Weight (kg)</p><span></span>
-        </div>
-        ${(sessionSets[i]||[]).map((set,j)=>html`<div key=${j} style=${{display:"grid",gridTemplateColumns:"1fr 1fr 28px",gap:6,marginBottom:6,alignItems:"center"}}>
-          <${Inp} type="number" value=${set.reps} onChange=${e=>setSessionSets(s=>({...s,[i]:s[i].map((x,k)=>k===j?{...x,reps:e.target.value}:x)}))} placeholder="10"/>
-          <${Inp} type="number" value=${set.weight} onChange=${e=>setSessionSets(s=>({...s,[i]:s[i].map((x,k)=>k===j?{...x,weight:e.target.value}:x)}))} placeholder="60"/>
-          <button onClick=${()=>setSessionSets(s=>({...s,[i]:s[i].filter((_,k)=>k!==j)}))} style=${{background:"none",border:"none",cursor:"pointer",color:"#A32D2D",fontSize:16}}>x</button>
-        </div>`)}
-        <${Btn} onClick=${()=>setSessionSets(s=>({...s,[i]:[...(s[i]||[]),{reps:"",weight:""}]}))} small=${true}>+ Add set<//>
-      <//>`;
-    })}
-    <${Card}>
-      <${CT} icon="ti-notes">Session notes<//>
-      <textarea value=${sessionNotes} onChange=${e=>setSessionNotes(e.target.value)} placeholder="How did it feel?" rows=${3} style=${{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid rgba(0,0,0,0.2)",fontSize:14,resize:"vertical",boxSizing:"border-box"}}></textarea>
-    <//>
-    <${Btn} onClick=${saveSession} primary=${true} style=${{width:"100%",justifyContent:"center"}}>Save session<//>
-  </div>`;
+    const grid=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 28px",gap:6,marginBottom:4}});
+    grid.appendChild(el("p",{style:{fontSize:11,color:"#666"}},["Reps"]));
+    grid.appendChild(el("p",{style:{fontSize:11,color:"#666"}},["Weight (kg)"]));
+    grid.appendChild(el("span"));
+    card.appendChild(grid);
 
-  return html`<div>
-    <div style=${{display:"flex",gap:8,marginBottom:12,flexWrap:"wrap"}}>
-      <${Btn} onClick=${()=>setView("suggest")} style=${{flex:1,justifyContent:"center"}}>Suggest a workout<//>
-      <${Btn} onClick=${()=>setView("history")} style=${{flex:1,justifyContent:"center"}}>History (${sessions.length})<//>
-    </div>
-    <${Card}>
-      <${CT} icon="ti-search">Exercise Info<//>
-      <div style=${{display:"flex",gap:8,marginBottom:8}}>
-        <${Inp} value=${exSearch} onChange=${e=>setExSearch(e.target.value)} onKeyDown=${e=>e.key==="Enter"&&searchEx()} placeholder="e.g. hip thrust, pull-up..."/>
-        <${Btn} onClick=${searchEx} primary=${true} disabled=${exLoading}>${exLoading?"...":"Search"}<//>
-      </div>
-      <${AIBox} text=${exResult} loading=${exLoading}/>
-      ${exResult&&!exLoading&&html`<a href=${"https://www.youtube.com/results?search_query="+encodeURIComponent(exSearch+" proper form tutorial")} target="_blank" style=${{display:"inline-flex",alignItems:"center",gap:6,marginTop:8,color:"#185FA5",fontSize:13,textDecoration:"none"}}>Watch on YouTube</a>`}
-    <//>
-    <${Card}>
-      <${CT} icon="ti-layout-list">Workout Programs<//>
-      <div style=${{display:"flex",gap:8,marginBottom:12}}>
-        <${Inp} value=${progName} onChange=${e=>setProgName(e.target.value)} onKeyDown=${e=>e.key==="Enter"&&createProg()} placeholder="New program name..."/>
-        <${Btn} onClick=${createProg} primary=${true}>Create<//>
-      </div>
-      ${!state.programs.length?html`<p style=${{fontSize:13,color:"#666"}}>No programs yet.</p>`:
-        state.programs.map(p=>html`<div key=${p.id}>
-          <div style=${{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}}>
-            <div><p style=${{fontSize:14,fontWeight:500}}>${p.name}</p><p style=${{fontSize:12,color:"#666"}}>${p.exercises.length} exercise(s)</p></div>
-            <div style=${{display:"flex",gap:6}}>
-              <${Btn} onClick=${()=>startSession(p)} small=${true} style=${{background:"#EAF3DE",color:"#3B6D11",border:"0.5px solid #C0DD97"}}>Start<//>
-              <${Btn} onClick=${()=>setActiveProg(activeProg===p.id?null:p.id)} small=${true}>Edit<//>
-              <${Btn} onClick=${()=>{setState(s=>({...s,programs:s.programs.filter(x=>x.id!==p.id)}));if(activeProg===p.id)setActiveProg(null);}} danger=${true} small=${true}>x<//>
-            </div>
-          </div>
-          ${activeProg===p.id&&html`<div style=${{padding:"10px 0 4px"}}>
-            <div style=${{display:"flex",flexWrap:"wrap",gap:8,marginBottom:10}}>
-              <${Inp} value=${exName} onChange=${e=>setExName(e.target.value)} placeholder="Exercise name" style=${{flex:"2 1 140px"}}/>
-              <${Inp} value=${exSets} onChange=${e=>setExSets(e.target.value)} placeholder="e.g. 3x10" style=${{flex:"1 1 90px"}}/>
-              <${Btn} onClick=${()=>addEx(p.id)} primary=${true} small=${true}>+ Add<//>
-            </div>
-            ${p.exercises.map((e,i)=>html`<div key=${i} style=${{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"6px 0",borderBottom:"0.5px solid rgba(0,0,0,0.06)"}}>
-              <div><p style=${{fontSize:13,fontWeight:500}}>${e.name}</p><p style=${{fontSize:12,color:"#666"}}>${e.sets||"No template"}</p></div>
-              <div style=${{display:"flex",gap:8,alignItems:"center"}}>
-                <a href=${"https://www.youtube.com/results?search_query="+e.ytQuery} target="_blank" style=${{fontSize:12,color:"#185FA5",textDecoration:"none"}}>Watch</a>
-                <${Btn} onClick=${()=>setState(s=>({...s,programs:s.programs.map(x=>x.id===p.id?{...x,exercises:x.exercises.filter((_,j)=>j!==i)}:x)}))} danger=${true} small=${true}>x<//>
-              </div>
-            </div>`)}
-          </div>`}
-        </div>`)}
-    <//>
-  </div>`;
+    if(!sessionSets[i]) sessionSets[i]=[{reps:"",weight:""}];
+    const setsDiv=el("div");
+    function renderSets(){
+      setsDiv.innerHTML="";
+      sessionSets[i].forEach((s,j)=>{
+        const row=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 28px",gap:6,marginBottom:6,alignItems:"center"}});
+        const repsInp=el("input",{type:"number",value:s.reps,placeholder:"10"});
+        repsInp.addEventListener("input",e=>{sessionSets[i][j].reps=e.target.value;});
+        const wgtInp=el("input",{type:"number",value:s.weight,placeholder:"60"});
+        wgtInp.addEventListener("input",e=>{sessionSets[i][j].weight=e.target.value;});
+        const delBtn=el("button",{style:{background:"none",border:"none",cursor:"pointer",color:"#A32D2D",fontSize:16}},["x"]);
+        delBtn.addEventListener("click",()=>{sessionSets[i].splice(j,1);renderSets();});
+        row.appendChild(repsInp);row.appendChild(wgtInp);row.appendChild(delBtn);setsDiv.appendChild(row);
+      });
+    }
+    renderSets();
+    card.appendChild(setsDiv);
+    const addSetBtn=btn("+ Add set","","btn small");
+    addSetBtn.addEventListener("click",()=>{sessionSets[i].push({reps:"",weight:""});renderSets();});
+    card.appendChild(addSetBtn);
+    div.appendChild(card);
+  });
+
+  const notesCard=el("div",{class:"card"});
+  notesCard.appendChild(cardTitle("ti-notes","Session notes"));
+  const notesTA=el("textarea",{placeholder:"How did it feel?",rows:3,style:{width:"100%",resize:"vertical",boxSizing:"border-box"}});
+  notesTA.value=sessionNotes;
+  notesTA.addEventListener("input",e=>{sessionNotes=e.target.value;});
+  notesCard.appendChild(notesTA);div.appendChild(notesCard);
+
+  const saveBtn=btn("Save session","","btn primary");
+  saveBtn.style.width="100%";saveBtn.style.justifyContent="center";
+  saveBtn.addEventListener("click",()=>{
+    const exercises=sessionProg.exercises.map((e,i)=>({name:e.name,sets:(sessionSets[i]||[]).filter(s=>s.reps||s.weight)}));
+    if(!state.workoutSessions) state.workoutSessions=[];
+    state.workoutSessions.push({id:Date.now().toString(),date:TODAY,programName:sessionProg.name,programId:sessionProg.id,exercises,notes:sessionNotes});
+    save();workoutView="programs";render();
+  });
+  div.appendChild(saveBtn);
+  return div;
 }
 
 // ── STEPS ──────────────────────────────────────────────────────────────────────
-function StepsTab({state,setState}){
-  const [stepsInput,setStepsInput]=useState("");
-  const [goalInput,setGoalInput]=useState("");
-  const [monthlyGoalInput,setMonthlyGoalInput]=useState("");
-  const [histView,setHistView]=useState("monthly");
+let stepsHistView="monthly";
+function renderSteps(){
+  const div=el("div");
   const stepHistory=state.stepHistory||[];
-  const monthlyStepGoal=state.goals.monthlySteps||(state.goals.steps*30);
-
-  function logSteps(){const v=parseInt(stepsInput)||0;if(!v)return;const newH=stepHistory.filter(h=>h.date!==TODAY);newH.push({date:TODAY,steps:v});setState(s=>({...s,steps:v,stepHistory:newH.slice(-365)}));setStepsInput("");}
-
-  function getMonthlyData(){
-    const bm={};
-    stepHistory.forEach(h=>{const m=h.date.slice(0,7);if(!bm[m])bm[m]={total:0,days:0};bm[m].total+=h.steps;bm[m].days+=1;});
-    return Object.entries(bm).sort((a,b)=>b[0]>a[0]?1:-1).slice(0,12);
-  }
-  function monthLabel(ym){const[y,m]=ym.split("-");return new Date(parseInt(y),parseInt(m)-1,1).toLocaleDateString("en-GB",{month:"short",year:"numeric"});}
-
-  const monthlyData=getMonthlyData();
+  const mGoal=state.goals.monthlySteps||(state.goals.steps*30);
   const curMonth=TODAY.slice(0,7);
-  const curEntry=monthlyData.find(([m])=>m===curMonth);
-  const curTotal=curEntry?curEntry[1].total:state.steps;
+  const bm={};stepHistory.forEach(h=>{const m=h.date.slice(0,7);if(!bm[m])bm[m]={total:0,days:0};bm[m].total+=h.steps;bm[m].days+=1;});
+  const curTotal=(bm[curMonth]||{total:state.steps}).total;
 
-  return html`<div>
-    <div style=${{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(120px,1fr))",gap:8,marginBottom:12}}>
-      <${MCard} label="Today" value=${state.steps.toLocaleString()} unit="steps" color="#534AB7"/>
-      <${MCard} label="Daily goal" value=${state.goals.steps.toLocaleString()} unit="steps"/>
-      <${MCard} label="This month" value=${curTotal.toLocaleString()} unit=${"/ "+monthlyStepGoal.toLocaleString()} color="#1D9E75"/>
-      <${MCard} label="Burned today" value=${Math.round(state.steps*0.04)} unit="kcal est." color="#D85A30"/>
-    </div>
-    <${Card}>
-      <${CT} icon="ti-shoe">Log Steps<//>
-      <div style=${{display:"flex",gap:8,marginBottom:10}}>
-        <${Inp} value=${stepsInput} onChange=${e=>setStepsInput(e.target.value)} type="number" placeholder="Number of steps"/>
-        <${Btn} onClick=${logSteps} primary=${true}>Log<//>
-      </div>
-      <${PBar} value=${state.steps} max=${state.goals.steps} color="#534AB7"/>
-      <p style=${{fontSize:12,color:"#666",marginTop:4}}>${state.steps.toLocaleString()} / ${state.goals.steps.toLocaleString()} today</p>
-      <div style=${{marginTop:10}}>
-        <${PBar} value=${curTotal} max=${monthlyStepGoal} color="#1D9E75"/>
-        <p style=${{fontSize:12,color:"#666",marginTop:4}}>${curTotal.toLocaleString()} / ${monthlyStepGoal.toLocaleString()} this month</p>
-      </div>
-    <//>
-    <${Card}>
-      <${CT} icon="ti-settings">Step Goals<//>
-      <div style=${{display:"flex",flexWrap:"wrap",gap:10}}>
-        <div style=${{flex:"1 1 130px"}}>
-          <p style=${{fontSize:12,color:"#666",marginBottom:4}}>Daily goal</p>
-          <div style=${{display:"flex",gap:8}}>
-            <${Inp} value=${goalInput} onChange=${e=>setGoalInput(e.target.value)} type="number" placeholder=${state.goals.steps.toLocaleString()}/>
-            <${Btn} onClick=${()=>{setState(s=>({...s,goals:{...s.goals,steps:parseInt(goalInput)||s.goals.steps}}));setGoalInput("");}}>Save<//>
-          </div>
-        </div>
-        <div style=${{flex:"1 1 130px"}}>
-          <p style=${{fontSize:12,color:"#666",marginBottom:4}}>Monthly goal</p>
-          <div style=${{display:"flex",gap:8}}>
-            <${Inp} value=${monthlyGoalInput} onChange=${e=>setMonthlyGoalInput(e.target.value)} type="number" placeholder=${monthlyStepGoal.toLocaleString()}/>
-            <${Btn} onClick=${()=>{setState(s=>({...s,goals:{...s.goals,monthlySteps:parseInt(monthlyGoalInput)||monthlyStepGoal}}));setMonthlyGoalInput("");}}>Save<//>
-          </div>
-        </div>
-      </div>
-    <//>
-    <${Card}>
-      <${CT} icon="ti-chart-line">Step History<//>
-      <div style=${{display:"flex",gap:6,marginBottom:12}}>
-        <${Chip} label="Monthly" active=${histView==="monthly"} onClick=${()=>setHistView("monthly")}/>
-        <${Chip} label="Daily (last 30)" active=${histView==="daily"} onClick=${()=>setHistView("daily")}/>
-      </div>
-      ${histView==="monthly"&&(!monthlyData.length?html`<p style=${{fontSize:13,color:"#666"}}>No history yet.</p>`:
-        monthlyData.map(([month,data],i)=>html`<div key=${i} style=${{marginBottom:12}}>
-          <div style=${{display:"flex",justifyContent:"space-between",fontSize:12,color:"#666",marginBottom:2}}>
-            <span style=${{fontWeight:500}}>${monthLabel(month)}</span>
-            <span>${data.total.toLocaleString()} steps - ${data.days} days - avg ${Math.round(data.total/data.days).toLocaleString()}/day</span>
-          </div>
-          <${PBar} value=${data.total} max=${monthlyStepGoal} color="#534AB7"/>
-          <p style=${{fontSize:11,color:"#666",marginTop:2}}>${Math.round(data.total/monthlyStepGoal*100)}% of monthly goal</p>
-        </div>`))}
-      ${histView==="daily"&&(!stepHistory.length?html`<p style=${{fontSize:13,color:"#666"}}>No history yet.</p>`:
-        [...stepHistory].reverse().slice(0,30).map((h,i)=>html`<div key=${i} style=${{marginBottom:10}}>
-          <div style=${{display:"flex",justifyContent:"space-between",fontSize:12,color:"#666"}}><span>${h.date}</span><span>${h.steps.toLocaleString()} steps</span></div>
-          <${PBar} value=${h.steps} max=${state.goals.steps} color="#534AB7"/>
-        </div>`))}
-    <//>
-  </div>`;
+  const grid=el("div",{class:"metric-grid"});
+  grid.appendChild(mcard("Today",state.steps.toLocaleString(),"steps","#534AB7"));
+  grid.appendChild(mcard("Daily goal",state.goals.steps.toLocaleString(),"steps"));
+  grid.appendChild(mcard("This month",curTotal.toLocaleString(),"/ "+mGoal.toLocaleString(),"#1D9E75"));
+  grid.appendChild(mcard("Burned",Math.round(state.steps*0.04),"kcal est.","#D85A30"));
+  div.appendChild(grid);
+
+  const logCard=el("div",{class:"card"});
+  logCard.appendChild(cardTitle("ti-shoe","Log Steps"));
+  const stepsInp=el("input",{type:"number",placeholder:"Number of steps"});
+  const logBtn=btn("Log","","btn primary");
+  logBtn.addEventListener("click",()=>{
+    const v=parseInt(stepsInp.value)||0;if(!v)return;
+    const nh=stepHistory.filter(h=>h.date!==TODAY);nh.push({date:TODAY,steps:v});
+    state.steps=v;state.stepHistory=nh.slice(-365);save();render();
+  });
+  logCard.appendChild(el("div",{class:"row",style:{marginBottom:10}},[stepsInp,logBtn]));
+  logCard.appendChild(pbar(state.steps,state.goals.steps,"#534AB7"));
+  logCard.appendChild(el("p",{style:{fontSize:12,color:"#666",marginTop:4}},[state.steps.toLocaleString()+" / "+state.goals.steps.toLocaleString()+" today"]));
+  logCard.appendChild(el("div",{style:{marginTop:10}},[pbar(curTotal,mGoal,"#1D9E75"),el("p",{style:{fontSize:12,color:"#666",marginTop:4}},[curTotal.toLocaleString()+" / "+mGoal.toLocaleString()+" this month"])]));
+  div.appendChild(logCard);
+
+  const goalCard=el("div",{class:"card"});
+  goalCard.appendChild(cardTitle("ti-settings","Step Goals"));
+  const gr=el("div",{class:"row",style:{flexWrap:"wrap",gap:10}});
+  const dInp=el("input",{type:"number",placeholder:String(state.goals.steps)});
+  const dSave=btn("Save","","btn");dSave.addEventListener("click",()=>{state.goals.steps=parseInt(dInp.value)||state.goals.steps;save();render();});
+  const mInp=el("input",{type:"number",placeholder:String(mGoal)});
+  const mSave=btn("Save","","btn");mSave.addEventListener("click",()=>{state.goals.monthlySteps=parseInt(mInp.value)||mGoal;save();render();});
+  gr.appendChild(el("div",{style:{flex:"1 1 130px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Daily goal"]),el("div",{class:"row"},[dInp,dSave])]));
+  gr.appendChild(el("div",{style:{flex:"1 1 130px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Monthly goal"]),el("div",{class:"row"},[mInp,mSave])]));
+  goalCard.appendChild(gr);div.appendChild(goalCard);
+
+  const histCard=el("div",{class:"card"});
+  histCard.appendChild(cardTitle("ti-chart-line","Step History"));
+  const tabs=el("div",{class:"row",style:{marginBottom:12}});
+  const mTab=chip("Monthly",stepsHistView==="monthly",()=>{stepsHistView="monthly";render();});
+  const dTab=chip("Daily (last 30)",stepsHistView==="daily",()=>{stepsHistView="daily";render();});
+  tabs.appendChild(mTab);tabs.appendChild(dTab);histCard.appendChild(tabs);
+
+  if(stepsHistView==="monthly"){
+    const entries=Object.entries(bm).sort((a,b)=>b[0]>a[0]?1:-1).slice(0,12);
+    if(!entries.length){histCard.appendChild(el("p",{style:{fontSize:13,color:"#666"}},["No history yet."]));}
+    else entries.forEach(([month,data])=>{
+      const ym=month.split("-");
+      const label=new Date(parseInt(ym[0]),parseInt(ym[1])-1,1).toLocaleDateString("en-GB",{month:"short",year:"numeric"});
+      const d=el("div",{style:{marginBottom:12}});
+      d.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",fontSize:12,color:"#666",marginBottom:2}},[el("span",{style:{fontWeight:500}},[label]),el("span",[data.total.toLocaleString()+" steps · "+data.days+" days"])]));
+      d.appendChild(pbar(data.total,mGoal,"#534AB7"));
+      d.appendChild(el("p",{style:{fontSize:11,color:"#666",marginTop:2}},[Math.round(data.total/mGoal*100)+"% of monthly goal"]));
+      histCard.appendChild(d);
+    });
+  } else {
+    if(!stepHistory.length){histCard.appendChild(el("p",{style:{fontSize:13,color:"#666"}},["No history yet."]));}
+    else [...stepHistory].reverse().slice(0,30).forEach(h=>{
+      const d=el("div",{style:{marginBottom:10}});
+      d.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",fontSize:12,color:"#666"}},[h.date,h.steps.toLocaleString()+" steps"]));
+      d.appendChild(pbar(h.steps,state.goals.steps,"#534AB7"));
+      histCard.appendChild(d);
+    });
+  }
+  div.appendChild(histCard);
+  return div;
 }
 
 // ── HABITS ─────────────────────────────────────────────────────────────────────
-function HabitsTab({state,setState}){
-  const [bedtime,setBedtime]=useState(state.habits.bedtime||"");
-  const [wakeTime,setWakeTime]=useState(state.habits.wakeTime||"");
-  const [aiText,setAiText]=useState("");const [aiLoading,setAiLoading]=useState(false);
+function renderHabits(){
+  const div=el("div");
+  const mainCard=el("div",{class:"card"});
+  mainCard.appendChild(cardTitle("ti-checklist","Daily Habits"));
 
-  function calcSleepHrs(bed,wake){
-    if(!bed||!wake)return null;
-    const[bh,bm]=bed.split(":").map(Number);const[wh,wm]=wake.split(":").map(Number);
-    let mins=(wh*60+wm)-(bh*60+bm);if(mins<0)mins+=24*60;return Math.round(mins/60*10)/10;
-  }
-  function logSleep(){
-    const hrs=calcSleepHrs(bedtime,wakeTime);if(!hrs)return;
-    setState(s=>({...s,habits:{...s.habits,sleep:hrs,bedtime,wakeTime}}));
-  }
-  const computedHrs=calcSleepHrs(bedtime,wakeTime);
-  async function getInsights(){
-    setAiLoading(true);setAiText("");
-    try{const r=await callAI(`Wellness coach. Water:${state.water}ml (goal ${state.goals.water}ml), Sleep:${state.habits.sleep}hrs (goal ${state.goals.sleep}hrs), Devotion:${state.habits.devotion}. Give 3 warm personalised habit tips.`);setAiText(r);}
-    catch{setAiText("Could not load.");}setAiLoading(false);
-  }
+  // Water
+  const waterRow=el("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}});
+  waterRow.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:10}},[el("i",{class:"ti ti-droplet",style:{fontSize:18,color:"#185FA5"}}),el("div",[el("p",{style:{fontSize:14,fontWeight:500}},["Water intake"]),el("p",{style:{fontSize:12,color:"#666"}},[state.water+" / "+state.goals.water+" ml"])])]));
+  const waterTog=toggle(state.habits.water,()=>{if(state.water>=state.goals.water){state.habits.water=!state.habits.water;save();render();}});
+  waterRow.appendChild(waterTog);mainCard.appendChild(waterRow);
 
-  return html`<div>
-    <${Card}>
-      <${CT} icon="ti-checklist">Daily Habits<//>
-      ${[{key:"water",icon:"ti-droplet",color:"#185FA5",label:"Water intake",sub:`${state.water} / ${state.goals.water} ml`,can:state.water>=state.goals.water},
-         {key:"devotion",icon:"ti-book",color:"#3B6D11",label:"Daily devotion",sub:"Spiritual time today",can:true}
-      ].map(h=>html`<div key=${h.key} style=${{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}}>
-        <div style=${{display:"flex",alignItems:"center",gap:10}}>
-          <i class=${"ti "+h.icon} style=${{fontSize:18,color:h.color}} aria-hidden="true"></i>
-          <div><p style=${{fontSize:14,fontWeight:500}}>${h.label}</p><p style=${{fontSize:12,color:"#666"}}>${h.sub}</p></div>
-        </div>
-        <${Toggle} on=${state.habits[h.key]} onClick=${()=>h.can&&setState(s=>({...s,habits:{...s.habits,[h.key]:!s.habits[h.key]}}))}/>
-      </div>`)}
-      <div style=${{padding:"10px 0"}}>
-        <div style=${{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
-          <i class="ti ti-moon" style=${{fontSize:18,color:"#534AB7"}} aria-hidden="true"></i>
-          <div>
-            <p style=${{fontSize:14,fontWeight:500}}>Sleep</p>
-            <p style=${{fontSize:12,color:"#666"}}>${state.habits.sleep>0?`${state.habits.sleep} hrs${state.habits.bedtime?" - "+state.habits.bedtime+" to "+state.habits.wakeTime:""`}:"Not logged"}</p>
-          </div>
-        </div>
-        <div style=${{display:"flex",flexWrap:"wrap",gap:8,alignItems:"flex-end"}}>
-          <div style=${{flex:"1 1 110px"}}>
-            <p style=${{fontSize:11,color:"#666",marginBottom:3}}>Bedtime</p>
-            <input type="time" value=${bedtime} onChange=${e=>setBedtime(e.target.value)} style=${{width:"100%",padding:"7px 10px",borderRadius:8,border:"0.5px solid rgba(0,0,0,0.2)",fontSize:14}}/>
-          </div>
-          <div style=${{flex:"1 1 110px"}}>
-            <p style=${{fontSize:11,color:"#666",marginBottom:3}}>Wake up</p>
-            <input type="time" value=${wakeTime} onChange=${e=>setWakeTime(e.target.value)} style=${{width:"100%",padding:"7px 10px",borderRadius:8,border:"0.5px solid rgba(0,0,0,0.2)",fontSize:14}}/>
-          </div>
-          <div style=${{display:"flex",flexDirection:"column",gap:4}}>
-            ${computedHrs!==null&&html`<p style=${{fontSize:12,color:"#534AB7",fontWeight:500}}>${computedHrs} hrs</p>`}
-            <${Btn} onClick=${logSleep} primary=${true} small=${true} disabled=${!computedHrs}>Save<//>
-          </div>
-        </div>
-        ${state.habits.sleep>0&&html`<div style=${{marginTop:8}}>
-          <${PBar} value=${state.habits.sleep} max=${state.goals.sleep} color="#534AB7"/>
-          <p style=${{fontSize:11,color:"#666",marginTop:3}}>${state.habits.sleep} / ${state.goals.sleep} hrs goal</p>
-        </div>`}
-      </div>
-    <//>
-    <${Card}>
-      <${CT} icon="ti-chart-bar">Today's Summary<//>
-      ${[{label:"Water goal",done:state.habits.water},{label:"Sleep logged",done:state.habits.sleep>0},{label:"Devotion",done:state.habits.devotion}].map((h,i,arr)=>html`<div key=${i} style=${{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 0",borderBottom:i<arr.length-1?"0.5px solid rgba(0,0,0,0.08)":"none"}}>
-        <span style=${{fontSize:14}}>${h.label}</span>
-        <${Tag} color=${h.done?"green":"amber"}>${h.done?"Done":"Pending"}<//>
-      </div>`)}
-    <//>
-    <${Card}><${CT} icon="ti-sparkles">AI Habit Insights<//>
-      <${Btn} onClick=${getInsights}>Get insights<//>
-      <${AIBox} text=${aiText} loading=${aiLoading}/>
-    <//>
-  </div>`;
+  // Devotion
+  const devRow=el("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}});
+  devRow.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:10}},[el("i",{class:"ti ti-book",style:{fontSize:18,color:"#3B6D11"}}),el("div",[el("p",{style:{fontSize:14,fontWeight:500}},["Daily devotion"]),el("p",{style:{fontSize:12,color:"#666"}},["Spiritual time today"])])]));
+  const devTog=toggle(state.habits.devotion,()=>{state.habits.devotion=!state.habits.devotion;save();render();});
+  devRow.appendChild(devTog);mainCard.appendChild(devRow);
+
+  // Sleep
+  const sleepRow=el("div",{style:{padding:"10px 0"}});
+  const sleepHdr=el("div",{style:{display:"flex",alignItems:"center",gap:10,marginBottom:10}});
+  sleepHdr.appendChild(el("i",{class:"ti ti-moon",style:{fontSize:18,color:"#534AB7"}}));
+  sleepHdr.appendChild(el("div",[el("p",{style:{fontSize:14,fontWeight:500}},["Sleep"]),el("p",{style:{fontSize:12,color:"#666"}},[state.habits.sleep>0?state.habits.sleep+" hrs"+(state.habits.bedtime?" · "+state.habits.bedtime+" to "+state.habits.wakeTime:""):"Not logged"])]));
+  sleepRow.appendChild(sleepHdr);
+  const timeRow=el("div",{class:"row",style:{flexWrap:"wrap",alignItems:"flex-end",gap:8}});
+  const bedInp=el("input",{type:"time",value:state.habits.bedtime||""});bedInp.style.flex="1 1 110px";
+  const wakeInp=el("input",{type:"time",value:state.habits.wakeTime||""});wakeInp.style.flex="1 1 110px";
+  const hrsSpan=el("span",{style:{fontSize:12,color:"#534AB7",fontWeight:500}});
+  function updateHrs(){
+    const bed=bedInp.value,wake=wakeInp.value;
+    if(bed&&wake){const[bh,bm]=bed.split(":").map(Number);const[wh,wm]=wake.split(":").map(Number);let mins=(wh*60+wm)-(bh*60+bm);if(mins<0)mins+=1440;hrsSpan.textContent=(Math.round(mins/60*10)/10)+" hrs";}
+    else hrsSpan.textContent="";
+  }
+  bedInp.addEventListener("input",updateHrs);wakeInp.addEventListener("input",updateHrs);
+  const saveSleepBtn=btn("Save","","btn primary small");
+  saveSleepBtn.addEventListener("click",()=>{
+    const bed=bedInp.value,wake=wakeInp.value;if(!bed||!wake)return;
+    const[bh,bm]=bed.split(":").map(Number);const[wh,wm]=wake.split(":").map(Number);let mins=(wh*60+wm)-(bh*60+bm);if(mins<0)mins+=1440;
+    state.habits.sleep=Math.round(mins/60*10)/10;state.habits.bedtime=bed;state.habits.wakeTime=wake;save();render();
+  });
+  const bedDiv=el("div",{style:{flex:"1 1 110px"}});bedDiv.appendChild(el("p",{style:{fontSize:11,color:"#666",marginBottom:3}},["Bedtime"]));bedDiv.appendChild(bedInp);
+  const wakeDiv=el("div",{style:{flex:"1 1 110px"}});wakeDiv.appendChild(el("p",{style:{fontSize:11,color:"#666",marginBottom:3}},["Wake up"]));wakeDiv.appendChild(wakeInp);
+  timeRow.appendChild(bedDiv);timeRow.appendChild(wakeDiv);
+  timeRow.appendChild(el("div",{style:{display:"flex",flexDirection:"column",gap:4}},[hrsSpan,saveSleepBtn]));
+  sleepRow.appendChild(timeRow);
+  if(state.habits.sleep>0){sleepRow.appendChild(pbar(state.habits.sleep,state.goals.sleep,"#534AB7"));sleepRow.appendChild(el("p",{style:{fontSize:11,color:"#666",marginTop:3}},[state.habits.sleep+" / "+state.goals.sleep+" hrs goal"]));}
+  mainCard.appendChild(sleepRow);div.appendChild(mainCard);
+
+  // Summary
+  const sumCard=el("div",{class:"card"});
+  sumCard.appendChild(cardTitle("ti-chart-bar","Today's Summary"));
+  [{label:"Water goal",done:state.habits.water},{label:"Sleep logged",done:state.habits.sleep>0},{label:"Devotion",done:state.habits.devotion}].forEach((h,i,arr)=>{
+    const row=el("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 0",borderBottom:i<arr.length-1?"0.5px solid rgba(0,0,0,0.08)":"none"}});
+    row.appendChild(el("span",{style:{fontSize:14}},[h.label]));
+    row.appendChild(tag(h.done?"Done":"Pending",h.done?"green":"amber"));
+    sumCard.appendChild(row);
+  });
+  div.appendChild(sumCard);
+
+  // AI insights
+  const aiCard=el("div",{class:"card"});
+  aiCard.appendChild(cardTitle("ti-sparkles","AI Habit Insights"));
+  const aiDiv=el("div");
+  const insBtn=btn("Get insights","","btn");
+  insBtn.addEventListener("click",async()=>{
+    aiDiv.innerHTML="<div class='ai-box'>Thinking...</div>";
+    try{const r=await callAI(`Wellness coach. Water:${state.water}ml (goal ${state.goals.water}ml), Sleep:${state.habits.sleep}hrs, Devotion:${state.habits.devotion}. 3 warm personalised habit tips.`);aiDiv.innerHTML="<div class='ai-box'>"+r+"</div>";}
+    catch{aiDiv.innerHTML="<div class='ai-box'>Could not load.</div>";}
+  });
+  aiCard.appendChild(insBtn);aiCard.appendChild(aiDiv);div.appendChild(aiCard);
+  return div;
 }
 
 // ── GOALS ──────────────────────────────────────────────────────────────────────
-function GoalsTab({state,setState}){
-  const [inputs,setInputs]=useState({calories:"",protein:"",water:"",steps:"",sleep:""});
-  const [aiText,setAiText]=useState("");const [aiLoading,setAiLoading]=useState(false);
+function renderGoals(){
+  const div=el("div");
   const totalCals=state.foods.reduce((s,f)=>s+(f.calories||0),0);
   const totalProt=state.foods.reduce((s,f)=>s+(f.protein||0),0);
-  const items=[
-    {label:"Calories",current:totalCals,goal:state.goals.calories,unit:"kcal",color:"#D85A30"},
-    {label:"Protein",current:totalProt,goal:state.goals.protein||150,unit:"g",color:"#534AB7"},
-    {label:"Water",current:state.water,goal:state.goals.water,unit:"ml",color:"#1D9E75"},
-    {label:"Steps",current:state.steps,goal:state.goals.steps,unit:"steps",color:"#185FA5"},
-    {label:"Sleep",current:state.habits.sleep,goal:state.goals.sleep,unit:"hrs",color:"#BA7517"}
-  ];
-  async function getAdvice(){
-    setAiLoading(true);setAiText("");
-    try{const r=await callAI(`Wellness coach. Stats: ${items.map(i=>`${i.label}:${i.current}/${i.goal}${i.unit}`).join(", ")}. Give 3-4 specific encouraging suggestions.`);setAiText(r);}
-    catch{setAiText("Could not load.");}setAiLoading(false);
-  }
-  return html`<div>
-    <${Card}>
-      <${CT} icon="ti-target">Set Daily Goals<//>
-      <div style=${{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:10,marginBottom:12}}>
-        ${[{key:"calories",label:"Calorie goal (kcal)",ph:state.goals.calories},{key:"protein",label:"Protein goal (g)",ph:state.goals.protein||150},{key:"water",label:"Water goal (ml)",ph:state.goals.water},{key:"steps",label:"Step goal",ph:state.goals.steps},{key:"sleep",label:"Sleep goal (hrs)",ph:state.goals.sleep}].map(f=>html`<div key=${f.key}>
-          <p style=${{fontSize:12,color:"#666",marginBottom:4}}>${f.label}</p>
-          <${Inp} value=${inputs[f.key]} onChange=${e=>setInputs(p=>({...p,[f.key]:e.target.value}))} type="number" placeholder=${String(f.ph)}/>
-        </div>`)}
-      </div>
-      <${Btn} onClick=${()=>{setState(s=>({...s,goals:{...s.goals,calories:parseInt(inputs.calories)||s.goals.calories,protein:parseInt(inputs.protein)||s.goals.protein||150,water:parseInt(inputs.water)||s.goals.water,steps:parseInt(inputs.steps)||s.goals.steps,sleep:parseFloat(inputs.sleep)||s.goals.sleep}}));setInputs({calories:"",protein:"",water:"",steps:"",sleep:""}); }} primary=${true}>Save goals<//>
-    <//>
-    <${Card}>
-      <${CT} icon="ti-chart-dots">Today's Progress<//>
-      ${items.map((item,i)=>{const pct=Math.min(100,item.goal>0?Math.round(item.current/item.goal*100):0);return html`<div key=${i} style=${{marginBottom:12}}>
-        <div style=${{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:2}}>
-          <span>${item.label}</span>
-          <span style=${{color:"#666"}}>${item.current.toLocaleString()} / ${item.goal.toLocaleString()} ${item.unit} (${pct}%)</span>
-        </div>
-        <${PBar} value=${item.current} max=${item.goal} color=${item.color}/>
-      </div>`;})}
-    <//>
-    <${Card}><${CT} icon="ti-sparkles">Personalised Advice<//>
-      <${Btn} onClick=${getAdvice}>Get advice<//>
-      <${AIBox} text=${aiText} loading=${aiLoading}/>
-    <//>
-  </div>`;
+
+  const setCard=el("div",{class:"card"});
+  setCard.appendChild(cardTitle("ti-target","Set Daily Goals"));
+  const grid=el("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:10,marginBottom:12}});
+  const fields=[["calories","Calorie goal (kcal)",state.goals.calories],["protein","Protein goal (g)",state.goals.protein||150],["water","Water goal (ml)",state.goals.water],["steps","Step goal",state.goals.steps],["sleep","Sleep goal (hrs)",state.goals.sleep]];
+  const inputs={};
+  fields.forEach(([k,l,ph])=>{
+    const d=el("div");d.appendChild(el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},[l]));
+    const inp=el("input",{type:"number",placeholder:String(ph)});inputs[k]=inp;d.appendChild(inp);grid.appendChild(d);
+  });
+  setCard.appendChild(grid);
+  const saveBtn=btn("Save goals","","btn primary");
+  saveBtn.addEventListener("click",()=>{
+    Object.keys(inputs).forEach(k=>{const v=parseFloat(inputs[k].value);if(v)state.goals[k]=v;});
+    save();render();
+  });
+  setCard.appendChild(saveBtn);div.appendChild(setCard);
+
+  const progCard=el("div",{class:"card"});
+  progCard.appendChild(cardTitle("ti-chart-dots","Today's Progress"));
+  [{label:"Calories",current:totalCals,goal:state.goals.calories,unit:"kcal",color:"#D85A30"},
+   {label:"Protein",current:totalProt,goal:state.goals.protein||150,unit:"g",color:"#534AB7"},
+   {label:"Water",current:state.water,goal:state.goals.water,unit:"ml",color:"#1D9E75"},
+   {label:"Steps",current:state.steps,goal:state.goals.steps,unit:"steps",color:"#185FA5"},
+   {label:"Sleep",current:state.habits.sleep,goal:state.goals.sleep,unit:"hrs",color:"#BA7517"}
+  ].forEach(item=>{
+    const pct=Math.min(100,item.goal>0?Math.round(item.current/item.goal*100):0);
+    const d=el("div",{style:{marginBottom:12}});
+    d.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:2}},[item.label,el("span",{style:{color:"#666"}},[item.current.toLocaleString()+" / "+item.goal.toLocaleString()+" "+item.unit+" ("+pct+"%)"])]));
+    d.appendChild(pbar(item.current,item.goal,item.color));
+    progCard.appendChild(d);
+  });
+  div.appendChild(progCard);
+
+  const aiCard=el("div",{class:"card"});
+  aiCard.appendChild(cardTitle("ti-sparkles","Personalised Advice"));
+  const aiDiv=el("div");
+  const advBtn=btn("Get advice","","btn");
+  advBtn.addEventListener("click",async()=>{
+    aiDiv.innerHTML="<div class='ai-box'>Thinking...</div>";
+    try{const r=await callAI(`Wellness coach. Calories:${totalCals}/${state.goals.calories}, Protein:${totalProt.toFixed(0)}/${state.goals.protein||150}g, Water:${state.water}/${state.goals.water}ml, Steps:${state.steps}/${state.goals.steps}, Sleep:${state.habits.sleep}/${state.goals.sleep}hrs. 3-4 specific encouraging suggestions.`);aiDiv.innerHTML="<div class='ai-box'>"+r+"</div>";}
+    catch{aiDiv.innerHTML="<div class='ai-box'>Could not load.</div>";}
+  });
+  aiCard.appendChild(advBtn);aiCard.appendChild(aiDiv);div.appendChild(aiCard);
+  return div;
 }
 
 // ── WEIGHT ─────────────────────────────────────────────────────────────────────
-function WeightTab({state,setState}){
-  const [weightInput,setWeightInput]=useState("");const [goalInput,setGoalInput]=useState("");const [heightInput,setHeightInput]=useState("");const [unit,setUnit]=useState("kg");
+function renderWeight(){
+  const div=el("div");
   const wLog=state.weightLog||[];
   const latest=wLog.length?wLog[wLog.length-1]:null;
-  const latestKg=latest?.weight||null;const hCm=state.heightCm;const gW=state.goalWeight;
+  const latKg=latest?.weight||null;
   function bmi(kg,cm){if(!kg||!cm)return null;return(kg/((cm/100)**2)).toFixed(1);}
-  function bmiCat(b){if(!b)return null;const n=parseFloat(b);if(n<18.5)return{label:"Underweight",color:"#185FA5"};if(n<25)return{label:"Healthy",color:"#1D9E75"};if(n<30)return{label:"Overweight",color:"#BA7517"};return{label:"Obese",color:"#A32D2D"};}
-  function logWeight(){let kg=parseFloat(weightInput);if(!kg)return;if(unit==="lbs")kg*=0.453592;if(unit==="st")kg*=6.35029;kg=Math.round(kg*10)/10;const ex=wLog.findIndex(e=>e.date===TODAY);const nl=ex>=0?wLog.map((e,i)=>i===ex?{...e,weight:kg}:e):[...wLog,{date:TODAY,weight:kg}];setState(s=>({...s,weightLog:nl}));setWeightInput("");}
-  const curBMI=bmi(latestKg,hCm);const cat=bmiCat(curBMI);
-  const toGoal=latestKg&&gW?(latestKg-gW).toFixed(1):null;
-  const last20=wLog.slice(-20);
-  const maxW=last20.length?Math.max(...last20.map(e=>e.weight)):80;
-  const minW=last20.length?Math.min(...last20.map(e=>e.weight)):50;
-  const range=Math.max(maxW-minW,5);const svgW=Math.max(300,last20.length*44);
+  function bmiCat(b){if(!b)return null;const n=parseFloat(b);if(n<18.5)return["Underweight","#185FA5"];if(n<25)return["Healthy","#1D9E75"];if(n<30)return["Overweight","#BA7517"];return["Obese","#A32D2D"];}
+  const curBMI=bmi(latKg,state.heightCm);const cat=bmiCat(curBMI);
+  const toGoal=latKg&&state.goalWeight?(latKg-state.goalWeight).toFixed(1):null;
 
-  return html`<div>
-    <div style=${{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(120px,1fr))",gap:8,marginBottom:12}}>
-      <${MCard} label="Current weight" value=${latestKg?`${latestKg} kg`:"--"} unit=${hCm?"BMI "+(curBMI||"--"):"Add height for BMI"} color="#D85A30"/>
-      <${MCard} label="Goal weight" value=${gW?`${gW} kg`:"--"} unit=${toGoal?(parseFloat(toGoal)>0?`${toGoal}kg to lose`:`${Math.abs(parseFloat(toGoal))}kg to gain`):"Set a goal"}/>
-      ${cat&&html`<${MCard} label="BMI status" value=${curBMI} unit=${cat.label} color=${cat.color}/>`}
-      <${MCard} label="Entries" value=${wLog.length} unit="weigh-ins logged"/>
-    </div>
-    <${Card}>
-      <${CT} icon="ti-scale">Log Weight<//>
-      <div style=${{display:"flex",gap:8,marginBottom:10,flexWrap:"wrap",alignItems:"center"}}>
-        <${Inp} value=${weightInput} onChange=${e=>setWeightInput(e.target.value)} type="number" step="0.1" placeholder="Enter weight" style=${{flex:"1 1 100px"}}/>
-        <${Sel} value=${unit} onChange=${e=>setUnit(e.target.value)}>
-          <option value="kg">kg</option><option value="lbs">lbs</option><option value="st">stone</option>
-        <//>
-        <${Btn} onClick=${logWeight} primary=${true}>+ Log<//>
-      </div>
-    <//>
-    <${Card}>
-      <${CT} icon="ti-settings">Settings<//>
-      <div style=${{display:"flex",flexWrap:"wrap",gap:10}}>
-        <div style=${{flex:"1 1 130px"}}>
-          <p style=${{fontSize:12,color:"#666",marginBottom:4}}>Height (cm)</p>
-          <${Inp} value=${heightInput} onChange=${e=>setHeightInput(e.target.value)} type="number" placeholder=${hCm?String(hCm):"e.g. 165"}/>
-        </div>
-        <div style=${{flex:"1 1 130px"}}>
-          <p style=${{fontSize:12,color:"#666",marginBottom:4}}>Goal weight (kg)</p>
-          <${Inp} value=${goalInput} onChange=${e=>setGoalInput(e.target.value)} type="number" placeholder=${gW?String(gW):"e.g. 65"}/>
-        </div>
-        <div style=${{display:"flex",alignItems:"flex-end"}}>
-          <${Btn} onClick=${()=>{setState(s=>({...s,heightCm:parseFloat(heightInput)||s.heightCm,goalWeight:parseFloat(goalInput)||s.goalWeight}));setHeightInput("");setGoalInput("");}}>Save<//>
-        </div>
-      </div>
-    <//>
-    ${last20.length>=2&&html`<${Card}>
-      <${CT} icon="ti-chart-line">Weight Trend<//>
-      <div style=${{overflowX:"auto"}}>
-        <svg width=${svgW} height=${150} style=${{display:"block"}}>
-          ${last20.map((entry,i,arr)=>{
-            const x=arr.length>1?(i/(arr.length-1))*(svgW-40)+20:svgW/2;
-            const y=110-((entry.weight-minW)/range)*90;
-            const next=arr[i+1];
-            const nx=next?((i+1)/(arr.length-1))*(svgW-40)+20:null;
-            const ny=next?110-((next.weight-minW)/range)*90:null;
-            return html`<g key=${i}>
-              ${next&&html`<line x1=${x} y1=${y} x2=${nx} y2=${ny} stroke="#534AB7" stroke-width="2" opacity="0.6"/>`}
-              <circle cx=${x} cy=${y} r=${4} fill="#534AB7"/>
-              <text x=${x} y=${y-8} text-anchor="middle" font-size=${10} fill="#666">${entry.weight}</text>
-              ${(i===0||i===arr.length-1)&&html`<text x=${x} y=${135} text-anchor="middle" font-size=${9} fill="#666">${entry.date.slice(5)}</text>`}
-            </g>`;
-          })}
-          ${gW&&minW<=gW&&gW<=maxW&&(()=>{const gy=110-((gW-minW)/range)*90;return html`<line x1=${20} y1=${gy} x2=${svgW-20} y2=${gy} stroke="#1D9E75" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.7"/>`;})()}
-        </svg>
-      </div>
-    <//>`}
-    <${Card}>
-      <${CT} icon="ti-list">Weight Log<//>
-      ${!wLog.length?html`<p style=${{fontSize:13,color:"#666"}}>No entries yet.</p>`:
-        [...wLog].reverse().map((e,i)=>html`<div key=${i} style=${{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 0",borderBottom:i<wLog.length-1?"0.5px solid rgba(0,0,0,0.08)":"none"}}>
-          <div><p style=${{fontSize:14,fontWeight:500}}>${e.weight} kg</p><p style=${{fontSize:12,color:"#666"}}>${e.date}${hCm?" - BMI "+bmi(e.weight,hCm):""}</p></div>
-          <${Btn} onClick=${()=>setState(s=>({...s,weightLog:s.weightLog.filter((_,j)=>j!==wLog.length-1-i)}))} danger=${true} small=${true}>x<//>
-        </div>`)}
-    <//>
-  </div>`;
+  const grid=el("div",{class:"metric-grid"});
+  grid.appendChild(mcard("Current weight",latKg?latKg+" kg":"--",state.heightCm?"BMI "+(curBMI||"--"):"Add height for BMI","#D85A30"));
+  grid.appendChild(mcard("Goal weight",state.goalWeight?state.goalWeight+" kg":"--",toGoal?(parseFloat(toGoal)>0?toGoal+"kg to lose":Math.abs(parseFloat(toGoal))+"kg to gain"):"Set a goal"));
+  if(cat) grid.appendChild(mcard("BMI status",curBMI,cat[0],cat[1]));
+  grid.appendChild(mcard("Entries",wLog.length,"weigh-ins logged"));
+  div.appendChild(grid);
+
+  const logCard=el("div",{class:"card"});
+  logCard.appendChild(cardTitle("ti-scale","Log Weight"));
+  const wInp=el("input",{type:"number",step:"0.1",placeholder:"Enter weight"});wInp.style.flex="1 1 100px";
+  const uSel=el("select");[["kg","kg"],["lbs","lbs"],["st","stone"]].forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;uSel.appendChild(o);});
+  const wLogBtn=btn("+ Log","","btn primary");
+  wLogBtn.addEventListener("click",()=>{
+    let kg=parseFloat(wInp.value);if(!kg)return;
+    if(uSel.value==="lbs")kg*=0.453592;if(uSel.value==="st")kg*=6.35029;
+    kg=Math.round(kg*10)/10;
+    const ex=wLog.findIndex(e=>e.date===TODAY);
+    if(ex>=0)wLog[ex].weight=kg;else wLog.push({date:TODAY,weight:kg});
+    state.weightLog=wLog;save();render();
+  });
+  logCard.appendChild(el("div",{class:"row"},[wInp,uSel,wLogBtn]));div.appendChild(logCard);
+
+  const settCard=el("div",{class:"card"});
+  settCard.appendChild(cardTitle("ti-settings","Settings"));
+  const hInp=el("input",{type:"number",placeholder:state.heightCm?String(state.heightCm):"e.g. 165"});
+  const gInp=el("input",{type:"number",placeholder:state.goalWeight?String(state.goalWeight):"e.g. 65"});
+  const sSave=btn("Save","","btn");
+  sSave.addEventListener("click",()=>{if(parseFloat(hInp.value))state.heightCm=parseFloat(hInp.value);if(parseFloat(gInp.value))state.goalWeight=parseFloat(gInp.value);save();render();});
+  settCard.appendChild(el("div",{class:"row",style:{flexWrap:"wrap",gap:10}},[
+    el("div",{style:{flex:"1 1 130px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Height (cm)"]),hInp]),
+    el("div",{style:{flex:"1 1 130px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Goal weight (kg)"]),gInp]),
+    el("div",{style:{display:"flex",alignItems:"flex-end"}},[sSave])
+  ]));div.appendChild(settCard);
+
+  // Chart
+  if(wLog.length>=2){
+    const last20=wLog.slice(-20);
+    const maxW=Math.max(...last20.map(e=>e.weight));const minW=Math.min(...last20.map(e=>e.weight));
+    const range=Math.max(maxW-minW,5);const svgW=Math.max(300,last20.length*44);
+    const chartCard=el("div",{class:"card"});chartCard.appendChild(cardTitle("ti-chart-line","Weight Trend"));
+    const wrapper=el("div",{style:{overflowX:"auto"}});
+    const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("width",svgW);svg.setAttribute("height","150");svg.style.display="block";
+    last20.forEach((entry,i,arr)=>{
+      const x=arr.length>1?(i/(arr.length-1))*(svgW-40)+20:svgW/2;
+      const y=110-((entry.weight-minW)/range)*90;
+      if(arr[i+1]){
+        const nx=((i+1)/(arr.length-1))*(svgW-40)+20;
+        const ny=110-((arr[i+1].weight-minW)/range)*90;
+        const line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1",x);line.setAttribute("y1",y);line.setAttribute("x2",nx);line.setAttribute("y2",ny);
+        line.setAttribute("stroke","#534AB7");line.setAttribute("stroke-width","2");line.setAttribute("opacity","0.6");
+        svg.appendChild(line);
+      }
+      const circle=document.createElementNS("http://www.w3.org/2000/svg","circle");
+      circle.setAttribute("cx",x);circle.setAttribute("cy",y);circle.setAttribute("r","4");circle.setAttribute("fill","#534AB7");svg.appendChild(circle);
+      const text=document.createElementNS("http://www.w3.org/2000/svg","text");
+      text.setAttribute("x",x);text.setAttribute("y",y-8);text.setAttribute("text-anchor","middle");text.setAttribute("font-size","10");text.setAttribute("fill","#666");
+      text.textContent=entry.weight;svg.appendChild(text);
+      if(i===0||i===arr.length-1){const t2=document.createElementNS("http://www.w3.org/2000/svg","text");t2.setAttribute("x",x);t2.setAttribute("y","135");t2.setAttribute("text-anchor","middle");t2.setAttribute("font-size","9");t2.setAttribute("fill","#666");t2.textContent=entry.date.slice(5);svg.appendChild(t2);}
+    });
+    if(state.goalWeight&&minW<=state.goalWeight&&state.goalWeight<=maxW){
+      const gy=110-((state.goalWeight-minW)/range)*90;
+      const gl=document.createElementNS("http://www.w3.org/2000/svg","line");
+      gl.setAttribute("x1","20");gl.setAttribute("y1",gy);gl.setAttribute("x2",svgW-20);gl.setAttribute("y2",gy);
+      gl.setAttribute("stroke","#1D9E75");gl.setAttribute("stroke-width","1.5");gl.setAttribute("stroke-dasharray","4,4");gl.setAttribute("opacity","0.7");svg.appendChild(gl);
+    }
+    wrapper.appendChild(svg);chartCard.appendChild(wrapper);div.appendChild(chartCard);
+  }
+
+  const listCard=el("div",{class:"card"});listCard.appendChild(cardTitle("ti-list","Weight Log"));
+  if(!wLog.length){listCard.appendChild(el("p",{style:{fontSize:13,color:"#666"}},["No entries yet."]));}
+  else{[...wLog].reverse().forEach((e,i)=>{
+    const row=el("div",{class:"entry-row"+(i===wLog.length-1?" last":"")});
+    row.appendChild(el("div",[el("p",{style:{fontSize:14,fontWeight:500}},[e.weight+" kg"]),el("p",{style:{fontSize:12,color:"#666"}},[e.date+(state.heightCm?" · BMI "+bmi(e.weight,state.heightCm):"")])]));
+    const d=btn("x","","btn danger small");d.addEventListener("click",()=>{state.weightLog=state.weightLog.filter((_,j)=>j!==wLog.length-1-i);save();render();});
+    row.appendChild(d);listCard.appendChild(row);
+  });}
+  div.appendChild(listCard);
+  return div;
 }
 
 // ── CYCLE ──────────────────────────────────────────────────────────────────────
+let cycleSection="overview";
 function computeCycleDay(cycle){
   if(!cycle.periodDates||!cycle.periodDates.length)return null;
   const sorted=[...cycle.periodDates].sort((a,b)=>a.start>b.start?-1:1);
-  const lastStart=new Date(sorted[0].start);
-  const diff=Math.floor((new Date()-lastStart)/86400000);
-  const avgLen=cycle.avgCycleLength||28;
-  const day=diff%avgLen;
+  const diff=Math.floor((new Date()-new Date(sorted[0].start))/86400000);
+  const len=cycle.avgCycleLength||28;const day=diff%len;const d=cycle.avgPeriodDuration||5;
   const phases=[
-    {name:"Menstrual",color:"#993556",bg:"#FBEAF0",border:"#F4C0D1",emoji:"M",desc:"Rest and restore. Your body is working hard."},
-    {name:"Follicular",color:"#0F6E56",bg:"#E1F5EE",border:"#9FE1CB",emoji:"F",desc:"Energy rising. Great time to try new workouts."},
-    {name:"Ovulation",color:"#534AB7",bg:"#EEEDFE",border:"#CECBF6",emoji:"O",desc:"Peak energy and strength. Push your limits!"},
-    {name:"Luteal",color:"#854F0B",bg:"#FAEEDA",border:"#FAC775",emoji:"L",desc:"Wind down. Focus on consistency over intensity."}
+    {name:"Menstrual",color:"#993556",bg:"#FBEAF0",border:"#F4C0D1",desc:"Rest and restore. Your body is working hard."},
+    {name:"Follicular",color:"#0F6E56",bg:"#E1F5EE",border:"#9FE1CB",desc:"Energy rising. Great time to try new workouts."},
+    {name:"Ovulation",color:"#534AB7",bg:"#EEEDFE",border:"#CECBF6",desc:"Peak energy and strength. Push your limits!"},
+    {name:"Luteal",color:"#854F0B",bg:"#FAEEDA",border:"#FAC775",desc:"Wind down. Focus on consistency over intensity."}
   ];
-  const d=cycle.avgPeriodDuration||5;
   const phase=day<d?phases[0]:day<13?phases[1]:day<16?phases[2]:phases[3];
-  return{...phase,dayOfCycle:day+1,nextPeriodIn:avgLen-day,avgLen};
+  return{...phase,dayOfCycle:day+1,nextPeriodIn:len-day,avgLen:len};
 }
 
-function CycleTab({state,setState}){
-  const [section,setSection]=useState("overview");
-  const [periodStart,setPeriodStart]=useState("");const [periodEnd,setPeriodEnd]=useState("");
-  const [ovDate,setOvDate]=useState(TODAY);
-  const [sympDate,setSympDate]=useState(TODAY);const [checked,setChecked]=useState([]);const [sympNotes,setSympNotes]=useState("");
-  const [avgLen,setAvgLen]=useState(String(state.cycle.avgCycleLength||28));
-  const [avgDur,setAvgDur]=useState(String(state.cycle.avgPeriodDuration||5));
-  const [aiText,setAiText]=useState("");const [aiLoading,setAiLoading]=useState(false);
+function renderCycle(){
+  const div=el("div");
+  const secs=[{id:"overview",label:"Overview"},{id:"log",label:"Log Period"},{id:"ovulation",label:"Ovulation"},{id:"symptoms",label:"Symptoms"},{id:"history",label:"History"}];
+  const tabRow=el("div",{style:{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}});
+  secs.forEach(s=>{tabRow.appendChild(chip(s.label,cycleSection===s.id,()=>{cycleSection=s.id;render();}));});
+  div.appendChild(tabRow);
+
   const cycle=state.cycle;const info=computeCycleDay(cycle);
 
-  function logPeriod(){
-    if(!periodStart)return;
-    const entry={start:periodStart,end:periodEnd||null};
-    const existing=(cycle.periodDates||[]).findIndex(p=>p.start===periodStart);
-    let nd=existing>=0?cycle.periodDates.map((p,i)=>i===existing?entry:p):[...(cycle.periodDates||[]),entry];
-    let newAvg=cycle.avgCycleLength;
-    if(nd.length>=2){const sorted=[...nd].sort((a,b)=>a.start>b.start?1:-1);const diffs=[];for(let i=1;i<sorted.length;i++){const d=Math.floor((new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000);if(d>0&&d<60)diffs.push(d);}if(diffs.length)newAvg=Math.round(diffs.reduce((a,b)=>a+b,0)/diffs.length);}
-    setState(s=>({...s,cycle:{...s.cycle,periodDates:nd,avgCycleLength:newAvg}}));
-    setPeriodStart("");setPeriodEnd("");
+  if(cycleSection==="overview"){
+    if(info){
+      const phaseDiv=el("div",{style:{background:info.bg,border:"0.5px solid "+info.border,borderRadius:12,padding:"1rem 1.25rem",marginBottom:12}});
+      phaseDiv.appendChild(el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Day "+info.dayOfCycle+" of ~"+info.avgLen+" day cycle"]));
+      phaseDiv.appendChild(el("p",{style:{fontSize:24,fontWeight:500,color:info.color}},[info.name+" Phase"]));
+      phaseDiv.appendChild(el("p",{style:{fontSize:13,color:info.color,marginTop:4}},[info.desc]));
+      phaseDiv.appendChild(el("p",{style:{fontSize:13,color:info.color,marginTop:6}},["Next period in approximately "+info.nextPeriodIn+" days"]));
+      div.appendChild(phaseDiv);
+    } else {
+      div.appendChild(el("div",{class:"card"},[el("p",{style:{fontSize:14,color:"#666"}},["Log your first period in the Log Period tab to get started."])]));
+    }
+    const aiCard=el("div",{class:"card"});aiCard.appendChild(cardTitle("ti-sparkles","AI Phase Recommendations"));
+    const aiDiv=el("div");
+    if(!info){aiDiv.appendChild(el("p",{style:{fontSize:13,color:"#666"}},["Log a period first."]));}
+    else{
+      const advBtn=btn("Get food, workout and self-care advice","","btn");
+      advBtn.addEventListener("click",async()=>{
+        aiDiv.innerHTML="<div class='ai-box'>Thinking...</div>";
+        const todaySymp=(cycle.symptoms||{})[TODAY];
+        const symStr=todaySymp?"Today symptoms: "+todaySymp.checklist.join(", ")+(todaySymp.notes?". "+todaySymp.notes:"")+".":" No symptoms today.";
+        try{const r=await callAI(`Women's health expert. User is in ${info.name} phase (day ${info.dayOfCycle} of ${info.avgLen}). ${symStr} Recommend: 1) Best workouts, 2) Foods and nutrients, 3) Self-care tips. Practical and empowering, 5-6 sentences.`);aiDiv.innerHTML="<div class='ai-box'>"+r+"</div>";}
+        catch{aiDiv.innerHTML="<div class='ai-box'>Could not load.</div>";}
+      });
+      aiDiv.appendChild(advBtn);
+    }
+    aiCard.appendChild(aiDiv);div.appendChild(aiCard);
   }
-  function logOvulation(){if(!ovDate)return;if(!(cycle.ovulationDates||[]).includes(ovDate))setState(s=>({...s,cycle:{...s.cycle,ovulationDates:[...(s.cycle.ovulationDates||[]),ovDate]}}));setOvDate(TODAY);}
-  function saveSymptoms(){setState(s=>({...s,cycle:{...s.cycle,symptoms:{...(s.cycle.symptoms||{}),[sympDate]:{checklist:checked,notes:sympNotes}}}}));setChecked([]);setSympNotes("");}
-  async function getAdvice(){
-    if(!info)return;setAiLoading(true);setAiText("");
-    const todaySymp=(cycle.symptoms||{})[TODAY];
-    const symStr=todaySymp?`Today symptoms: ${todaySymp.checklist.join(", ")}${todaySymp.notes?". "+todaySymp.notes:""}.`:"No symptoms today.";
-    try{const r=await callAI(`Women's health expert. User is in ${info.name} phase (day ${info.dayOfCycle} of ${info.avgLen}). ${symStr} Recommend: 1) Best workouts, 2) Foods and nutrients, 3) Self-care and mood tips. Practical and empowering, 5-6 sentences.`);setAiText(r);}
-    catch{setAiText("Could not load.");}setAiLoading(false);
-  }
 
-  const secs=[{id:"overview",label:"Overview"},{id:"log",label:"Log Period"},{id:"ovulation",label:"Ovulation"},{id:"symptoms",label:"Symptoms"},{id:"history",label:"History"}];
-
-  return html`<div>
-    <div style=${{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>
-      ${secs.map(s=>html`<${Chip} key=${s.id} label=${s.label} active=${section===s.id} onClick=${()=>setSection(s.id)}/>`)}
-    </div>
-    ${section==="overview"&&html`<div>
-      ${info?html`<div style=${{background:info.bg,border:`0.5px solid ${info.border}`,borderRadius:12,padding:"1rem 1.25rem",marginBottom:12}}>
-        <p style=${{fontSize:12,color:"#666",marginBottom:4}}>Day ${info.dayOfCycle} of ~${info.avgLen} day cycle</p>
-        <p style=${{fontSize:24,fontWeight:500,color:info.color}}>${info.name} Phase</p>
-        <p style=${{fontSize:13,color:info.color,marginTop:6}}>Next period in approximately ${info.nextPeriodIn} days</p>
-        <div style=${{display:"flex",gap:10,marginTop:10,flexWrap:"wrap"}}>
-          <span style=${{fontSize:12,color:"#666"}}>Avg cycle: ${info.avgLen} days</span>
-          <span style=${{fontSize:12,color:"#666"}}>Periods logged: ${(cycle.periodDates||[]).length}</span>
-        </div>
-      </div>`:html`<${Card}><p style=${{fontSize:14,color:"#666"}}>Log your first period in the Log Period tab to see your cycle overview.</p><//>`}
-      <${Card}>
-        <${CT} icon="ti-sparkles">AI Phase Recommendations<//>
-        ${!info?html`<p style=${{fontSize:13,color:"#666"}}>Log a period first.</p>`:html`<div>
-          <${Btn} onClick=${getAdvice} disabled=${aiLoading}>${aiLoading?"Thinking...":"Get food, workout and self-care advice"}<//>
-          <${AIBox} text=${aiText} loading=${aiLoading}/>
-        </div>`}
-      <//>
-    </div>`}
-    ${section==="log"&&html`<${Card}>
-      <${CT} icon="ti-calendar-plus">Log Period<//>
-      <p style=${{fontSize:13,color:"#666",marginBottom:12}}>Enter your period dates. The app auto-calculates your average cycle length from history.</p>
-      <div style=${{display:"flex",flexWrap:"wrap",gap:10,marginBottom:12}}>
-        <div style=${{flex:"1 1 140px"}}>
-          <p style=${{fontSize:12,color:"#666",marginBottom:4}}>Period start *</p>
-          <input type="date" value=${periodStart} onChange=${e=>setPeriodStart(e.target.value)} style=${{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid rgba(0,0,0,0.2)",fontSize:14,boxSizing:"border-box"}}/>
-        </div>
-        <div style=${{flex:"1 1 140px"}}>
-          <p style=${{fontSize:12,color:"#666",marginBottom:4}}>Period end (optional)</p>
-          <input type="date" value=${periodEnd} onChange=${e=>setPeriodEnd(e.target.value)} style=${{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid rgba(0,0,0,0.2)",fontSize:14,boxSizing:"border-box"}}/>
-        </div>
-      </div>
-      <${Btn} onClick=${logPeriod} primary=${true} disabled=${!periodStart}>+ Log period<//>
-      <div style=${{marginTop:16}}>
-        <p style=${{fontSize:13,fontWeight:500,marginBottom:4}}>Avg settings (auto-updated from history):</p>
-        <div style=${{display:"flex",gap:10,flexWrap:"wrap"}}>
-          <div style=${{flex:"1 1 120px"}}><p style=${{fontSize:12,color:"#666",marginBottom:4}}>Cycle length (days)</p><${Inp} value=${avgLen} onChange=${e=>setAvgLen(e.target.value)} type="number" min="21" max="45"/></div>
-          <div style=${{flex:"1 1 120px"}}><p style=${{fontSize:12,color:"#666",marginBottom:4}}>Period duration (days)</p><${Inp} value=${avgDur} onChange=${e=>setAvgDur(e.target.value)} type="number" min="1" max="10"/></div>
-          <div style=${{display:"flex",alignItems:"flex-end"}}><${Btn} onClick=${()=>setState(s=>({...s,cycle:{...s.cycle,avgCycleLength:parseInt(avgLen)||28,avgPeriodDuration:parseInt(avgDur)||5}}))}>Save<///></div>
-        </div>
-      </div>
-    <//>`}
-    ${section==="ovulation"&&html`<${Card}>
-      <${CT} icon="ti-sparkles">Log Ovulation<//>
-      <p style=${{fontSize:13,color:"#666",marginBottom:12}}>Mark days you think you ovulated (based on discharge, temperature, or OPK test).</p>
-      <div style=${{display:"flex",gap:8,marginBottom:12,alignItems:"center"}}>
-        <input type="date" value=${ovDate} onChange=${e=>setOvDate(e.target.value)} style=${{flex:1,padding:"8px 10px",borderRadius:8,border:"0.5px solid rgba(0,0,0,0.2)",fontSize:14}}/>
-        <${Btn} onClick=${logOvulation} primary=${true}>+ Log<//>
-      </div>
-      ${(cycle.ovulationDates||[]).length>0&&html`<div>
-        <p style=${{fontSize:13,fontWeight:500,marginBottom:8}}>Logged ovulation dates:</p>
-        ${[...(cycle.ovulationDates||[])].sort((a,b)=>b>a?1:-1).slice(0,6).map((d,i)=>html`<div key=${i} style=${{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"6px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}}>
-          <span style=${{fontSize:14}}>${d}</span>
-          <${Btn} onClick=${()=>setState(s=>({...s,cycle:{...s.cycle,ovulationDates:s.cycle.ovulationDates.filter(x=>x!==d)}}))} danger=${true} small=${true}>x<//>
-        </div>`)}
-      </div>`}
-    <//>`}
-    ${section==="symptoms"&&html`<${Card}>
-      <${CT} icon="ti-stethoscope">Log Symptoms<//>
-      <div style=${{marginBottom:10}}>
-        <p style=${{fontSize:12,color:"#666",marginBottom:4}}>Date</p>
-        <input type="date" value=${sympDate} onChange=${e=>setSympDate(e.target.value)} style=${{padding:"8px 10px",borderRadius:8,border:"0.5px solid rgba(0,0,0,0.2)",fontSize:14,width:"100%",boxSizing:"border-box"}}/>
-      </div>
-      <p style=${{fontSize:13,fontWeight:500,marginBottom:8}}>Symptoms:</p>
-      <div style=${{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12}}>
-        ${SYMPTOM_LIST.map(sym=>html`<${Chip} key=${sym} label=${sym} active=${checked.includes(sym)} onClick=${()=>setChecked(prev=>prev.includes(sym)?prev.filter(x=>x!==sym):[...prev,sym])}/>`)}
-      </div>
-      <p style=${{fontSize:12,color:"#666",marginBottom:4}}>Additional notes</p>
-      <textarea value=${sympNotes} onChange=${e=>setSympNotes(e.target.value)} placeholder="Any other observations..." rows=${3} style=${{width:"100%",padding:"8px 10px",borderRadius:8,border:"0.5px solid rgba(0,0,0,0.2)",fontSize:14,resize:"vertical",boxSizing:"border-box",marginBottom:10}}></textarea>
-      <${Btn} onClick=${saveSymptoms} primary=${true}>Save symptoms<//>
-      ${(cycle.symptoms||{})[sympDate]&&html`<div style=${{marginTop:12,padding:10,background:"#f8f8f5",borderRadius:8}}>
-        <p style=${{fontSize:12,fontWeight:500,marginBottom:4}}>Saved for ${sympDate}:</p>
-        <div style=${{display:"flex",flexWrap:"wrap",gap:4}}>
-          ${(cycle.symptoms[sympDate].checklist||[]).map(s=>html`<${Tag} key=${s} color="pink">${s}<//>`) }
-        </div>
-        ${cycle.symptoms[sympDate].notes&&html`<p style=${{fontSize:12,color:"#666",marginTop:6}}>${cycle.symptoms[sympDate].notes}</p>`}
-      </div>`}
-    <//>`}
-    ${section==="history"&&html`<${Card}>
-      <${CT} icon="ti-history">Period History<//>
-      ${!(cycle.periodDates||[]).length?html`<p style=${{fontSize:13,color:"#666"}}>No periods logged yet.</p>`:
-        [...(cycle.periodDates||[])].sort((a,b)=>b.start>a.start?1:-1).map((p,i,arr)=>{
-          const duration=p.end?Math.floor((new Date(p.end)-new Date(p.start))/86400000)+1:null;
-          const nextStart=arr[i+1]?.start;
-          const cycleLen=nextStart?Math.floor((new Date(p.start)-new Date(nextStart))/86400000):null;
-          return html`<div key=${i} style=${{padding:"10px 0",borderBottom:i<arr.length-1?"0.5px solid rgba(0,0,0,0.08)":"none"}}>
-            <div style=${{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-              <div>
-                <p style=${{fontSize:14,fontWeight:500}}>${p.start}${p.end?" to "+p.end:""}</p>
-                <p style=${{fontSize:12,color:"#666"}}>${duration?duration+" days":"End not logged"}${cycleLen?" - Cycle: "+cycleLen+" days":""}</p>
-              </div>
-              <${Btn} onClick=${()=>setState(s=>({...s,cycle:{...s.cycle,periodDates:s.cycle.periodDates.filter((_,j)=>j!==(arr.length-1-i))}}))} danger=${true} small=${true}>x<//>
-            </div>
-          </div>`;
-        })}
-    <//>`}
-  </div>`;
-}
-
-// ── ROOT APP ───────────────────────────────────────────────────────────────────
-function App(){
-  const [state,setStateRaw]=useState(loadState);
-  const [activeTab,setActiveTab]=useState("nutrition");
-
-  const setState=useCallback((updater)=>{
-    setStateRaw(prev=>{
-      const next=typeof updater==="function"?updater(prev):{...prev,...updater};
-      try{localStorage.setItem(STORAGE_KEY,JSON.stringify(next));}catch{}
-      return next;
+  else if(cycleSection==="log"){
+    const card=el("div",{class:"card"});card.appendChild(cardTitle("ti-calendar-plus","Log Period"));
+    card.appendChild(el("p",{style:{fontSize:13,color:"#666",marginBottom:12}},["Enter your period dates. The app auto-calculates your average cycle length."]));
+    const pStart=el("input",{type:"date"});const pEnd=el("input",{type:"date"});
+    card.appendChild(el("div",{style:{display:"flex",flexWrap:"wrap",gap:10,marginBottom:12}},[
+      el("div",{style:{flex:"1 1 140px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Period start *"]),pStart]),
+      el("div",{style:{flex:"1 1 140px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Period end (optional)"]),pEnd])
+    ]));
+    const logPBtn=btn("+ Log period","","btn primary");
+    logPBtn.addEventListener("click",()=>{
+      if(!pStart.value)return;
+      const entry={start:pStart.value,end:pEnd.value||null};
+      let nd=(cycle.periodDates||[]).filter(p=>p.start!==pStart.value);nd.push(entry);
+      if(nd.length>=2){const s=[...nd].sort((a,b)=>a.start>b.start?1:-1);const diffs=[];for(let i=1;i<s.length;i++){const d=Math.floor((new Date(s[i].start)-new Date(s[i-1].start))/86400000);if(d>0&&d<60)diffs.push(d);}if(diffs.length)state.cycle.avgCycleLength=Math.round(diffs.reduce((a,b)=>a+b,0)/diffs.length);}
+      state.cycle.periodDates=nd;save();cycleSection="overview";render();
     });
-  },[]);
+    card.appendChild(logPBtn);
+    card.appendChild(el("div",{style:{marginTop:16}},[
+      el("p",{style:{fontSize:13,fontWeight:500,marginBottom:8}},["Manual settings:"]),
+      el("div",{class:"row",style:{flexWrap:"wrap",gap:10}},[
+        el("div",{style:{flex:"1 1 120px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Avg cycle length (days)"]),el("input",{type:"number",value:String(cycle.avgCycleLength||28),onChange:e=>{state.cycle.avgCycleLength=parseInt(e.target.value)||28;save();}})]),
+        el("div",{style:{flex:"1 1 120px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Period duration (days)"]),el("input",{type:"number",value:String(cycle.avgPeriodDuration||5),onChange:e=>{state.cycle.avgPeriodDuration=parseInt(e.target.value)||5;save();}})]),
+      ])
+    ]));
+    div.appendChild(card);
+  }
 
-  const dateStr=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  else if(cycleSection==="ovulation"){
+    const card=el("div",{class:"card"});card.appendChild(cardTitle("ti-sparkles","Log Ovulation"));
+    card.appendChild(el("p",{style:{fontSize:13,color:"#666",marginBottom:12}},["Mark days you think you ovulated."]));
+    const ovInp=el("input",{type:"date",value:TODAY});
+    const ovBtn=btn("+ Log","","btn primary");
+    ovBtn.addEventListener("click",()=>{
+      if(ovInp.value&&!(cycle.ovulationDates||[]).includes(ovInp.value)){state.cycle.ovulationDates=[...(cycle.ovulationDates||[]),ovInp.value];save();render();}
+    });
+    card.appendChild(el("div",{class:"row",style:{marginBottom:12}},[ovInp,ovBtn]));
+    (cycle.ovulationDates||[]).sort((a,b)=>b>a?1:-1).slice(0,6).forEach(d=>{
+      const row=el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"6px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}});
+      row.appendChild(el("span",{style:{fontSize:14}},[d]));
+      const del=btn("x","","btn danger small");del.addEventListener("click",()=>{state.cycle.ovulationDates=state.cycle.ovulationDates.filter(x=>x!==d);save();render();});
+      row.appendChild(del);card.appendChild(row);
+    });
+    div.appendChild(card);
+  }
 
-  return html`<div style=${{maxWidth:700,margin:"0 auto",paddingBottom:60}}>
-    <div style=${{padding:"1.25rem 1rem 0"}}>
-      <h1 style=${{fontSize:20,fontWeight:500}}>Wellness Hub</h1>
-      <p style=${{fontSize:13,color:"#666",marginTop:2}}>${dateStr}</p>
-    </div>
-    <div style=${{display:"flex",gap:6,padding:"0.75rem 1rem",overflowX:"auto",scrollbarWidth:"none"}}>
-      ${TABS.map(t=>html`<button key=${t.id} onClick=${()=>setActiveTab(t.id)} style=${{whiteSpace:"nowrap",padding:"6px 12px",borderRadius:20,border:"0.5px solid rgba(0,0,0,0.2)",background:activeTab===t.id?"var(--color-text-primary,#1a1a1a)":"var(--color-background-primary,#fff)",color:activeTab===t.id?"var(--color-background-primary,#fff)":"#666",fontSize:13,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:5}}>
-        <i class=${"ti "+t.icon} aria-hidden="true"></i> ${t.label}
-      </button>`)}
-    </div>
-    <div style=${{padding:"0 1rem"}}>
-      ${activeTab==="nutrition"&&html`<${NutritionTab} state=${state} setState=${setState}/>`}
-      ${activeTab==="workouts"&&html`<${WorkoutsTab} state=${state} setState=${setState}/>`}
-      ${activeTab==="steps"&&html`<${StepsTab} state=${state} setState=${setState}/>`}
-      ${activeTab==="habits"&&html`<${HabitsTab} state=${state} setState=${setState}/>`}
-      ${activeTab==="goals"&&html`<${GoalsTab} state=${state} setState=${setState}/>`}
-      ${activeTab==="weight"&&html`<${WeightTab} state=${state} setState=${setState}/>`}
-      ${activeTab==="cycle"&&html`<${CycleTab} state=${state} setState=${setState}/>`}
-    </div>
-  </div>`;
+  else if(cycleSection==="symptoms"){
+    const card=el("div",{class:"card"});card.appendChild(cardTitle("ti-stethoscope","Log Symptoms"));
+    const dateInp=el("input",{type:"date",value:TODAY});
+    card.appendChild(el("div",{style:{marginBottom:10}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Date"]),dateInp]));
+    let checked=(cycle.symptoms&&cycle.symptoms[dateInp.value]&&cycle.symptoms[dateInp.value].checklist)||[];
+    card.appendChild(el("p",{style:{fontSize:13,fontWeight:500,marginBottom:8}},["Symptoms:"]));
+    const chipDiv=el("div",{style:{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12}});
+    SYMPTOM_LIST.forEach(sym=>{
+      const c=el("button",{class:"chip"+(checked.includes(sym)?" active":"")},[ sym]);
+      c.addEventListener("click",()=>{if(checked.includes(sym))checked=checked.filter(x=>x!==sym);else checked.push(sym);c.classList.toggle("active",checked.includes(sym));});
+      chipDiv.appendChild(c);
+    });
+    card.appendChild(chipDiv);
+    const notesTA=el("textarea",{placeholder:"Any other observations...",rows:3,style:{width:"100%",resize:"vertical",boxSizing:"border-box",marginBottom:10}});
+    if(cycle.symptoms&&cycle.symptoms[TODAY]) notesTA.value=cycle.symptoms[TODAY].notes||"";
+    card.appendChild(notesTA);
+    const saveBtn=btn("Save symptoms","","btn primary");
+    saveBtn.addEventListener("click",()=>{
+      if(!state.cycle.symptoms)state.cycle.symptoms={};
+      state.cycle.symptoms[dateInp.value]={checklist:checked,notes:notesTA.value};
+      save();render();
+    });
+    card.appendChild(saveBtn);div.appendChild(card);
+  }
+
+  else if(cycleSection==="history"){
+    const card=el("div",{class:"card"});card.appendChild(cardTitle("ti-history","Period History"));
+    const dates=(cycle.periodDates||[]).sort((a,b)=>b.start>a.start?1:-1);
+    if(!dates.length){card.appendChild(el("p",{style:{fontSize:13,color:"#666"}},["No periods logged yet."]));}
+    else dates.forEach((p,i,arr)=>{
+      const dur=p.end?Math.floor((new Date(p.end)-new Date(p.start))/86400000)+1:null;
+      const nxt=arr[i+1]?.start;const cLen=nxt?Math.floor((new Date(p.start)-new Date(nxt))/86400000):null;
+      const row=el("div",{style:{padding:"10px 0",borderBottom:i<arr.length-1?"0.5px solid rgba(0,0,0,0.08)":"none"}});
+      const inner=el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}});
+      inner.appendChild(el("div",[el("p",{style:{fontSize:14,fontWeight:500}},[p.start+(p.end?" to "+p.end:"")]),el("p",{style:{fontSize:12,color:"#666"}},[(dur?dur+" days":"End not logged")+(cLen?" · Cycle: "+cLen+" days":"")])]));
+      const del=btn("x","","btn danger small");
+      del.addEventListener("click",()=>{state.cycle.periodDates=state.cycle.periodDates.filter((_,j)=>j!==arr.length-1-i);save();render();});
+      inner.appendChild(del);row.appendChild(inner);card.appendChild(row);
+    });
+    div.appendChild(card);
+  }
+  return div;
 }
 
-const root=ReactDOM.createRoot(document.getElementById("root"));
-root.render(html`<${App}/>`);
+// ── INIT ───────────────────────────────────────────────────────────────────────
+loadState();
+document.getElementById("today-str").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+render();
 </script>
 </body>
 </html>
