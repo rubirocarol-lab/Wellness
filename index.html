@@ -1694,115 +1694,104 @@ function renderNutrition(){
   async function doSearch(){
     const q=searchInp.value.trim();
     if(!q) return;
-    resultsDiv.innerHTML="";aiResultDiv.innerHTML="";
+    resultsDiv.innerHTML="";
+    aiResultDiv.innerHTML="";
 
-    // STEP 1: Check local DB first (instant)
+    // STEP 1: Local DB (instant, always works)
     const local=searchLocalDB(q);
     if(local.length){
       renderResults(local.map(f=>({
-        name:f.name,
-        cal:f.cal,pro:f.pro,carb:f.carb,fat:f.fat,
-        note:f.note||"",itemG:f.itemG,cupG:f.cupG,
-        fromDB:true
+        name:f.name,cal:f.cal,pro:f.pro,carb:f.carb,fat:f.fat,
+        note:f.note||"",itemG:f.itemG,cupG:f.cupG,fromDB:true
       })));
     }
 
-    // STEP 2: Search multiple food APIs in parallel
-    aiResultDiv.innerHTML="<p style='font-size:12px;color:#666;margin-bottom:6px'>Searching global food databases...</p>";
-    
-    const allApiResults=[];
+    // STEP 2: USDA + Open Food Facts in parallel
+    aiResultDiv.innerHTML="<p style='font-size:12px;color:#999;margin:6px 0'>Searching online databases...</p>";
 
-    // USDA FoodData Central - 1 million+ foods, strong on Western/branded foods
-    const usdaPromise=fetch("https://api.nal.usda.gov/fdc/v1/foods/search?query="+encodeURIComponent(q)+"&pageSize=6&dataType=Foundation,SR%20Legacy,Survey%20(FNDDS),Branded&api_key=DEMO_KEY")
-      .then(r=>r.json())
-      .then(data=>{
-        if(!data.foods) return [];
-        return data.foods.map(f=>{
-          const nutrients=f.foodNutrients||[];
-          const get=id=>{const n=nutrients.find(x=>x.nutrientId===id||x.nutrientNumber===String(id));return n?Math.round((n.value||0)*10)/10:0;};
-          const cal=get(1008)||get(208);
-          const pro=get(1003)||get(203);
-          const carb=get(1005)||get(205);
-          const fat=get(1004)||get(204);
-          const fibre=get(1079)||get(291);
-          return{name:f.description+(f.brandName?" ("+f.brandName+")":""),cal:Math.round(cal),pro,carb,fat,fibre,note:f.servingSize?(f.servingSize+""+(f.servingSizeUnit||"g")):"",fromUSDA:true};
-        }).filter(f=>f.cal>0);
-      }).catch(()=>[]);
+    let apiResults=[];
 
-    // Open Food Facts - global crowdsourced DB, strong on African/Asian/local products
-    const offPromise=fetch("https://world.openfoodfacts.org/cgi/search.pl?search_terms="+encodeURIComponent(q)+"&search_simple=1&action=process&json=1&page_size=6&fields=product_name,brands,nutriments,countries_tags,quantity")
-      .then(r=>r.json())
-      .then(data=>{
-        if(!data.products) return [];
-        return data.products.filter(p=>{
-          if(!p.product_name||!p.nutriments) return false;
+    try{
+      // USDA FoodData Central
+      const usdaUrl="https://api.nal.usda.gov/fdc/v1/foods/search?query="+encodeURIComponent(q)+"&pageSize=8&api_key=DEMO_KEY";
+      const usdaResp=await fetch(usdaUrl,{signal:AbortSignal.timeout(8000)});
+      const usdaData=await usdaResp.json();
+      if(usdaData.foods&&usdaData.foods.length){
+        usdaData.foods.forEach(f=>{
+          const n=f.foodNutrients||[];
+          const get=(...ids)=>{for(const id of ids){const found=n.find(x=>x.nutrientId===id||x.nutrientNumber===String(id));if(found&&found.value)return Math.round(found.value*10)/10;}return 0;};
+          const cal=get(1008,208);
+          if(cal>0) apiResults.push({
+            name:f.description+(f.brandName&&f.brandName!==f.description?" ("+f.brandName+")":""),
+            cal:Math.round(cal),pro:get(1003,203),carb:get(1005,205),fat:get(1004,204),fibre:get(1079,291),
+            note:f.servingSize?(Math.round(f.servingSize)+(f.servingSizeUnit||"g")):"per 100g",
+            badge:"USDA",badgeColor:"#185FA5",badgeBg:"#E6F1FB"
+          });
+        });
+      }
+    }catch(e){console.log("USDA error:",e.message);}
+
+    try{
+      // Open Food Facts - good for African, Asian, local/regional products
+      const offUrl="https://world.openfoodfacts.org/cgi/search.pl?search_terms="+encodeURIComponent(q)+"&search_simple=1&action=process&json=1&page_size=8&fields=product_name,brands,nutriments,countries_tags,quantity&lc=en";
+      const offResp=await fetch(offUrl,{signal:AbortSignal.timeout(8000)});
+      const offData=await offResp.json();
+      if(offData.products&&offData.products.length){
+        const africanCountries=["en:kenya","en:nigeria","en:ghana","en:ethiopia","en:tanzania","en:uganda","en:south-africa","en:egypt","en:morocco","en:zimbabwe","en:zambia","en:cameroon","en:senegal","en:rwanda","en:malawi","en:mozambique"];
+        offData.products.forEach(p=>{
+          if(!p.product_name||!p.nutriments) return;
           const kcal=p.nutriments["energy-kcal_100g"]||p.nutriments["energy-kcal"]||0;
-          if(!kcal||kcal>900) return false;
-          if(/[^\u0000-\u024F\s]/.test(p.product_name)) return false;
-          return true;
-        }).map(p=>{
+          if(!kcal||kcal>950) return;
+          if(/[^\u0000-\u024F\s]/.test(p.product_name)) return;
           const n=p.nutriments;
-          const kcal=Math.round(n["energy-kcal_100g"]||n["energy-kcal"]||0);
-          // Show country flag hint for African products
           const countries=p.countries_tags||[];
-          const isAfrican=countries.some(c=>["en:kenya","en:nigeria","en:ghana","en:ethiopia","en:tanzania","en:uganda","en:south-africa","en:egypt","en:morocco","en:zimbabwe","en:zambia","en:cameroon","en:senegal","en:ivory-coast"].includes(c));
-          return{
-            name:p.product_name+(p.brands?" ("+p.brands+")":""),
-            cal:kcal,
+          const isAfrican=countries.some(c=>africanCountries.includes(c));
+          // Check if it's a duplicate
+          const isDup=apiResults.some(r=>r.name.toLowerCase().includes(p.product_name.toLowerCase().slice(0,8)));
+          if(!isDup) apiResults.push({
+            name:p.product_name+(p.brands&&p.brands.slice(0,20)!=p.product_name?" ("+p.brands.slice(0,30)+")":""),
+            cal:Math.round(kcal),
             pro:Math.round((n.proteins_100g||0)*10)/10,
             carb:Math.round((n.carbohydrates_100g||0)*10)/10,
             fat:Math.round((n.fat_100g||0)*10)/10,
-            fibre:Math.round((n.fiber_100g||0)*10)/10,
-            note:p.quantity||"",
-            fromOFF:true,
-            isAfrican
-          };
+            fibre:Math.round((n.fiber_100g||n["fiber-g_100g"]||0)*10)/10,
+            note:p.quantity||"per 100g",
+            isAfrican,
+            badge:isAfrican?"🌍 African":"World",
+            badgeColor:isAfrican?"#3B6D11":"#666",
+            badgeBg:isAfrican?"#EAF3DE":"#F0F0EC"
+          });
         });
-      }).catch(()=>[]);
-
-    // Wait for both APIs
-    const [usdaResults, offResults]=await Promise.all([usdaPromise, offPromise]);
-    
-    // Deduplicate by name similarity
-    const combined=[...usdaResults];
-    offResults.forEach(o=>{
-      const isDup=combined.some(u=>u.name.toLowerCase().includes(o.name.toLowerCase().slice(0,10))||o.name.toLowerCase().includes(u.name.toLowerCase().slice(0,10)));
-      if(!isDup) combined.push(o);
-    });
+      }
+    }catch(e){console.log("OFF error:",e.message);}
 
     aiResultDiv.innerHTML="";
 
-    // Show African products first if any found
-    const africanResults=combined.filter(f=>f.isAfrican);
-    const otherResults=combined.filter(f=>!f.isAfrican);
-
-    if(africanResults.length){
-      const hdr=el("p",{style:{fontSize:12,color:"#0F6E56",fontWeight:500,marginBottom:6,marginTop:8}},["African / Local products:"]);
-      aiResultDiv.appendChild(hdr);
-      const africanDiv=document.createElement("div");
-      renderResults(africanResults, africanDiv);
-      aiResultDiv.appendChild(africanDiv);
-    }
-
-    if(otherResults.length){
-      const hdr=el("p",{style:{fontSize:12,color:"#666",marginBottom:6,marginTop:africanResults.length?12:0}},["Global database results ("+combined.length+" found):"]);
-      aiResultDiv.appendChild(hdr);
-      const otherDiv=document.createElement("div");
-      renderResults(otherResults.slice(0,8), otherDiv);
-      aiResultDiv.appendChild(otherDiv);
-    }
-
-    if(!combined.length && !local.length){
-      aiResultDiv.innerHTML="";
-    }
-
-    // STEP 3: If nothing found anywhere, show manual entry prompt
-    if(!local.length && !aiResultDiv.innerHTML){
-      aiResultDiv.innerHTML="<div class='ai-box'><strong>"+q+"</strong> not found. Use Manual Entry below to add it with your own calorie values.</div>";
+    if(apiResults.length){
+      // Sort: African first, then by name match
+      apiResults.sort((a,b)=>{
+        if(a.isAfrican&&!b.isAfrican) return -1;
+        if(!a.isAfrican&&b.isAfrican) return 1;
+        return 0;
+      });
+      const label=el("p",{style:{fontSize:12,color:"#666",margin:"8px 0 6px"}},["Found "+apiResults.length+" results from USDA & Open Food Facts:"]);
+      aiResultDiv.appendChild(label);
+      const apiDiv=document.createElement("div");
+      renderResults(apiResults.slice(0,10),apiDiv);
+      aiResultDiv.appendChild(apiDiv);
+    } else if(!local.length){
+      // Nothing found anywhere
+      aiResultDiv.innerHTML="<div class='ai-box'><strong>"+q+"</strong> not found in any database.<br><br>"+
+        "Tips: Try simpler terms e.g. 'oreo' instead of 'oreo cake', or use <strong>Manual Entry</strong> below to add it yourself.</div>";
       const manNameInp=document.querySelector("#manual-food-name");
       if(manNameInp) manNameInp.value=q;
+    } else if(!apiResults.length){
+      // Local found but no online results
+      const note=el("p",{style:{fontSize:12,color:"#999",margin:"8px 0"}},["No additional online results found."]);
+      aiResultDiv.appendChild(note);
     }
   }
+
 
   function renderResults(foods, container){
     const target=container||resultsDiv;
