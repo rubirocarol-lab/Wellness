@@ -475,7 +475,308 @@ const FOOD_DB = [
   { name: "Whey Protein Powder", cal: 400, pro: 80, carb: 8, fat: 5 },
   { name: "Casein Protein Powder", cal: 370, pro: 72, carb: 10, fat: 4 },
   { name: "Pea Protein Powder", cal: 360, pro: 75, carb: 5, fat: 4 },
-];
+  // ── CAKES, DESSERTS & SWEET BAKED GOODS ──
+  { name: "Cake (chocolate)", cal: 371, pro: 5, carb: 52, fat: 17, itemG: 80, note: "~1 slice" },
+  { name: "Cake (vanilla / sponge)", cal: 350, pro: 5, carb: 53, fat: 14, itemG: 80, note: "~1 slice" },
+  { name: "Cake (carrot)", cal: 415, pro: 5, carb: 55, fat: 21, itemG: 80, note: "~1 slice" },
+  { name: "Cake (red velvet)", cal: 430, pro: 5, carb: 58, fat: 22, itemG: 80, note: "~1 slice" },
+  { name: "Cake (cheesecake)", cal: 321, pro: 6, carb: 26, fat: 22, itemG: 120, note: "~1 slice" },
+  { name: "Cake (fruit cake)", cal: 354, pro: 4, carb: 58, fat: 13, itemG: 70, note: "~1 slice" },
+  { name: "Cake (birthday cake)", cal: 390, pro: 4, carb: 56, fat: 18, itemG: 80, note: "~1 slice" },
+  { name: "Cake (pound cake)", cal: 385, pro: 5, carb: 48, fat: 21, itemG: 80, note: "~1 slice" },
+  { name: "Cake (banana bread)", cal: 326, pro: 5, carb: 55, fat: 10, itemG: 60, note: "~1 slice" },
+  { name: "Cupcake (with frosting)", cal: 430, pro: 4, carb: 58, fat: 22, itemG: 70, note: "~1 cupcake" },
+  { name: "Brownie (chocolate)", cal: 466, pro: 6, carb: 63, fat: 22, itemG: 56, note: "~1 piece" },
+  { name: "Doughnut (glazed)", cal: 452, pro: 4.9, carb: 51, fat: 25, itemG: 60, note: "~1 doughnut" },
+  { name: "Doughnut (chocolate)", cal: 480, pro: 5, carb: 54, fat: 28, itemG: 65, note: "~1 doughnut" },
+  { name: "Muffin (blueberry)", cal: 377, pro: 5, carb: 58, fat: 14, itemG: 113, note: "~1 large muffin" },
+  { name: "Muffin (chocolate chip)", cal: 400, pro: 6, carb: 60, fat: 16, itemG: 113, note: "~1 muffin" },
+  { name: "Scone (plain)", cal: 364, pro: 7, carb: 55, fat: 14, itemG: 60, note: "~1 scone" },
+  { name: "Cookies (chocolate chip, 1 piece)", cal: 490, pro: 5.5, carb: 64, fat: 24, itemG: 16, note: "~1 cookie" },
+  { name: "Cookies (oatmeal raisin)", cal: 471, pro: 6, carb: 69, fat: 19, itemG: 15, note: "~1 cookie" },
+  { name: "Digestive Biscuit", cal: 471, pro: 6.7, carb: 68, fat: 20, itemG: 14, note: "~1 biscuit" },
+  { name: "Shortbread biscuit", cal: 498, pro: 6, carb: 64, fat: 25, itemG: 12, note: "~1 biscuit" },
+  { name: "Cinnamon Roll", cal: 420, pro: 7, carb: 65, fat: 15, itemG: 100, note: "~1 roll" },
+  { name: "Eclair (chocolate)", cal: 310, pro: 6, carb: 35, fat: 17, itemG: 85, note: "~1 eclair" },
+  { name: "Tiramisu", cal: 240, pro: 6, carb: 28, fat: 12, itemG: 120, note: "~1 slice" },
+  { name: "Ice Cream (vanilla, 2 scoops)", cal: 207, pro: 3.5, carb: 24, fat: 11, itemG: 132, note: "~2 scoops" },
+  { name: "Ice Cream (chocolate)", cal: 216, pro: 3.8, carb: 28, fat: 11, itemG: 132, note: "~2 scoops" },
+  { name: "Gelato", cal: 160, pro: 3.5, carb: 25, fat: 6, itemG: 120, note: "~2 scoops" },
+  { name: "Custard", cal: 122, pro: 4.5, carb: 17, fat: 4, cupG: 244 },
+  { name: "Jelly / Jello", cal: 61, pro: 1.8, carb: 14, fat: 0, itemG: 120, note: "~1 serving" },
+  { name: "Pudding (chocolate)", cal: 130, pro: 3, carb: 23, fat: 3.5, cupG: 260 },
+  // ── SAVOURY SNACKS ──
+  { name: "Samosa (meat)", cal: 200, pro: 8, carb: 18, fat: 11, itemG: 70, note: "~1 samosa" },
+  { name: "Spring Roll", cal: 208, pro: 5, carb: 23, fat: 10, itemG: 85, note: "~1 roll" },
+  { name: "Sausage Roll", cal: 320, pro: 9, carb: 26, fat: 20, itemG: 75, note: "~1 sausage roll" },
+  { name: "Meat Pie", cal: 380, pro: 12, carb: 35, fat: 22, itemG: 150, note: "~1 pie" },
+  { name: "Scotch Egg", cal: 242, pro: 14, carb: 10, fat: 17, itemG: 120, note: "~1 scotch egg" },
+  { name: "Quiche", cal: 270, pro: 10, carb: 20, fat: 17, itemG: 150, note: "~1 slice" },
+  { name: "Tortilla Chips / Nachos", cal: 489, pro: 7, carb: 64, fat: 24, itemG: 28, note: "~small handful" },
+  { name: "Pretzels", cal: 381, pro: 9, carb: 80, fat: 4, itemG: 28, note: "~small handful" },
+  { name: "Rice Cakes", cal: 387, pro: 8, carb: 81, fat: 3, itemG: 9, note: "~1 rice cake" },
+  // ── BREAKFAST ──
+  { name: "French Toast", cal: 229, pro: 8, carb: 26, fat: 10, itemG: 65, note: "~1 slice" },
+  { name: "Crepe (plain)", cal: 196, pro: 6, carb: 27, fat: 7, itemG: 50, note: "~1 crepe" },
+  { name: "Hash Browns", cal: 265, pro: 3, carb: 33, fat: 14, itemG: 100, note: "~1 portion" },
+  { name: "English Muffin", cal: 227, pro: 8, carb: 44, fat: 2, itemG: 57, note: "~1 muffin" },
+  // ── SAUCES & EXTRAS ──
+  { name: "Guacamole", cal: 160, pro: 2, carb: 9, fat: 15, cupG: 230 },
+  { name: "Salsa", cal: 36, pro: 1.8, carb: 7, fat: 0.4, cupG: 259 },
+  { name: "Tzatziki", cal: 95, pro: 5, carb: 5, fat: 6 },
+  { name: "Pesto", cal: 420, pro: 9, carb: 8, fat: 41 },
+  { name: "Cheese Sauce", cal: 160, pro: 6, carb: 10, fat: 11, cupG: 244 },
+  { name: "White Sauce / Bechamel", cal: 155, pro: 4, carb: 12, fat: 10, cupG: 244 },
+  // ── PIZZA & PASTA ──
+  { name: "Pizza (Margherita, 1 slice)", cal: 250, pro: 10, carb: 31, fat: 9, itemG: 100, note: "~1 slice" },
+  { name: "Pizza (chicken, 1 slice)", cal: 270, pro: 14, carb: 30, fat: 10, itemG: 105, note: "~1 slice" },
+  { name: "Lasagne", cal: 180, pro: 11, carb: 18, fat: 7, itemG: 300, note: "~1 serving" },
+  { name: "Mac and Cheese", cal: 164, pro: 7, carb: 20, fat: 6, cupG: 200 },
+  { name: "Spaghetti Bolognese", cal: 165, pro: 11, carb: 20, fat: 5, cupG: 250 },
+  // ── RICE DISHES ──
+  { name: "Fried Rice (egg)", cal: 160, pro: 4, carb: 27, fat: 5, cupG: 195 },
+  { name: "Risotto", cal: 166, pro: 5, carb: 27, fat: 4, cupG: 245 },
+  // ── SANDWICHES & WRAPS ──
+  { name: "Sandwich (chicken mayo)", cal: 250, pro: 15, carb: 27, fat: 9, itemG: 150, note: "~1 sandwich" },
+  { name: "Sandwich (tuna)", cal: 240, pro: 14, carb: 28, fat: 8, itemG: 150, note: "~1 sandwich" },
+  { name: "Sandwich (cheese)", cal: 300, pro: 12, carb: 28, fat: 16, itemG: 150, note: "~1 sandwich" },
+  { name: "Wrap (chicken)", cal: 280, pro: 18, carb: 30, fat: 9, itemG: 200, note: "~1 wrap" },
+  { name: "Wrap (veggie)", cal: 230, pro: 8, carb: 34, fat: 7, itemG: 180, note: "~1 wrap" },
+  // ── DRINKS ──
+  { name: "Smoothie (banana milk)", cal: 120, pro: 4, carb: 22, fat: 2, cupG: 300 },
+  { name: "Milkshake (chocolate)", cal: 112, pro: 3.5, carb: 18, fat: 3.5, cupG: 300 },
+  { name: "Hot Chocolate", cal: 110, pro: 4, carb: 16, fat: 3.5, cupG: 240, itemG: 240, note: "~1 mug" },
+  { name: "Fruit Punch", cal: 55, pro: 0, carb: 14, fat: 0, cupG: 248 },
+
+  // ── MORE KENYAN & EAST AFRICAN ──
+  { name: "Nyoyo (maize and beans)", cal: 155, pro: 8, carb: 26, fat: 2, cupG: 200 },
+  { name: "Kitheri (beans and maize)", cal: 150, pro: 7.5, carb: 25, fat: 2 },
+  { name: "Mukimo wa Githeri", cal: 140, pro: 6, carb: 25, fat: 3 },
+  { name: "Waru (boiled potatoes, Kenyan)", cal: 87, pro: 1.9, carb: 20, fat: 0.1, itemG: 150 },
+  { name: "Viazi mviringo (round potatoes, fried)", cal: 260, pro: 3, carb: 33, fat: 13 },
+  { name: "Nyoyo ya Pembe", cal: 140, pro: 6, carb: 24, fat: 2 },
+  { name: "Maharagwe ya Nazi (beans in coconut)", cal: 175, pro: 8, carb: 22, fat: 7, cupG: 200 },
+  { name: "Kachri (dried beans)", cal: 337, pro: 22, carb: 58, fat: 1 },
+  { name: "Kunde (cowpeas, cooked)", cal: 116, pro: 8, carb: 20, fat: 0.5 },
+  { name: "Terere (amaranth, cooked)", cal: 36, pro: 3.5, carb: 4.5, fat: 0.5 },
+  { name: "Osuga (black nightshade leaves)", cal: 35, pro: 3.5, carb: 4, fat: 0.5 },
+  { name: "Mrenda / Jute Leaves (cooked)", cal: 43, pro: 4.5, carb: 5, fat: 0.6 },
+  { name: "Lishe (mixed greens stew)", cal: 45, pro: 4, carb: 5, fat: 2 },
+  { name: "Ugali na Nyama (with meat)", cal: 160, pro: 10, carb: 20, fat: 5 },
+  { name: "Ugali na Sukuma", cal: 95, pro: 2.8, carb: 20, fat: 0.8 },
+  { name: "Mukimo wa Ngwaci (sweet potato)", cal: 110, pro: 3, carb: 22, fat: 2 },
+  { name: "Matumbo (tripe stew)", cal: 120, pro: 16, carb: 3, fat: 5, cupG: 200 },
+  { name: "Mutura (blood sausage, Kenyan)", cal: 290, pro: 22, carb: 3, fat: 21, itemG: 80 },
+  { name: "Kuku paka (chicken in coconut)", cal: 220, pro: 25, carb: 5, fat: 12, cupG: 244 },
+  { name: "Mchuzi wa kuku (chicken curry)", cal: 180, pro: 20, carb: 6, fat: 9, cupG: 244 },
+  { name: "Mchuzi wa samaki (fish curry)", cal: 150, pro: 22, carb: 5, fat: 6, cupG: 244 },
+  { name: "Mchuzi wa nyama (meat curry)", cal: 195, pro: 18, carb: 7, fat: 11, cupG: 244 },
+  { name: "Biriani ya kuku", cal: 190, pro: 14, carb: 22, fat: 6, cupG: 200 },
+  { name: "Biriani ya nyama", cal: 210, pro: 15, carb: 22, fat: 8, cupG: 200 },
+  { name: "Wali wa kawaida (plain rice)", cal: 130, pro: 2.7, carb: 28, fat: 0.3, cupG: 186 },
+  { name: "Maandazi ya Nazi", cal: 340, pro: 5.5, carb: 50, fat: 14, itemG: 55 },
+  { name: "Mkate mayai (Zanzibar pizza)", cal: 350, pro: 14, carb: 40, fat: 16, itemG: 200 },
+  { name: "Zanzibar mix (cassava chips + sauce)", cal: 280, pro: 4, carb: 45, fat: 10 },
+  { name: "Viazi vya kukaanga (fried cassava)", cal: 190, pro: 2, carb: 40, fat: 5 },
+  { name: "Kaimati (sweet dumplings)", cal: 350, pro: 5, carb: 52, fat: 15, itemG: 30, note: "~1 piece" },
+  { name: "Bagia (Kenyan bhajia)", cal: 280, pro: 7, carb: 35, fat: 13, itemG: 50 },
+  { name: "Mkate wa Sinia (Swahili rice bread)", cal: 260, pro: 6, carb: 48, fat: 5 },
+  { name: "Uji wa Mahindi (maize porridge)", cal: 55, pro: 1.2, carb: 12, fat: 0.3, cupG: 244 },
+  { name: "Uji wa Wimbi (finger millet)", cal: 58, pro: 2, carb: 12, fat: 0.5, cupG: 244 },
+  { name: "Mursik (fermented Kalenjin milk)", cal: 68, pro: 3.3, carb: 5, fat: 3.8, cupG: 240 },
+  // ── WEST AFRICAN EXPANDED ──
+  { name: "Jollof Rice (Ghanaian)", cal: 180, pro: 3.5, carb: 31, fat: 5, cupG: 190 },
+  { name: "Jollof Rice (Senegalese Thieboudienne)", cal: 195, pro: 8, carb: 28, fat: 7, cupG: 200 },
+  { name: "Thieboudienne (fish and rice)", cal: 200, pro: 12, carb: 25, fat: 7, cupG: 250 },
+  { name: "Egusi Soup with fufu", cal: 520, pro: 20, carb: 75, fat: 16 },
+  { name: "Ewedu Soup", cal: 60, pro: 3, carb: 8, fat: 2, cupG: 244 },
+  { name: "Afang Soup", cal: 300, pro: 14, carb: 10, fat: 24, cupG: 244 },
+  { name: "Edikaikong Soup", cal: 280, pro: 14, carb: 8, fat: 22, cupG: 244 },
+  { name: "Ogiri (fermented oil bean)", cal: 380, pro: 20, carb: 15, fat: 28 },
+  { name: "Tuwo Masara (corn tuwo)", cal: 120, pro: 2.5, carb: 26, fat: 0.5 },
+  { name: "Miyan Kuka (baobab leaf soup)", cal: 90, pro: 5, carb: 10, fat: 4, cupG: 244 },
+  { name: "Miyan Taushe (pumpkin soup)", cal: 130, pro: 6, carb: 14, fat: 7, cupG: 244 },
+  { name: "Kilishi (dried spiced beef, Nigerian)", cal: 330, pro: 45, carb: 12, fat: 12 },
+  { name: "Nkwobi (spiced cow foot)", cal: 350, pro: 28, carb: 5, fat: 24 },
+  { name: "Ofe Akwu (palm nut soup)", cal: 380, pro: 10, carb: 12, fat: 35, cupG: 244 },
+  { name: "Bitterleaf Soup", cal: 220, pro: 14, carb: 8, fat: 16, cupG: 244 },
+  { name: "Oha Soup", cal: 210, pro: 13, carb: 7, fat: 15, cupG: 244 },
+  { name: "Abak Atama Soup", cal: 350, pro: 12, carb: 10, fat: 30, cupG: 244 },
+  { name: "Nkwobi (goat meat)", cal: 340, pro: 26, carb: 4, fat: 25 },
+  { name: "Asun (spicy goat meat)", cal: 280, pro: 30, carb: 3, fat: 17 },
+  { name: "Adalu (beans and corn)", cal: 160, pro: 8, carb: 27, fat: 3, cupG: 200 },
+  { name: "Okpa (Bambara nut pudding)", cal: 200, pro: 12, carb: 22, fat: 7, itemG: 100 },
+  { name: "Agidi (corn jelly)", cal: 80, pro: 1, carb: 19, fat: 0.2 },
+  { name: "Ogi (pap / akamu)", cal: 55, pro: 1, carb: 12, fat: 0.4, cupG: 244 },
+  { name: "Fried Plantain (dodo)", cal: 218, pro: 1.5, carb: 41, fat: 6, itemG: 100 },
+  { name: "Plantain chips", cal: 520, pro: 2.5, carb: 60, fat: 30, itemG: 30 },
+  { name: "Bole (roasted plantain)", cal: 130, pro: 1, carb: 34, fat: 0.2, itemG: 120 },
+  { name: "Dundun (fried yam)", cal: 240, pro: 2, carb: 42, fat: 8, itemG: 100 },
+  { name: "Ojojo (water yam fritters)", cal: 280, pro: 4, carb: 38, fat: 13, itemG: 60 },
+  { name: "Abacha (African Salad)", cal: 220, pro: 6, carb: 30, fat: 10 },
+  { name: "Nkwobi na Ugba", cal: 380, pro: 26, carb: 8, fat: 28 },
+  // ── SOUTHERN AFRICAN EXPANDED ──
+  { name: "Samp (broken maize)", cal: 120, pro: 3, carb: 26, fat: 0.5 },
+  { name: "Umngqusho (samp and beans)", cal: 165, pro: 8, carb: 28, fat: 2, cupG: 200 },
+  { name: "Amadumbe (taro/madumbi)", cal: 112, pro: 1.5, carb: 26, fat: 0.2 },
+  { name: "Isijingi (pumpkin and maize)", cal: 90, pro: 2, carb: 19, fat: 1 },
+  { name: "Uphuthu (crumbly pap)", cal: 110, pro: 2.3, carb: 24, fat: 0.4 },
+  { name: "Umleqwa (free range chicken stew)", cal: 195, pro: 26, carb: 4, fat: 9 },
+  { name: "Umvubo (soured porridge)", cal: 95, pro: 4, carb: 16, fat: 2 },
+  { name: "Inyama yenkomo (beef stew, Zulu)", cal: 200, pro: 22, carb: 5, fat: 11 },
+  { name: "Morogo wa dikgopana (wild spinach)", cal: 40, pro: 4, carb: 5, fat: 0.5 },
+  { name: "Vetkoek (fat cake)", cal: 420, pro: 7, carb: 55, fat: 20, itemG: 90, note: "~1 vetkoek" },
+  { name: "Biltong (beef jerky)", cal: 286, pro: 55, carb: 0, fat: 7 },
+  { name: "Droëwors (dried sausage)", cal: 380, pro: 40, carb: 2, fat: 24 },
+  { name: "Melktert (milk tart)", cal: 260, pro: 6, carb: 32, fat: 13, itemG: 100, note: "~1 slice" },
+  { name: "Koeksister (syrup doughnut)", cal: 450, pro: 5, carb: 72, fat: 18, itemG: 60, note: "~1 koeksister" },
+  { name: "Malva Pudding", cal: 380, pro: 5, carb: 55, fat: 17, itemG: 100, note: "~1 slice" },
+  { name: "Pap en vleis (pap and meat)", cal: 250, pro: 18, carb: 22, fat: 10 },
+  { name: "Chakalaka", cal: 65, pro: 2, carb: 10, fat: 2 },
+  { name: "Boerewors roll", cal: 450, pro: 18, carb: 35, fat: 28, itemG: 200, note: "~1 roll" },
+  // ── NORTH AFRICAN & MIDDLE EASTERN EXPANDED ──
+  { name: "Couscous (plain cooked)", cal: 112, pro: 3.8, carb: 23, fat: 0.2, cupG: 157 },
+  { name: "Couscous with chicken", cal: 165, pro: 14, carb: 18, fat: 5, cupG: 200 },
+  { name: "Shakshuka", cal: 130, pro: 8, carb: 8, fat: 8, cupG: 244 },
+  { name: "Mansaf (lamb and rice)", cal: 280, pro: 18, carb: 25, fat: 12, cupG: 300 },
+  { name: "Kabsa (spiced rice with meat)", cal: 220, pro: 14, carb: 26, fat: 7, cupG: 250 },
+  { name: "Mujaddara (lentils and rice)", cal: 160, pro: 7, carb: 28, fat: 3, cupG: 244 },
+  { name: "Fatteh (bread and chickpea dish)", cal: 290, pro: 12, carb: 38, fat: 11 },
+  { name: "Fattoush Salad", cal: 130, pro: 3, carb: 16, fat: 7, cupG: 200 },
+  { name: "Tabbouleh", cal: 86, pro: 2.5, carb: 11, fat: 4 },
+  { name: "Kibbeh (fried)", cal: 380, pro: 16, carb: 30, fat: 22, itemG: 60, note: "~1 piece" },
+  { name: "Shawarma wrap (chicken)", cal: 350, pro: 25, carb: 32, fat: 13, itemG: 250 },
+  { name: "Shawarma wrap (beef)", cal: 380, pro: 26, carb: 30, fat: 16, itemG: 250 },
+  { name: "Kofta (grilled)", cal: 250, pro: 22, carb: 5, fat: 16, itemG: 80, note: "~2 skewers" },
+  { name: "Dolma (stuffed vine leaves)", cal: 180, pro: 4, carb: 22, fat: 9, itemG: 150, note: "~4 pieces" },
+  { name: "Baklava", cal: 510, pro: 6, carb: 63, fat: 28, itemG: 43, note: "~1 piece" },
+  { name: "Kanafeh", cal: 430, pro: 8, carb: 58, fat: 20, itemG: 120, note: "~1 piece" },
+  { name: "Maamoul (date cookie)", cal: 420, pro: 5, carb: 60, fat: 19, itemG: 30, note: "~1 cookie" },
+  { name: "Harira Soup (Moroccan)", cal: 120, pro: 7, carb: 18, fat: 3, cupG: 244 },
+  { name: "Msemen (Moroccan flatbread)", cal: 290, pro: 8, carb: 45, fat: 10, itemG: 80, note: "~1 piece" },
+  { name: "Bastilla (Moroccan pie)", cal: 310, pro: 14, carb: 28, fat: 16, itemG: 150 },
+  // ── ASIAN FOODS ──
+  { name: "Sushi (salmon, 2 pieces)", cal: 120, pro: 7, carb: 18, fat: 2.5, itemG: 60, note: "~2 pieces" },
+  { name: "Sushi (tuna, 2 pieces)", cal: 110, pro: 8, carb: 16, fat: 1.5, itemG: 60 },
+  { name: "Sushi roll (California)", cal: 255, pro: 9, carb: 38, fat: 7, itemG: 120, note: "~1 roll" },
+  { name: "Ramen (with broth)", cal: 190, pro: 11, carb: 27, fat: 4, cupG: 450 },
+  { name: "Pad Thai", cal: 230, pro: 12, carb: 30, fat: 8, cupG: 250 },
+  { name: "Fried Rice (Thai)", cal: 180, pro: 6, carb: 30, fat: 6, cupG: 200 },
+  { name: "Green Curry (Thai)", cal: 180, pro: 12, carb: 8, fat: 13, cupG: 244 },
+  { name: "Red Curry (Thai)", cal: 175, pro: 11, carb: 9, fat: 12, cupG: 244 },
+  { name: "Tom Yum Soup", cal: 90, pro: 7, carb: 8, fat: 4, cupG: 244 },
+  { name: "Dim Sum (steamed dumplings, 3 pcs)", cal: 170, pro: 8, carb: 22, fat: 5, itemG: 90 },
+  { name: "Spring Roll (fried)", cal: 208, pro: 5, carb: 23, fat: 10, itemG: 85 },
+  { name: "Nasi Goreng (Indonesian fried rice)", cal: 200, pro: 7, carb: 32, fat: 6, cupG: 200 },
+  { name: "Mie Goreng (fried noodles)", cal: 190, pro: 7, carb: 28, fat: 6, cupG: 200 },
+  { name: "Satay (chicken skewer)", cal: 170, pro: 18, carb: 4, fat: 9, itemG: 80, note: "~2 skewers" },
+  { name: "Biryani (Indian lamb)", cal: 230, pro: 15, carb: 25, fat: 9, cupG: 200 },
+  { name: "Dal (lentil curry)", cal: 120, pro: 7, carb: 18, fat: 3, cupG: 244 },
+  { name: "Palak Paneer (spinach and cheese)", cal: 165, pro: 9, carb: 8, fat: 12, cupG: 244 },
+  { name: "Butter Chicken", cal: 185, pro: 18, carb: 8, fat: 10, cupG: 244 },
+  { name: "Chicken Tikka Masala", cal: 190, pro: 19, carb: 9, fat: 10, cupG: 244 },
+  { name: "Naan with butter", cal: 360, pro: 9, carb: 55, fat: 12, itemG: 90 },
+  { name: "Samosa (Indian vegetable)", cal: 160, pro: 4, carb: 20, fat: 8, itemG: 60 },
+  { name: "Pakora (vegetable fritter)", cal: 260, pro: 6, carb: 30, fat: 13, itemG: 60, note: "~2 pieces" },
+  { name: "Chana Masala (chickpea curry)", cal: 145, pro: 7, carb: 22, fat: 5, cupG: 244 },
+  { name: "Aloo Gobi (potato and cauliflower)", cal: 115, pro: 3, carb: 16, fat: 5, cupG: 244 },
+  { name: "Saag (spinach curry)", cal: 130, pro: 5, carb: 8, fat: 9, cupG: 244 },
+  { name: "Idli (steamed rice cake)", cal: 58, pro: 2, carb: 12, fat: 0.4, itemG: 30, note: "~1 idli" },
+  { name: "Dosa (plain)", cal: 120, pro: 3, carb: 20, fat: 3.5, itemG: 65, note: "~1 dosa" },
+  { name: "Pho (Vietnamese noodle soup)", cal: 215, pro: 15, carb: 30, fat: 4, cupG: 450 },
+  { name: "Banh Mi (Vietnamese sandwich)", cal: 330, pro: 16, carb: 42, fat: 11, itemG: 200 },
+  { name: "Kimchi", cal: 15, pro: 1, carb: 3, fat: 0.1, cupG: 150 },
+  { name: "Korean Bibimbap", cal: 490, pro: 20, carb: 70, fat: 15, itemG: 400 },
+  { name: "Miso Soup", cal: 35, pro: 2.2, carb: 4.5, fat: 1, cupG: 240 },
+  // ── LATIN AMERICAN ──
+  { name: "Tacos (chicken, 2 pieces)", cal: 340, pro: 20, carb: 36, fat: 12, itemG: 160, note: "~2 tacos" },
+  { name: "Tacos (beef, 2 pieces)", cal: 370, pro: 20, carb: 34, fat: 16, itemG: 170 },
+  { name: "Burrito (chicken)", cal: 490, pro: 28, carb: 55, fat: 15, itemG: 300 },
+  { name: "Quesadilla (cheese)", cal: 350, pro: 14, carb: 36, fat: 17, itemG: 150 },
+  { name: "Nachos with cheese", cal: 440, pro: 11, carb: 50, fat: 23, itemG: 170 },
+  { name: "Guacamole", cal: 160, pro: 2, carb: 9, fat: 15, cupG: 230 },
+  { name: "Salsa (tomato)", cal: 36, pro: 1.8, carb: 7, fat: 0.4, cupG: 259 },
+  { name: "Black Bean Soup", cal: 130, pro: 7, carb: 22, fat: 2, cupG: 244 },
+  { name: "Feijoada (Brazilian black bean stew)", cal: 210, pro: 14, carb: 22, fat: 8, cupG: 244 },
+  { name: "Empanada (beef)", cal: 300, pro: 10, carb: 32, fat: 16, itemG: 90, note: "~1 empanada" },
+  { name: "Arepas (corn cake)", cal: 210, pro: 5, carb: 36, fat: 5, itemG: 80, note: "~1 arepa" },
+  { name: "Ceviche", cal: 130, pro: 18, carb: 8, fat: 3, cupG: 200 },
+  { name: "Plantain tostones (fried green)", cal: 200, pro: 1.5, carb: 38, fat: 6, itemG: 100 },
+  // ── EUROPEAN & AMERICAN ──
+  { name: "Fish and Chips", cal: 250, pro: 13, carb: 25, fat: 11, itemG: 300 },
+  { name: "Shepherd's Pie", cal: 190, pro: 11, carb: 18, fat: 8, itemG: 300 },
+  { name: "Beef Stew (British)", cal: 185, pro: 16, carb: 14, fat: 8, cupG: 244 },
+  { name: "Roast Dinner (chicken, veg, gravy)", cal: 350, pro: 28, carb: 25, fat: 15, itemG: 350 },
+  { name: "Full English Breakfast", cal: 550, pro: 30, carb: 30, fat: 35, itemG: 400 },
+  { name: "Scotch Broth", cal: 95, pro: 6, carb: 12, fat: 2.5, cupG: 244 },
+  { name: "Haggis", cal: 310, pro: 16, carb: 16, fat: 21, itemG: 150 },
+  { name: "Paella (chicken and seafood)", cal: 195, pro: 14, carb: 26, fat: 5, cupG: 250 },
+  { name: "Gazpacho", cal: 55, pro: 1.5, carb: 8, fat: 2.5, cupG: 244 },
+  { name: "Pasta Carbonara", cal: 280, pro: 14, carb: 30, fat: 12, cupG: 200 },
+  { name: "Pasta Arrabiata", cal: 195, pro: 7, carb: 33, fat: 5, cupG: 200 },
+  { name: "Pesto Pasta", cal: 290, pro: 9, carb: 35, fat: 13, cupG: 200 },
+  { name: "Goulash (Hungarian)", cal: 175, pro: 14, carb: 12, fat: 8, cupG: 244 },
+  { name: "Pierogi (Polish dumplings)", cal: 200, pro: 6, carb: 30, fat: 7, itemG: 120, note: "~3 pieces" },
+  { name: "Chicken Caesar Salad", cal: 180, pro: 16, carb: 9, fat: 9, cupG: 200 },
+  { name: "Greek Salad", cal: 100, pro: 3, carb: 8, fat: 7, cupG: 200 },
+  { name: "Coleslaw", cal: 150, pro: 1.5, carb: 16, fat: 9, cupG: 120 },
+  { name: "Mac and Cheese", cal: 164, pro: 7, carb: 20, fat: 6, cupG: 200 },
+  { name: "Buffalo Wings", cal: 290, pro: 22, carb: 8, fat: 20, itemG: 120, note: "~4 wings" },
+  { name: "Clam Chowder", cal: 190, pro: 10, carb: 20, fat: 8, cupG: 244 },
+  { name: "BLT Sandwich", cal: 380, pro: 18, carb: 32, fat: 20, itemG: 200 },
+  { name: "Club Sandwich", cal: 430, pro: 24, carb: 38, fat: 20, itemG: 250 },
+  { name: "Pancakes with syrup", cal: 350, pro: 7, carb: 60, fat: 9, itemG: 150, note: "~2 pancakes" },
+  { name: "Waffles with syrup", cal: 380, pro: 8, carb: 62, fat: 12, itemG: 150, note: "~1 waffle" },
+  // ── CAKES & DESSERTS EXPANDED ──
+  { name: "Cake (chocolate)", cal: 371, pro: 5, carb: 52, fat: 17, itemG: 80, note: "~1 slice" },
+  { name: "Cake (vanilla sponge)", cal: 350, pro: 5, carb: 53, fat: 14, itemG: 80, note: "~1 slice" },
+  { name: "Cake (carrot)", cal: 415, pro: 5, carb: 55, fat: 21, itemG: 80, note: "~1 slice" },
+  { name: "Cake (red velvet)", cal: 430, pro: 5, carb: 58, fat: 22, itemG: 80, note: "~1 slice" },
+  { name: "Cheesecake (slice)", cal: 321, pro: 6, carb: 26, fat: 22, itemG: 120, note: "~1 slice" },
+  { name: "Fruit cake (slice)", cal: 354, pro: 4, carb: 58, fat: 13, itemG: 70, note: "~1 slice" },
+  { name: "Birthday cake (slice)", cal: 390, pro: 4, carb: 56, fat: 18, itemG: 80, note: "~1 slice" },
+  { name: "Pound cake (slice)", cal: 385, pro: 5, carb: 48, fat: 21, itemG: 80, note: "~1 slice" },
+  { name: "Banana bread (slice)", cal: 326, pro: 5, carb: 55, fat: 10, itemG: 60, note: "~1 slice" },
+  { name: "Cupcake with frosting", cal: 430, pro: 4, carb: 58, fat: 22, itemG: 70, note: "~1 cupcake" },
+  { name: "Brownie", cal: 466, pro: 6, carb: 63, fat: 22, itemG: 56, note: "~1 piece" },
+  { name: "Tiramisu", cal: 240, pro: 6, carb: 28, fat: 12, itemG: 120, note: "~1 slice" },
+  { name: "Chocolate mousse", cal: 230, pro: 5, carb: 22, fat: 15, itemG: 100 },
+  { name: "Creme brulee", cal: 275, pro: 5, carb: 22, fat: 18, itemG: 120 },
+  { name: "Apple pie (slice)", cal: 296, pro: 2.5, carb: 43, fat: 14, itemG: 125, note: "~1 slice" },
+  { name: "Lemon tart (slice)", cal: 330, pro: 5, carb: 42, fat: 17, itemG: 100, note: "~1 slice" },
+  { name: "Pudding (bread and butter)", cal: 250, pro: 7, carb: 34, fat: 10, itemG: 150 },
+  { name: "Rice pudding", cal: 130, pro: 4, carb: 22, fat: 3.5, cupG: 250 },
+  { name: "Jelly / Jello", cal: 61, pro: 1.8, carb: 14, fat: 0, itemG: 120 },
+  { name: "Custard", cal: 122, pro: 4.5, carb: 17, fat: 4, cupG: 244 },
+  { name: "Profiteroles (3 pieces)", cal: 280, pro: 5, carb: 26, fat: 18, itemG: 90 },
+  { name: "Croissant (plain)", cal: 406, pro: 8, carb: 45, fat: 21, itemG: 57, note: "~1 croissant" },
+  { name: "Pain au chocolat", cal: 430, pro: 7, carb: 46, fat: 25, itemG: 65, note: "~1 piece" },
+  // ── POPULAR FAST FOOD ITEMS ──
+  { name: "Big Mac", cal: 563, pro: 26, carb: 44, fat: 33, itemG: 210, note: "~1 burger" },
+  { name: "McChicken burger", cal: 385, pro: 17, carb: 41, fat: 17, itemG: 175 },
+  { name: "French Fries (medium)", cal: 365, pro: 4, carb: 48, fat: 17, itemG: 117, note: "~medium portion" },
+  { name: "KFC Original Chicken piece", cal: 260, pro: 20, carb: 9, fat: 16, itemG: 100 },
+  { name: "KFC Zinger Burger", cal: 450, pro: 25, carb: 42, fat: 20, itemG: 200 },
+  { name: "Subway 6-inch (chicken)", cal: 310, pro: 23, carb: 40, fat: 6, itemG: 230 },
+  { name: "Dominos Pizza (cheese, 1 slice)", cal: 250, pro: 11, carb: 29, fat: 10, itemG: 100 },
+  { name: "Hotdog (street vendor)", cal: 290, pro: 11, carb: 24, fat: 16, itemG: 130 },
+  // ── SALADS ──
+  { name: "Garden Salad (no dressing)", cal: 20, pro: 1.5, carb: 3.5, fat: 0.3, cupG: 100 },
+  { name: "Caesar Salad (with dressing)", cal: 180, pro: 8, carb: 9, fat: 14, cupG: 200 },
+  { name: "Nicoise Salad", cal: 190, pro: 14, carb: 12, fat: 10, cupG: 200 },
+  { name: "Waldorf Salad", cal: 220, pro: 3, carb: 18, fat: 16, cupG: 200 },
+  { name: "Couscous Salad", cal: 160, pro: 5, carb: 26, fat: 5, cupG: 200 },
+  { name: "Pasta Salad", cal: 200, pro: 6, carb: 30, fat: 7, cupG: 200 },
+  { name: "Bean Salad", cal: 145, pro: 8, carb: 22, fat: 3, cupG: 200 },
+  // ── COMMON MIXED DISHES ──
+  { name: "Stir Fry (chicken and vegetables)", cal: 185, pro: 20, carb: 10, fat: 8, cupG: 250 },
+  { name: "Stir Fry (beef and vegetables)", cal: 210, pro: 20, carb: 10, fat: 12, cupG: 250 },
+  { name: "Curry (vegetable)", cal: 130, pro: 4, carb: 16, fat: 7, cupG: 244 },
+  { name: "Curry (lamb)", cal: 235, pro: 18, carb: 10, fat: 15, cupG: 244 },
+  { name: "Stew (mixed vegetable)", cal: 110, pro: 4, carb: 18, fat: 3, cupG: 244 },
+  { name: "Oxtail Stew", cal: 250, pro: 24, carb: 5, fat: 16, cupG: 244 },
+  { name: "Tripe stew", cal: 120, pro: 14, carb: 4, fat: 6, cupG: 244 },
+  { name: "Mixed Grill (restaurant portion)", cal: 680, pro: 55, carb: 5, fat: 50, itemG: 400 },];
 
 const UNIT_OPTIONS=[
   {v:"g",l:"grams (g)"},{v:"kg",l:"kilograms (kg)"},{v:"ml",l:"millilitres (ml)"},
@@ -514,9 +815,20 @@ let state={
 
 let activeTab="nutrition";
 
+// Storage with fallback to memory if localStorage is blocked
+let memStorage = null;
+function storageGet(key){
+  try{ return localStorage.getItem(key); }
+  catch(e){ return memStorage ? JSON.stringify(memStorage) : null; }
+}
+function storageSet(key, val){
+  try{ localStorage.setItem(key, val); }
+  catch(e){ try{ memStorage = JSON.parse(val); }catch(e2){} }
+}
+
 function loadState(){
   try{
-    const raw=localStorage.getItem(STORAGE_KEY);
+    const raw=storageGet(STORAGE_KEY);
     if(!raw) return;
     const s=JSON.parse(raw);
     if(s.date!==TODAY){
@@ -524,11 +836,11 @@ function loadState(){
       s.habits={water:false,devotion:false,sleep:0,bedtime:"",wakeTime:""};
     }
     state={...state,...s};
-  }catch(e){}
+  }catch(e){ console.log("State load error:", e); }
 }
 
 function save(){
-  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}
+  try{ storageSet(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
 }
 
 function smartToGrams(qty,unit,food){
@@ -545,7 +857,7 @@ function smartToGrams(qty,unit,food){
 
 function searchLocalDB(query){
   const q=query.toLowerCase().trim();
-  const words=q.split(/\s+/).filter(w=>w.length>1);
+  const words=q.split(/\s+/).filter(w=>w.length>0);
   return FOOD_DB.map(food=>{
     const name=food.name.toLowerCase();
     let score=0;
@@ -566,6 +878,8 @@ async function callAI(prompt){
 // ── HELPERS ────────────────────────────────────────────────────────────────────
 function el(tag,attrs={},children=[]){
   const e=document.createElement(tag);
+  // Handle case where attrs is actually children array
+  if(Array.isArray(attrs)){children=attrs;attrs={};}
   Object.entries(attrs).forEach(([k,v])=>{
     if(k==="style"&&typeof v==="object") Object.assign(e.style,v);
     else if(k.startsWith("on")&&typeof v==="function") e.addEventListener(k.slice(2).toLowerCase(),v);
@@ -573,11 +887,11 @@ function el(tag,attrs={},children=[]){
     else if(k==="html") e.innerHTML=v;
     else e.setAttribute(k,v);
   });
-  children.forEach(c=>{
-    if(c===null||c===undefined||c===false) return;
-    if(typeof c==="string"||typeof c==="number") e.appendChild(document.createTextNode(c));
+  (Array.isArray(children)?children:[children]).forEach(c=>{
+    if(c===null||c===undefined||c===false||c==="") return;
+    if(typeof c==="string"||typeof c==="number") e.appendChild(document.createTextNode(String(c)));
     else if(c instanceof Node) e.appendChild(c);
-    else if(Array.isArray(c)) c.forEach(cc=>cc&&e.appendChild(typeof cc==="string"?document.createTextNode(cc):cc));
+    else if(Array.isArray(c)) c.forEach(cc=>{if(cc&&cc instanceof Node)e.appendChild(cc);else if(cc!==null&&cc!==undefined&&cc!==false)e.appendChild(document.createTextNode(String(cc)));});
   });
   return e;
 }
@@ -976,7 +1290,7 @@ function renderWorkoutSuggest(){
   const levelSel=el("select");
   [["beginner","Beginner"],["intermediate","Intermediate"],["advanced","Advanced"]].forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;if(v==="intermediate")o.selected=true;levelSel.appendChild(o);});
   const eqSel=el("select");
-  [["gym","Full gym"],["home","Home / bodyweight"],["minimal","Bands / dumbbells"]].forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;levelSel.appendChild(o);});
+  [["gym","Full gym"],["home","Home / bodyweight"],["minimal","Bands / dumbbells"]].forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;eqSel.appendChild(o);});
   optRow.appendChild(el("div",{style:{flex:"1 1 130px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Fitness level"]),levelSel]));
   optRow.appendChild(el("div",{style:{flex:"1 1 130px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Equipment"]),eqSel]));
   card.appendChild(optRow);
@@ -1418,11 +1732,15 @@ function renderCycle(){
     else{
       const advBtn=btn("Get food, workout and self-care advice","","btn");
       advBtn.addEventListener("click",async()=>{
-        aiDiv.innerHTML="<div class='ai-box'>Thinking...</div>";
+        aiDiv.innerHTML="<div class='ai-box'>Thinking... (this may take a few seconds)</div>";
         const todaySymp=(cycle.symptoms||{})[TODAY];
-        const symStr=todaySymp?"Today symptoms: "+todaySymp.checklist.join(", ")+(todaySymp.notes?". "+todaySymp.notes:"")+".":" No symptoms today.";
-        try{const r=await callAI(`Women's health expert. User is in ${info.name} phase (day ${info.dayOfCycle} of ${info.avgLen}). ${symStr} Recommend: 1) Best workouts, 2) Foods and nutrients, 3) Self-care tips. Practical and empowering, 5-6 sentences.`);aiDiv.innerHTML="<div class='ai-box'>"+r+"</div>";}
-        catch{aiDiv.innerHTML="<div class='ai-box'>Could not load.</div>";}
+        const symStr=todaySymp?"Today's symptoms: "+todaySymp.checklist.join(", ")+(todaySymp.notes?". "+todaySymp.notes:"")+".":" No symptoms logged today.";
+        try{
+          const r=await callAI("Women's health and fitness expert. The user is in the "+info.name+" phase of their menstrual cycle (day "+info.dayOfCycle+" of "+info.avgLen+"). "+symStr+" Give personalised recommendations for: 1) WORKOUTS - best exercises and intensity for this phase with specific examples. 2) FOOD AND NUTRITION - specific foods, nutrients and eating patterns to support this phase. 3) SELF-CARE AND MOOD - energy, mood and lifestyle tips. Be warm, practical and specific. Use clear headings.");
+          aiDiv.innerHTML="<div class='ai-box'>"+r+"</div>";
+        }catch(err){
+          aiDiv.innerHTML="<div class='ai-box'>Could not load recommendations. Please check your internet connection and try again. Error: "+(err.message||"unknown")+"</div>";
+        }
       });
       aiDiv.appendChild(advBtn);
     }
@@ -1478,7 +1796,16 @@ function renderCycle(){
     const card=el("div",{class:"card"});card.appendChild(cardTitle("ti-stethoscope","Log Symptoms"));
     const dateInp=el("input",{type:"date",value:TODAY});
     card.appendChild(el("div",{style:{marginBottom:10}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Date"]),dateInp]));
-    let checked=(cycle.symptoms&&cycle.symptoms[dateInp.value]&&cycle.symptoms[dateInp.value].checklist)||[];
+    let checked=[...(cycle.symptoms&&cycle.symptoms[TODAY]&&cycle.symptoms[TODAY].checklist||[])];
+    // Update checked when date changes
+    dateInp.addEventListener("change",()=>{
+      const existing=(cycle.symptoms&&cycle.symptoms[dateInp.value]&&cycle.symptoms[dateInp.value].checklist)||[];
+      checked.length=0;existing.forEach(s=>checked.push(s));
+      chipDiv.querySelectorAll(".chip").forEach(chip=>{
+        const isActive=checked.includes(chip.textContent);
+        chip.classList.toggle("active",isActive);
+      });
+    });
     card.appendChild(el("p",{style:{fontSize:13,fontWeight:500,marginBottom:8}},["Symptoms:"]));
     const chipDiv=el("div",{style:{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12}});
     SYMPTOM_LIST.forEach(sym=>{
@@ -1491,12 +1818,16 @@ function renderCycle(){
     if(cycle.symptoms&&cycle.symptoms[TODAY]) notesTA.value=cycle.symptoms[TODAY].notes||"";
     card.appendChild(notesTA);
     const saveBtn=btn("Save symptoms","","btn primary");
+    const saveMsg=el("span",{style:{fontSize:13,color:"#1D9E75",marginLeft:10,display:"none"}},["Saved!"]);
     saveBtn.addEventListener("click",()=>{
       if(!state.cycle.symptoms)state.cycle.symptoms={};
-      state.cycle.symptoms[dateInp.value]={checklist:checked,notes:notesTA.value};
-      save();render();
+      state.cycle.symptoms[dateInp.value]={checklist:[...checked],notes:notesTA.value};
+      save();
+      saveMsg.style.display="inline";
+      setTimeout(()=>{saveMsg.style.display="none";},2000);
     });
-    card.appendChild(saveBtn);div.appendChild(card);
+    card.appendChild(el("div",{style:{display:"flex",alignItems:"center",marginBottom:8}},[saveBtn,saveMsg]));
+    div.appendChild(card);
   }
 
   else if(cycleSection==="history"){
@@ -1519,7 +1850,7 @@ function renderCycle(){
 }
 
 // ── INIT ───────────────────────────────────────────────────────────────────────
-loadState();
+try{ loadState(); }catch(e){ console.log("Load failed, using defaults:", e); }
 document.getElementById("today-str").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 render();
 </script>
