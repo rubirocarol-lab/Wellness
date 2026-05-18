@@ -1368,28 +1368,31 @@ function searchLocalDB(query){
   const q=query.toLowerCase().trim();
   if(!q) return [];
   const words=q.split(/\s+/).filter(w=>w.length>0);
+  // Also try reversed word order e.g. "lemon cake" -> also check "cake lemon"
+  const reversed=words.slice().reverse().join(" ");
   
   const scored=FOOD_DB.map(food=>{
     const name=food.name.toLowerCase();
     let score=0;
-    // Exact match gets highest score
-    if(name===q) score+=20;
-    // Name starts with query
-    if(name.startsWith(q)) score+=10;
-    // Query is contained in name
-    if(name.includes(q)) score+=6;
-    // Each word matching
+    // Exact match
+    if(name===q) score+=30;
+    if(name===reversed) score+=28;
+    // Full query contained in name
+    if(name.includes(q)) score+=15;
+    if(name.includes(reversed)) score+=13;
+    // All words present (any order)
+    const allWordsMatch=words.every(w=>w.length<2||name.includes(w));
+    if(allWordsMatch && words.length>1) score+=10;
+    // Name starts with any word
     words.forEach(w=>{
       if(w.length<2) return;
-      if(name===w) score+=8;
-      if(name.startsWith(w)) score+=4;
-      if(name.includes(w)) score+=2;
+      if(name.startsWith(w)) score+=6;
+      if(name.includes(w)) score+=3;
     });
-    // Partial word matching - first 3+ chars
+    // Stem matching (first 4 chars)
     words.forEach(w=>{
-      if(w.length>=3){
-        const stem=w.slice(0,3);
-        if(name.includes(stem)) score+=1;
+      if(w.length>=4){
+        if(name.includes(w.slice(0,4))) score+=1;
       }
     });
     return{food,score};
@@ -1692,83 +1695,170 @@ function renderNutrition(){
     const q=searchInp.value.trim();
     if(!q) return;
     resultsDiv.innerHTML="";aiResultDiv.innerHTML="";
+
+    // STEP 1: Check local DB first (instant)
     const local=searchLocalDB(q);
     if(local.length){
-      local.forEach(food=>{
-        const defUnit=food.itemG?"item":"g";
-        const defQty=food.itemG?"1":"100";
-        const row=el("div",{style:{padding:"10px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}});
-        const hdr=el("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:4}});
-        hdr.appendChild(el("p",{style:{fontSize:14,fontWeight:500}},[food.name]));
-        hdr.appendChild(el("span",{class:"verified"},["Verified"]));
-        row.appendChild(hdr);
-        row.appendChild(el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},[food.cal+" kcal · "+food.pro+"g protein per 100g"]));
-        if(food.note) row.appendChild(el("p",{style:{fontSize:11,color:"#534AB7",marginBottom:6}},[food.note]));
-        const addRow=el("div",{class:"row"});
-        const qtyInp=el("input",{type:"number",value:defQty,style:{width:60}});
-        const unitSel=el("select");
-        UNIT_OPTIONS.forEach(o=>{
-          const opt=document.createElement("option");
-          opt.value=o.v;opt.textContent=o.l;
-          if(o.v===defUnit) opt.selected=true;
-          unitSel.appendChild(opt);
+      renderResults(local.map(f=>({
+        name:f.name,
+        cal:f.cal,pro:f.pro,carb:f.carb,fat:f.fat,
+        note:f.note||"",itemG:f.itemG,cupG:f.cupG,
+        fromDB:true
+      })));
+    }
+
+    // STEP 2: Search multiple food APIs in parallel
+    aiResultDiv.innerHTML="<p style='font-size:12px;color:#666;margin-bottom:6px'>Searching global food databases...</p>";
+    
+    const allApiResults=[];
+
+    // USDA FoodData Central - 1 million+ foods, strong on Western/branded foods
+    const usdaPromise=fetch("https://api.nal.usda.gov/fdc/v1/foods/search?query="+encodeURIComponent(q)+"&pageSize=6&dataType=Foundation,SR%20Legacy,Survey%20(FNDDS),Branded&api_key=DEMO_KEY")
+      .then(r=>r.json())
+      .then(data=>{
+        if(!data.foods) return [];
+        return data.foods.map(f=>{
+          const nutrients=f.foodNutrients||[];
+          const get=id=>{const n=nutrients.find(x=>x.nutrientId===id||x.nutrientNumber===String(id));return n?Math.round((n.value||0)*10)/10:0;};
+          const cal=get(1008)||get(208);
+          const pro=get(1003)||get(203);
+          const carb=get(1005)||get(205);
+          const fat=get(1004)||get(204);
+          const fibre=get(1079)||get(291);
+          return{name:f.description+(f.brandName?" ("+f.brandName+")":""),cal:Math.round(cal),pro,carb,fat,fibre,note:f.servingSize?(f.servingSize+""+(f.servingSizeUnit||"g")):"",fromUSDA:true};
+        }).filter(f=>f.cal>0);
+      }).catch(()=>[]);
+
+    // Open Food Facts - global crowdsourced DB, strong on African/Asian/local products
+    const offPromise=fetch("https://world.openfoodfacts.org/cgi/search.pl?search_terms="+encodeURIComponent(q)+"&search_simple=1&action=process&json=1&page_size=6&fields=product_name,brands,nutriments,countries_tags,quantity")
+      .then(r=>r.json())
+      .then(data=>{
+        if(!data.products) return [];
+        return data.products.filter(p=>{
+          if(!p.product_name||!p.nutriments) return false;
+          const kcal=p.nutriments["energy-kcal_100g"]||p.nutriments["energy-kcal"]||0;
+          if(!kcal||kcal>900) return false;
+          if(/[^\u0000-\u024F\s]/.test(p.product_name)) return false;
+          return true;
+        }).map(p=>{
+          const n=p.nutriments;
+          const kcal=Math.round(n["energy-kcal_100g"]||n["energy-kcal"]||0);
+          // Show country flag hint for African products
+          const countries=p.countries_tags||[];
+          const isAfrican=countries.some(c=>["en:kenya","en:nigeria","en:ghana","en:ethiopia","en:tanzania","en:uganda","en:south-africa","en:egypt","en:morocco","en:zimbabwe","en:zambia","en:cameroon","en:senegal","en:ivory-coast"].includes(c));
+          return{
+            name:p.product_name+(p.brands?" ("+p.brands+")":""),
+            cal:kcal,
+            pro:Math.round((n.proteins_100g||0)*10)/10,
+            carb:Math.round((n.carbohydrates_100g||0)*10)/10,
+            fat:Math.round((n.fat_100g||0)*10)/10,
+            fibre:Math.round((n.fiber_100g||0)*10)/10,
+            note:p.quantity||"",
+            fromOFF:true,
+            isAfrican
+          };
         });
-        const estSpan=el("span",{style:{fontSize:13,color:"#D85A30",fontWeight:600}});
-        function updateEst(){
-          const g=smartToGrams(parseFloat(qtyInp.value)||100,unitSel.value,food);
-          estSpan.textContent=Math.round(food.cal*g/100)+" kcal";
-        }
-        qtyInp.addEventListener("input",updateEst);
-        unitSel.addEventListener("change",updateEst);
-        updateEst();
-        const addBtn=btn("+ Add","",{"class":"btn primary small"});
-        addBtn.addEventListener("click",()=>{
-          const g=smartToGrams(parseFloat(qtyInp.value)||100,unitSel.value,food);
-          const f=parseFloat(qtyInp.value)||100;
-          const factor=g/100;
-          const unitLabel=(unitSel.value==="item"&&food.note)?food.note:`${qtyInp.value} ${unitSel.value}`;
-          state.foods.push({name:food.name,calories:Math.round(food.cal*factor),protein:Math.round(food.pro*factor*10)/10,carbs:Math.round(food.carb*factor*10)/10,fat:Math.round(food.fat*factor*10)/10,serving:unitLabel});
-          save();render();
-        });
-        addRow.appendChild(qtyInp);addRow.appendChild(unitSel);addRow.appendChild(estSpan);addRow.appendChild(addBtn);
-        row.appendChild(addRow);
-        resultsDiv.appendChild(row);
-      });
-    } else {
+      }).catch(()=>[]);
+
+    // Wait for both APIs
+    const [usdaResults, offResults]=await Promise.all([usdaPromise, offPromise]);
+    
+    // Deduplicate by name similarity
+    const combined=[...usdaResults];
+    offResults.forEach(o=>{
+      const isDup=combined.some(u=>u.name.toLowerCase().includes(o.name.toLowerCase().slice(0,10))||o.name.toLowerCase().includes(u.name.toLowerCase().slice(0,10)));
+      if(!isDup) combined.push(o);
+    });
+
+    aiResultDiv.innerHTML="";
+
+    // Show African products first if any found
+    const africanResults=combined.filter(f=>f.isAfrican);
+    const otherResults=combined.filter(f=>!f.isAfrican);
+
+    if(africanResults.length){
+      const hdr=el("p",{style:{fontSize:12,color:"#0F6E56",fontWeight:500,marginBottom:6,marginTop:8}},["African / Local products:"]);
+      aiResultDiv.appendChild(hdr);
+      const africanDiv=document.createElement("div");
+      renderResults(africanResults, africanDiv);
+      aiResultDiv.appendChild(africanDiv);
+    }
+
+    if(otherResults.length){
+      const hdr=el("p",{style:{fontSize:12,color:"#666",marginBottom:6,marginTop:africanResults.length?12:0}},["Global database results ("+combined.length+" found):"]);
+      aiResultDiv.appendChild(hdr);
+      const otherDiv=document.createElement("div");
+      renderResults(otherResults.slice(0,8), otherDiv);
+      aiResultDiv.appendChild(otherDiv);
+    }
+
+    if(!combined.length && !local.length){
       aiResultDiv.innerHTML="";
-      const loading=el("div",{class:"ai-box"},["Searching..."]);
-      aiResultDiv.appendChild(loading);
-      try{
-        const r=await callAI("You are a nutrition database. Give accurate values per 100g for: "+q+". One sentence description. End response with exactly: CALORIES:[number] PROTEIN:[number] CARBS:[number] FAT:[number]");
-        const parse=k=>{const m=r.match(new RegExp(k+":[\\d.]+","i"));return m?parseFloat(m[0].split(":")[1]):0;};
-        const text=r.replace(/CALORIES:[\d.]+/ig,"").replace(/PROTEIN:[\d.]+/ig,"").replace(/CARBS:[\d.]+/ig,"").replace(/FAT:[\d.]+/ig,"").trim();
-        const cals=Math.round(parse("CALORIES"));
-        aiResultDiv.innerHTML="";
-        aiResultDiv.appendChild(el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["AI estimate (per 100g):"]));
-        aiResultDiv.appendChild(el("div",{class:"ai-box"},[text]));
-        const addAiBtn=btn("+ Add AI estimate ("+cals+" kcal)","","btn primary");
-        addAiBtn.style.marginTop="8px";
-        addAiBtn.addEventListener("click",()=>{
-          state.foods.push({name:q,calories:cals,protein:Math.round(parse("PROTEIN")*10)/10,carbs:Math.round(parse("CARBS")*10)/10,fat:Math.round(parse("FAT")*10)/10,serving:"100g"});
-          save();render();
-        });
-        aiResultDiv.appendChild(addAiBtn);
-      }catch(e){
-        // AI not available - show helpful manual entry prompt
-        aiResultDiv.innerHTML="";
-        const msg=el("div",{class:"ai-box"});
-        msg.innerHTML="<strong>"+q+"</strong> not found in database.<br><br>"+
-          "Use <strong>Manual Entry</strong> below to add it with your own values, "+
-          "or try searching a more specific name (e.g. \"chocolate cake\" instead of \"cake\")."+
-          "<br><br><small style='color:#854F0B'>AI lookup requires an OpenRouter API key. See instructions in the file.</small>";
-        aiResultDiv.appendChild(msg);
-        // Auto-fill the manual entry food name
-        const manNameInp=document.querySelector("#manual-food-name");
-        if(manNameInp) manNameInp.value=q;
-      }
+    }
+
+    // STEP 3: If nothing found anywhere, show manual entry prompt
+    if(!local.length && !aiResultDiv.innerHTML){
+      aiResultDiv.innerHTML="<div class='ai-box'><strong>"+q+"</strong> not found. Use Manual Entry below to add it with your own calorie values.</div>";
+      const manNameInp=document.querySelector("#manual-food-name");
+      if(manNameInp) manNameInp.value=q;
     }
   }
 
+  function renderResults(foods, container){
+    const target=container||resultsDiv;
+    foods.forEach(food=>{
+      const key=food.name;
+      const defUnit=food.itemG?"item":"g";
+      const defQty=food.itemG?"1":"100";
+      const row=el("div",{style:{padding:"10px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}});
+      const hdr=el("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:4}});
+      hdr.appendChild(el("p",{style:{fontSize:14,fontWeight:500}},[food.name]));
+      if(food.fromDB) hdr.appendChild(el("span",{class:"verified"},["✓ Verified"]));
+      if(food.fromUSDA) hdr.appendChild(el("span",{style:{fontSize:11,background:"#E6F1FB",color:"#185FA5",padding:"1px 6px",borderRadius:8,flexShrink:0}},["USDA"]));
+      if(food.fromOFF) hdr.appendChild(el("span",{style:{fontSize:11,background:food.isAfrican?"#EAF3DE":"#F0F0EC",color:food.isAfrican?"#3B6D11":"#666",padding:"1px 6px",borderRadius:8,flexShrink:0}},[food.isAfrican?"🌍 African":"Global"]));
+      row.appendChild(hdr);
+      row.appendChild(el("p",{style:{fontSize:12,color:"#666",marginBottom:food.note?2:6}},[
+        food.cal+" kcal · "+food.pro+"g protein · "+food.carb+"g carbs · "+food.fat+"g fat per 100g"
+      ]));
+      if(food.note) row.appendChild(el("p",{style:{fontSize:11,color:"#534AB7",marginBottom:6}},[food.note]));
+      const addRow=el("div",{class:"row"});
+      const qtyInp=el("input",{type:"number",value:food.itemG?"1":"100",style:{width:60}});
+      const unitSel=el("select");
+      UNIT_OPTIONS.forEach(o=>{
+        const opt=document.createElement("option");
+        opt.value=o.v;opt.textContent=o.l;
+        if(o.v===(food.itemG?"item":"g")) opt.selected=true;
+        unitSel.appendChild(opt);
+      });
+      const estSpan=el("span",{style:{fontSize:13,color:"#D85A30",fontWeight:600}});
+      function updateEst(){
+        const g=smartToGrams(parseFloat(qtyInp.value)||100,unitSel.value,food);
+        estSpan.textContent=Math.round(food.cal*g/100)+" kcal";
+      }
+      qtyInp.addEventListener("input",updateEst);
+      unitSel.addEventListener("change",updateEst);
+      updateEst();
+      const addBtn=btn("+ Add","","btn primary small");
+      addBtn.addEventListener("click",()=>{
+        const g=smartToGrams(parseFloat(qtyInp.value)||100,unitSel.value,food);
+        const factor=g/100;
+        const unitLabel=(unitSel.value==="item"&&food.note)?food.note:`${qtyInp.value} ${unitSel.value}`;
+        state.foods.push({
+          name:food.name,
+          calories:Math.round(food.cal*factor),
+          protein:Math.round(food.pro*factor*10)/10,
+          carbs:Math.round(food.carb*factor*10)/10,
+          fat:Math.round(food.fat*factor*10)/10,
+          fibre:Math.round((food.fibre||0)*factor*10)/10,
+          serving:unitLabel
+        });
+        save();render();
+      });
+      addRow.appendChild(qtyInp);addRow.appendChild(unitSel);addRow.appendChild(estSpan);addRow.appendChild(addBtn);
+      row.appendChild(addRow);
+      target.appendChild(row);
+    });
+  }
   searchInp.addEventListener("keydown",e=>{if(e.key==="Enter")doSearch();});
   const searchBtn=btn("Search","","btn primary");
   searchBtn.addEventListener("click",doSearch);
