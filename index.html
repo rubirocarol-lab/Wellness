@@ -776,7 +776,38 @@ const FOOD_DB = [
   { name: "Stew (mixed vegetable)", cal: 110, pro: 4, carb: 18, fat: 3, cupG: 244 },
   { name: "Oxtail Stew", cal: 250, pro: 24, carb: 5, fat: 16, cupG: 244 },
   { name: "Tripe stew", cal: 120, pro: 14, carb: 4, fat: 6, cupG: 244 },
-  { name: "Mixed Grill (restaurant portion)", cal: 680, pro: 55, carb: 5, fat: 50, itemG: 400 },];
+  { name: "Mixed Grill (restaurant portion)", cal: 680, pro: 55, carb: 5, fat: 50, itemG: 400 },
+  // ── GENERIC / CATCH-ALL ENTRIES ──
+  { name: "Cake (any flavour, slice)", cal: 380, pro: 4.5, carb: 55, fat: 17, itemG: 80, note: "~1 slice" },
+  { name: "Cookie (any type)", cal: 480, pro: 5.5, carb: 65, fat: 22, itemG: 15, note: "~1 cookie" },
+  { name: "Biscuit (plain)", cal: 440, pro: 7, carb: 65, fat: 18, itemG: 12, note: "~1 biscuit" },
+  { name: "Bread roll", cal: 265, pro: 9, carb: 49, fat: 3.5, itemG: 50, note: "~1 roll" },
+  { name: "Pastry (any)", cal: 420, pro: 6, carb: 48, fat: 23, itemG: 75, note: "~1 piece" },
+  { name: "Pie (savoury, slice)", cal: 310, pro: 10, carb: 30, fat: 18, itemG: 150, note: "~1 slice" },
+  { name: "Pie (sweet, slice)", cal: 295, pro: 3, carb: 43, fat: 13, itemG: 125, note: "~1 slice" },
+  { name: "Tart (sweet, slice)", cal: 320, pro: 4, carb: 42, fat: 16, itemG: 100, note: "~1 slice" },
+  { name: "Soup (any, bowl)", cal: 100, pro: 5, carb: 14, fat: 3.5, itemG: 300, note: "~1 bowl" },
+  { name: "Salad (mixed, no dressing)", cal: 25, pro: 2, carb: 4, fat: 0.4, cupG: 100 },
+  { name: "Stew (any, bowl)", cal: 175, pro: 14, carb: 12, fat: 8, itemG: 300, note: "~1 bowl" },
+  { name: "Curry (any, portion)", cal: 185, pro: 13, carb: 12, fat: 10, itemG: 250, note: "~1 portion" },
+  { name: "Rice dish (any, cup)", cal: 175, pro: 5, carb: 32, fat: 4, cupG: 200 },
+  { name: "Pasta dish (any, cup)", cal: 200, pro: 8, carb: 32, fat: 6, cupG: 200 },
+  { name: "Noodle dish (any, cup)", cal: 190, pro: 7, carb: 30, fat: 5, cupG: 200 },
+  { name: "Sandwich (any, medium)", cal: 320, pro: 15, carb: 36, fat: 12, itemG: 180, note: "~1 sandwich" },
+  { name: "Wrap (any)", cal: 280, pro: 14, carb: 32, fat: 10, itemG: 200, note: "~1 wrap" },
+  { name: "Burger (any)", cal: 350, pro: 18, carb: 30, fat: 17, itemG: 200, note: "~1 burger" },
+  { name: "Pizza (any, slice)", cal: 270, pro: 11, carb: 32, fat: 11, itemG: 107, note: "~1 slice" },
+  { name: "Fried food (any, portion)", cal: 300, pro: 10, carb: 28, fat: 18, itemG: 150 },
+  { name: "Grilled meat (any, portion)", cal: 220, pro: 26, carb: 0, fat: 13, itemG: 150 },
+  { name: "Roast meat (any, portion)", cal: 240, pro: 27, carb: 0, fat: 15, itemG: 150 },
+  { name: "Stir fry (any, cup)", cal: 200, pro: 15, carb: 12, fat: 10, cupG: 250 },
+  { name: "Smoothie (any fruit)", cal: 110, pro: 2, carb: 24, fat: 0.5, cupG: 300, itemG: 300, note: "~1 glass" },
+  { name: "Juice (any fruit, glass)", cal: 50, pro: 0.5, carb: 12, fat: 0.1, itemG: 250, note: "~1 glass" },
+  { name: "Soft drink (any, can)", cal: 42, pro: 0, carb: 11, fat: 0, itemG: 330, note: "~1 can" },
+  { name: "Snack bar (any)", cal: 380, pro: 8, carb: 58, fat: 14, itemG: 50, note: "~1 bar" },
+  { name: "Nuts (mixed handful)", cal: 600, pro: 18, carb: 18, fat: 54, itemG: 30, note: "~1 handful" },
+  { name: "Fruit (any medium)", cal: 60, pro: 0.8, carb: 15, fat: 0.2, itemG: 150, note: "~1 medium piece" },
+  { name: "Vegetable (any cooked, cup)", cal: 35, pro: 2.5, carb: 6, fat: 0.3, cupG: 150 },];
 
 const UNIT_OPTIONS=[
   {v:"g",l:"grams (g)"},{v:"kg",l:"kilograms (kg)"},{v:"ml",l:"millilitres (ml)"},
@@ -857,22 +888,62 @@ function smartToGrams(qty,unit,food){
 
 function searchLocalDB(query){
   const q=query.toLowerCase().trim();
+  if(!q) return [];
   const words=q.split(/\s+/).filter(w=>w.length>0);
-  return FOOD_DB.map(food=>{
+  
+  const scored=FOOD_DB.map(food=>{
     const name=food.name.toLowerCase();
     let score=0;
-    words.forEach(w=>{if(name.startsWith(w))score+=3;else if(name.includes(w))score+=1;});
+    // Exact match gets highest score
+    if(name===q) score+=20;
+    // Name starts with query
+    if(name.startsWith(q)) score+=10;
+    // Query is contained in name
+    if(name.includes(q)) score+=6;
+    // Each word matching
+    words.forEach(w=>{
+      if(w.length<2) return;
+      if(name===w) score+=8;
+      if(name.startsWith(w)) score+=4;
+      if(name.includes(w)) score+=2;
+    });
+    // Partial word matching - first 3+ chars
+    words.forEach(w=>{
+      if(w.length>=3){
+        const stem=w.slice(0,3);
+        if(name.includes(stem)) score+=1;
+      }
+    });
     return{food,score};
-  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,6).map(x=>x.food);
+  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+  
+  return scored.slice(0,8).map(x=>x.food);
 }
 
+// ── AI SETUP ──────────────────────────────────────────────────────────────────
+// To enable AI features, add your OpenRouter API key below (free at openrouter.ai)
+const OPENROUTER_KEY = "";  // paste your key here e.g. "sk-or-v1-..."
+
 async function callAI(prompt){
-  const r=await fetch("https://api.anthropic.com/v1/messages",{
-    method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})
+  if(!OPENROUTER_KEY){
+    throw new Error("AI features need setup. Get a free key at openrouter.ai and paste it in the OPENROUTER_KEY field in the app file.");
+  }
+  const r=await fetch("https://openrouter.ai/api/v1/chat/completions",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+OPENROUTER_KEY,
+      "HTTP-Referer":"https://rubirocarol-lab.github.io/Wellness/",
+      "X-Title":"Wellness Hub"
+    },
+    body:JSON.stringify({
+      model:"meta-llama/llama-3.1-8b-instruct:free",
+      messages:[{role:"user",content:prompt}]
+    })
   });
   const d=await r.json();
-  return(d.content||[]).map(b=>b.text||"").join("");
+  if(d.error) throw new Error(d.error.message||"API error");
+  return d.choices[0].message.content||"";
 }
 
 // ── HELPERS ────────────────────────────────────────────────────────────────────
@@ -1077,21 +1148,33 @@ function renderNutrition(){
       const loading=el("div",{class:"ai-box"},["Searching..."]);
       aiResultDiv.appendChild(loading);
       try{
-        const r=await callAI(`Nutrition database. Per 100g for "${q}": 1 sentence. End with: CALORIES:[n] PROTEIN:[n] CARBS:[n] FAT:[n]`);
+        const r=await callAI("You are a nutrition database. Give accurate values per 100g for: "+q+". One sentence description. End response with exactly: CALORIES:[number] PROTEIN:[number] CARBS:[number] FAT:[number]");
         const parse=k=>{const m=r.match(new RegExp(k+":[\\d.]+","i"));return m?parseFloat(m[0].split(":")[1]):0;};
         const text=r.replace(/CALORIES:[\d.]+/ig,"").replace(/PROTEIN:[\d.]+/ig,"").replace(/CARBS:[\d.]+/ig,"").replace(/FAT:[\d.]+/ig,"").trim();
         const cals=Math.round(parse("CALORIES"));
         aiResultDiv.innerHTML="";
         aiResultDiv.appendChild(el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["AI estimate (per 100g):"]));
         aiResultDiv.appendChild(el("div",{class:"ai-box"},[text]));
-        const addAiBtn=btn(`+ Add AI estimate (${cals} kcal)`,"","btn primary");
+        const addAiBtn=btn("+ Add AI estimate ("+cals+" kcal)","","btn primary");
         addAiBtn.style.marginTop="8px";
         addAiBtn.addEventListener("click",()=>{
           state.foods.push({name:q,calories:cals,protein:Math.round(parse("PROTEIN")*10)/10,carbs:Math.round(parse("CARBS")*10)/10,fat:Math.round(parse("FAT")*10)/10,serving:"100g"});
           save();render();
         });
         aiResultDiv.appendChild(addAiBtn);
-      }catch(e){aiResultDiv.innerHTML="<div class='ai-box'>Not found. Use manual entry below.</div>";}
+      }catch(e){
+        // AI not available - show helpful manual entry prompt
+        aiResultDiv.innerHTML="";
+        const msg=el("div",{class:"ai-box"});
+        msg.innerHTML="<strong>"+q+"</strong> not found in database.<br><br>"+
+          "Use <strong>Manual Entry</strong> below to add it with your own values, "+
+          "or try searching a more specific name (e.g. \"chocolate cake\" instead of \"cake\")."+
+          "<br><br><small style='color:#854F0B'>AI lookup requires an OpenRouter API key. See instructions in the file.</small>";
+        aiResultDiv.appendChild(msg);
+        // Auto-fill the manual entry food name
+        const manNameInp=document.querySelector("#manual-food-name");
+        if(manNameInp) manNameInp.value=q;
+      }
     }
   }
 
@@ -1105,7 +1188,7 @@ function renderNutrition(){
   // Manual entry
   const manCard=el("div",{class:"card"});
   manCard.appendChild(cardTitle("ti-pencil","Manual Entry"));
-  const nameInp=el("input",{type:"text",placeholder:"Food name"});
+  const nameInp=el("input",{type:"text",placeholder:"Food name",id:"manual-food-name"});
   const qtyInp=el("input",{type:"number",placeholder:"Qty",style:{width:65}});
   const unitSel=el("select");
   UNIT_OPTIONS.forEach(o=>{const opt=document.createElement("option");opt.value=o.v;opt.textContent=o.l;unitSel.appendChild(opt);});
@@ -1851,6 +1934,14 @@ function renderCycle(){
 
 // ── INIT ───────────────────────────────────────────────────────────────────────
 try{ loadState(); }catch(e){ console.log("Load failed, using defaults:", e); }
+
+// Show AI setup banner if no key
+if(!OPENROUTER_KEY){
+  const banner=document.createElement("div");
+  banner.style.cssText="background:#FAEEDA;border-bottom:1px solid #FAC775;padding:10px 16px;font-size:13px;color:#854F0B;display:flex;justify-content:space-between;align-items:center;";
+  banner.innerHTML="<span><strong>AI features disabled.</strong> Get a free key at <a href='https://openrouter.ai' target='_blank' style='color:#854F0B'>openrouter.ai</a> and paste it in the OPENROUTER_KEY field in the HTML file to enable workout suggestions, cycle advice and food AI lookup.</span><button onclick='this.parentElement.remove()' style='background:none;border:none;cursor:pointer;font-size:18px;color:#854F0B;margin-left:10px;'>x</button>";
+  document.body.insertBefore(banner, document.body.firstChild);
+}
 document.getElementById("today-str").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 render();
 </script>
