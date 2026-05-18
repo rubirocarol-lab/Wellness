@@ -922,7 +922,7 @@ function searchLocalDB(query){
 
 // ── AI SETUP ──────────────────────────────────────────────────────────────────
 // To enable AI features, add your OpenRouter API key below (free at openrouter.ai)
-const OPENROUTER_KEY = "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";  // paste your key here e.g. "sk-or-v1-..."
+const OPENROUTER_KEY = "";  // paste your key here e.g. "sk-or-v1-..."
 
 async function callAI(prompt){
   if(!OPENROUTER_KEY){
@@ -937,12 +937,18 @@ async function callAI(prompt){
       "X-Title":"Wellness Hub"
     },
     body:JSON.stringify({
-      model:"meta-llama/llama-3.1-8b-instruct:free",
+      model:"mistralai/mistral-7b-instruct:free",
       messages:[{role:"user",content:prompt}]
     })
   });
   const d=await r.json();
-  if(d.error) throw new Error(d.error.message||"API error");
+  if(!r.ok || d.error){
+    const msg = d.error?.message || d.error || ("HTTP "+r.status);
+    throw new Error("OpenRouter error: "+msg);
+  }
+  if(!d.choices || !d.choices[0]){
+    throw new Error("No response from AI. Response: "+JSON.stringify(d));
+  }
   return d.choices[0].message.content||"";
 }
 
@@ -1257,7 +1263,6 @@ let sessionSets={};
 let sessionNotes="";
 
 function renderWorkouts(){
-  if(workoutView==="suggest") return renderWorkoutSuggest();
   if(workoutView==="history") return renderWorkoutHistory();
   if(workoutView==="session") return renderWorkoutSession();
   return renderWorkoutPrograms();
@@ -1266,9 +1271,8 @@ function renderWorkouts(){
 function renderWorkoutPrograms(){
   const div=el("div");
   const btns=el("div",{class:"row",style:{marginBottom:12}});
-  const sb=btn("Suggest a workout","","btn");sb.style.flex="1";sb.style.justifyContent="center";sb.addEventListener("click",()=>{workoutView="suggest";render();});
-  const hb=btn("History ("+((state.workoutSessions||[]).length)+")","","btn");hb.style.flex="1";hb.style.justifyContent="center";hb.addEventListener("click",()=>{workoutView="history";render();});
-  btns.appendChild(sb);btns.appendChild(hb);div.appendChild(btns);
+  const hb=btn("Session History ("+((state.workoutSessions||[]).length)+")","","btn");hb.style.flex="1";hb.style.justifyContent="center";hb.addEventListener("click",()=>{workoutView="history";render();});
+  btns.appendChild(hb);div.appendChild(btns);
 
   // Exercise search
   const exCard=el("div",{class:"card"});
@@ -1353,44 +1357,6 @@ function renderWorkoutPrograms(){
 }
 
 function renderWorkoutSuggest(){
-  const div=el("div");
-  const backBtn=btn("Back","","btn");backBtn.addEventListener("click",()=>{workoutView="programs";render();});
-  div.appendChild(el("div",{class:"row",style:{marginBottom:12}},[backBtn,el("p",{style:{fontWeight:500,fontSize:15}},["Workout Suggestions"])]));
-  const card=el("div",{class:"card"});
-  card.appendChild(cardTitle("ti-target","Target Body Areas"));
-  const areaDiv=el("div",{style:{display:"flex",flexWrap:"wrap",gap:8,marginBottom:12}});
-  let selAreas=[];
-  BODY_AREAS.forEach(a=>{
-    const c=el("button",{class:"chip"},[ a]);
-    c.addEventListener("click",()=>{
-      if(selAreas.includes(a)){selAreas=selAreas.filter(x=>x!==a);c.classList.remove("active");}
-      else{selAreas.push(a);c.classList.add("active");}
-    });
-    areaDiv.appendChild(c);
-  });
-  card.appendChild(areaDiv);
-  const optRow=el("div",{class:"row",style:{marginBottom:12}});
-  const levelSel=el("select");
-  [["beginner","Beginner"],["intermediate","Intermediate"],["advanced","Advanced"]].forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;if(v==="intermediate")o.selected=true;levelSel.appendChild(o);});
-  const eqSel=el("select");
-  [["gym","Full gym"],["home","Home / bodyweight"],["minimal","Bands / dumbbells"]].forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;eqSel.appendChild(o);});
-  optRow.appendChild(el("div",{style:{flex:"1 1 130px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Fitness level"]),levelSel]));
-  optRow.appendChild(el("div",{style:{flex:"1 1 130px"}},[el("p",{style:{fontSize:12,color:"#666",marginBottom:4}},["Equipment"]),eqSel]));
-  card.appendChild(optRow);
-  const result=el("div");
-  const sugBtn=btn("Suggest workout","","btn primary");
-  sugBtn.addEventListener("click",async()=>{
-    if(!selAreas.length)return;
-    result.innerHTML="<div class='ai-box'>Generating...</div>";
-    const eq=eqSel.value==="gym"?"full gym":eqSel.value==="home"?"bodyweight":"bands/dumbbells";
-    try{const r=await callAI(`Personal trainer. Workout for: ${selAreas.join(", ")}. Level: ${levelSel.value}. Equipment: ${eq}. Give 6-8 exercises with sets, reps and brief notes.`);result.innerHTML="<div class='ai-box'>"+r+"</div>";}
-    catch{result.innerHTML="<div class='ai-box'>Could not generate.</div>";}
-  });
-  card.appendChild(sugBtn);card.appendChild(result);div.appendChild(card);
-  return div;
-}
-
-function renderWorkoutHistory(){
   const div=el("div");
   const backBtn=btn("Back","","btn");backBtn.addEventListener("click",()=>{workoutView="programs";render();});
   div.appendChild(el("div",{class:"row",style:{marginBottom:12}},[backBtn,el("p",{style:{fontWeight:500,fontSize:15}},["Session History"])]));
@@ -1935,13 +1901,7 @@ function renderCycle(){
 // ── INIT ───────────────────────────────────────────────────────────────────────
 try{ loadState(); }catch(e){ console.log("Load failed, using defaults:", e); }
 
-// Show AI setup banner if no key
-if(!OPENROUTER_KEY){
-  const banner=document.createElement("div");
-  banner.style.cssText="background:#FAEEDA;border-bottom:1px solid #FAC775;padding:10px 16px;font-size:13px;color:#854F0B;display:flex;justify-content:space-between;align-items:center;";
-  banner.innerHTML="<span><strong>AI features disabled.</strong> Get a free key at <a href='https://openrouter.ai' target='_blank' style='color:#854F0B'>openrouter.ai</a> and paste it in the OPENROUTER_KEY field in the HTML file to enable workout suggestions, cycle advice and food AI lookup.</span><button onclick='this.parentElement.remove()' style='background:none;border:none;cursor:pointer;font-size:18px;color:#854F0B;margin-left:10px;'>x</button>";
-  document.body.insertBefore(banner, document.body.firstChild);
-}
+
 document.getElementById("today-str").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 render();
 </script>
