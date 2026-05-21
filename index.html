@@ -1317,7 +1317,8 @@ const SYMPTOM_LIST=["Cramps","Bloating","Spotting","Heavy flow","Light flow","Br
   "Increased libido","Clear/stretchy discharge","Pelvic pain","Constipation","Insomnia"];
 
 const STORAGE_KEY="wellness_hub_v5";
-const TODAY=new Date().toISOString().split("T")[0];
+const _tn=new Date();
+const TODAY=_tn.getFullYear()+"-"+String(_tn.getMonth()+1).padStart(2,"0")+"-"+String(_tn.getDate()).padStart(2,"0");
 
 // ── DATE NAVIGATION ──────────────────────────────────────────────────────────
 // Each section has its own "viewing date" so you can backfill any day
@@ -1338,8 +1339,11 @@ function fmtDate(d){
 function shiftDate(section, delta){
   const d=new Date(viewDate[section]+"T00:00:00");
   d.setDate(d.getDate()+delta);
-  const nd=d.toISOString().split("T")[0];
-  viewDate[section]=nd;
+  // Use local date parts to avoid UTC timezone shift
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const day=String(d.getDate()).padStart(2,"0");
+  viewDate[section]=y+"-"+m+"-"+day;
   render();
 }
 
@@ -2186,15 +2190,71 @@ function renderWorkoutSession(){
   div.appendChild(el("div",{class:"row",style:{marginBottom:12}},[backBtn,el("p",{style:{fontWeight:500,fontSize:15}},["Logging: "+sessionProg.name])]));
 
   sessionProg.exercises.forEach((ex,i)=>{
-    // Find PB
+    // Collect last 4 sessions for this exercise + overall PB
+    const pastSessions=[];
     let pb=null;
-    (state.workoutSessions||[]).forEach(sess=>sess.exercises.forEach(e=>{if(e.name===ex.name)e.sets.forEach(s=>{if(s.weight&&(!pb||parseFloat(s.weight)>pb.weight))pb={weight:parseFloat(s.weight),reps:parseInt(s.reps)||0,date:sess.date};});}));
+    (state.workoutSessions||[]).slice().reverse().forEach(sess=>{
+      const match=sess.exercises.find(e=>e.name===ex.name);
+      if(match&&match.sets&&match.sets.length){
+        if(pastSessions.length<4) pastSessions.push({date:sess.date,sets:match.sets});
+        match.sets.forEach(s=>{
+          if(s.weight&&(!pb||parseFloat(s.weight)>pb.weight))
+            pb={weight:parseFloat(s.weight),reps:parseInt(s.reps)||0,date:sess.date};
+        });
+      }
+    });
+
     const card=el("div",{class:"card"});
-    const hdr=el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}});
+    const hdr=el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}});
     const nameDiv=el("div",[el("p",{style:{fontSize:15,fontWeight:500}},[ex.name])]);
-    if(pb) nameDiv.appendChild(el("p",{style:{fontSize:12,color:"#534AB7"}},["PB: "+pb.weight+"kg x "+pb.reps+" reps ("+pb.date+")"]));
-    const ytLink=el("a",{href:"https://www.youtube.com/results?search_query="+ex.ytQuery,target:"_blank",style:{fontSize:12,color:"#185FA5",textDecoration:"none"}},["Watch"]);
+    if(pb) nameDiv.appendChild(el("p",{style:{fontSize:12,color:"var(--rose)",fontWeight:500}},["PB: "+pb.weight+"kg x "+pb.reps+" reps ("+pb.date+")"]));
+    const ytLink=el("a",{href:"https://www.youtube.com/results?search_query="+ex.ytQuery,target:"_blank",style:{fontSize:12,color:"var(--teal)",textDecoration:"none",fontWeight:500}},["Watch"]);
     hdr.appendChild(nameDiv);hdr.appendChild(ytLink);card.appendChild(hdr);
+
+    // ── Last 4 sessions progress table ──────────────────────────────────────
+    if(pastSessions.length){
+      const histWrap=el("div",{style:{marginBottom:12,background:"var(--teal-l)",border:"1px solid var(--teal-m)",borderRadius:10,padding:"10px 12px"}});
+      histWrap.appendChild(el("p",{style:{fontSize:11,fontWeight:600,color:"var(--teal-d)",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:8}},["Last "+pastSessions.length+" session"+(pastSessions.length>1?"s":"")]));
+
+      pastSessions.forEach((sess,si)=>{
+        const bestWeight=Math.max(...sess.sets.filter(s=>s.weight).map(s=>parseFloat(s.weight)||0),0);
+        const totalVol=sess.sets.reduce((sum,s)=>{
+          const w=parseFloat(s.weight)||0;const r=parseInt(s.reps)||0;return sum+(w*r);
+        },0);
+        const sessRow=el("div",{style:{marginBottom:si<pastSessions.length-1?"8px":"0",paddingBottom:si<pastSessions.length-1?"8px":"0",borderBottom:si<pastSessions.length-1?"1px solid var(--teal-m)":"none"}});
+
+        // Date + summary line
+        const topLine=el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:4}});
+        topLine.appendChild(el("span",{style:{fontSize:12,fontWeight:600,color:"var(--text)"}},[sess.date]));
+        const summary=[];
+        if(bestWeight) summary.push(bestWeight+"kg best");
+        summary.push(sess.sets.length+" set"+(sess.sets.length>1?"s":""));
+        if(totalVol) summary.push(Math.round(totalVol)+"kg vol");
+        topLine.appendChild(el("span",{style:{fontSize:11,color:"var(--muted)"}},[summary.join(" · ")]));
+        sessRow.appendChild(topLine);
+
+        // Sets breakdown chips
+        const setsRow=el("div",{style:{display:"flex",gap:4,flexWrap:"wrap"}});
+        sess.sets.forEach((s,j)=>{
+          const w=s.weight?s.weight+"kg":"--";
+          const r=s.reps?s.reps+"r":"--";
+          const isTop=parseFloat(s.weight||0)===bestWeight&&bestWeight>0;
+          const chip=el("span",{style:{
+            fontSize:11,padding:"2px 7px",borderRadius:6,
+            background:isTop?"var(--rose-l)":"#fff",
+            border:"1px solid "+(isTop?"var(--rose-m)":"var(--teal-m)"),
+            color:isTop?"var(--rose-d)":"var(--muted)",
+            fontWeight:isTop?"600":"400"
+          }},["S"+(j+1)+": "+w+" x "+r]);
+          setsRow.appendChild(chip);
+        });
+        sessRow.appendChild(setsRow);
+        histWrap.appendChild(sessRow);
+      });
+      card.appendChild(histWrap);
+    } else {
+      card.appendChild(el("p",{style:{fontSize:12,color:"var(--muted)",marginBottom:10,fontStyle:"italic"}},["No previous sessions yet — this will be your first!"]));
+    }
 
     const grid=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 28px",gap:6,marginBottom:4}});
     grid.appendChild(el("p",{style:{fontSize:11,color:"#666"}},["Reps"]));
