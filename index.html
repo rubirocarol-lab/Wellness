@@ -9,36 +9,43 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:#f5f5f0;color:#1a1a1a;min-height:100vh}
+:root{
+  --rose:#D4537E; --rose-d:#993556; --rose-l:#FBEAF0; --rose-m:#F9D0E0;
+  --teal:#1A9E8F; --teal-d:#0D6E63; --teal-l:#E0F5F3; --teal-m:#A8E6E1;
+  --bg:#F7FDFC; --card:#fff; --border:rgba(26,158,143,0.18);
+  --text:#0F2D2A; --muted:#3D6B66; --subtle:#7AAEAA;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 input,select,button,textarea{font-family:inherit}
 .app{max-width:700px;margin:0 auto;padding-bottom:80px}
-.header{padding:1.25rem 1rem 0}
-.header h1{font-size:20px;font-weight:500}
-.header p{font-size:13px;color:#666;margin-top:2px}
-.tabs{display:flex;gap:6px;padding:.75rem 1rem;overflow-x:auto;scrollbar-width:none}
+.header{padding:1.25rem 1rem 0;background:linear-gradient(135deg,#fff 0%,#F0FAFA 100%)}
+.header h1{font-size:22px;font-weight:600;background:linear-gradient(135deg,var(--rose) 0%,var(--teal) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header p{font-size:13px;color:var(--muted);margin-top:2px}
+.tabs{display:flex;gap:6px;padding:.75rem 1rem;overflow-x:auto;scrollbar-width:none;background:#fff;border-bottom:1px solid var(--teal-m)}
 .tabs::-webkit-scrollbar{display:none}
-.tab{white-space:nowrap;padding:6px 12px;border-radius:20px;border:0.5px solid rgba(0,0,0,0.2);background:#fff;color:#666;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
-.tab.active{background:#1a1a1a;color:#fff;border-color:transparent}
+.tab{white-space:nowrap;padding:7px 14px;border-radius:20px;border:1px solid var(--rose-m);background:#fff;color:var(--muted);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .2s}
+.tab:hover{background:var(--teal-l);border-color:var(--teal);color:var(--teal-d)}
+.tab.active{background:linear-gradient(135deg,var(--rose) 0%,var(--teal) 100%);color:#fff;border-color:transparent;box-shadow:0 2px 8px rgba(26,158,143,0.3)}
 .content{padding:0 1rem}
-.card{background:#fff;border:0.5px solid rgba(0,0,0,0.1);border-radius:12px;padding:14px 18px;margin-bottom:12px}
-.card-title{font-size:15px;font-weight:500;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:12px;box-shadow:0 1px 4px rgba(212,83,126,0.06)}
+.card-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:12px;color:var(--text)}
 .metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:12px}
-.metric{background:#f8f8f5;border-radius:8px;padding:12px 14px}
-.metric .lbl{font-size:12px;color:#666;margin-bottom:2px}
-.metric .val{font-size:19px;font-weight:500}
-.metric .unit{font-size:12px;color:#666}
+.metric{background:linear-gradient(135deg,#F0FAFA 0%,#E8F8F7 100%);border-radius:10px;padding:12px 14px;border:1px solid var(--teal-m)}
+.metric .lbl{font-size:12px;color:var(--muted);margin-bottom:2px}
+.metric .val{font-size:19px;font-weight:600}
+.metric .unit{font-size:12px;color:var(--subtle)}
 input[type=text],input[type=number],input[type=date],input[type=time],select,textarea{
-  width:100%;padding:8px 10px;border-radius:8px;border:0.5px solid rgba(0,0,0,0.2);
-  font-size:14px;background:#fff;color:#1a1a1a;outline:none}
-input:focus,select:focus,textarea:focus{border-color:rgba(0,0,0,0.5)}
-.btn{padding:8px 14px;border-radius:8px;border:0.5px solid rgba(0,0,0,0.2);background:#fff;
-  color:#1a1a1a;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;flex-shrink:0}
-.btn:hover{background:#f5f5f0}
-.btn.primary{background:#1a1a1a;color:#fff;border-color:transparent}
-.btn.primary:hover{opacity:.85}
+  width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--rose-m);
+  font-size:14px;background:#fff;color:var(--text);outline:none;transition:border-color .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(26,158,143,0.12)}
+.btn{padding:8px 14px;border-radius:10px;border:1px solid var(--rose-m);background:#fff;
+  color:var(--text);font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;flex-shrink:0;transition:all .2s}
+.btn:hover{background:var(--teal-l);border-color:var(--teal);color:var(--teal-d)}
+.btn.primary{background:linear-gradient(135deg,var(--rose) 0%,var(--teal) 100%);color:#fff;border-color:transparent;box-shadow:0 2px 6px rgba(26,158,143,0.3)}
+.btn.primary:hover{opacity:.9;box-shadow:0 3px 10px rgba(26,158,143,0.35)}
 .btn.danger{color:#A32D2D;border-color:#F7C1C1}
 .btn.small{padding:5px 10px;font-size:12px}
-.pbar{height:8px;background:#eee;border-radius:4px;overflow:hidden;margin-top:4px}
+.pbar{height:8px;background:var(--teal-m);border-radius:4px;overflow:hidden;margin-top:4px}
 .pfill{height:100%;border-radius:4px;transition:width .3s}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500}
@@ -48,18 +55,25 @@ input:focus,select:focus,textarea:focus{border-color:rgba(0,0,0,0.5)}
 .tag.pink{background:#FBEAF0;color:#993556}
 .tag.purple{background:#EEEDFE;color:#534AB7}
 .tag.red{background:#FCEBEB;color:#A32D2D}
-.ai-box{background:#f8f8f5;border-radius:8px;padding:10px 12px;margin-top:8px;font-size:13px;line-height:1.6;color:#555;white-space:pre-wrap}
-.chip{padding:5px 12px;border-radius:20px;border:0.5px solid rgba(0,0,0,0.2);background:#fff;color:#666;font-size:13px;cursor:pointer;white-space:nowrap}
-.chip.active{background:#1a1a1a;color:#fff;border-color:transparent}
+.ai-box{background:linear-gradient(135deg,#F0FAFA 0%,#FDF0F5 100%);border:1px solid var(--teal-m);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:13px;line-height:1.6;color:var(--text);white-space:pre-wrap}
+.chip{padding:5px 12px;border-radius:20px;border:1px solid var(--rose-m);background:#fff;color:var(--muted);font-size:13px;cursor:pointer;white-space:nowrap;transition:all .2s}
+.chip:hover{background:var(--teal-l);border-color:var(--teal);color:var(--teal-d)}
+.chip.active{background:linear-gradient(135deg,var(--rose) 0%,var(--teal) 100%);color:#fff;border-color:transparent}
 .toggle{width:40px;height:22px;border-radius:11px;background:#ddd;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
-.toggle.on{background:#1D9E75}
-.toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggle.on{background:linear-gradient(135deg,var(--rose) 0%,var(--teal) 100%)}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
 .toggle.on::after{transform:translateX(18px)}
-.food-row,.entry-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid rgba(0,0,0,0.08)}
+.food-row,.entry-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--rose-m)}
 .food-row:last-child,.entry-row:last-child{border-bottom:none}
 .hidden{display:none!important}
 .flex{display:flex;gap:8px}
 .verified{font-size:11px;background:#EAF3DE;color:#3B6D11;padding:1px 6px;border-radius:8px;flex-shrink:0}
+.date-nav{display:flex;align-items:center;gap:8px;padding:8px 0;margin-bottom:10px}
+.date-nav-btn{padding:5px 12px;border-radius:20px;border:1px solid var(--teal-m);background:#fff;color:var(--teal-d);cursor:pointer;font-size:13px;font-weight:500;transition:all .2s}
+.date-nav-btn:hover{background:var(--teal-l);border-color:var(--teal)}
+.date-nav-label{flex:1;text-align:center;font-size:14px;font-weight:600;color:var(--text)}
+.date-nav-sub{font-size:11px;color:var(--muted);font-weight:400}
+.date-today-btn{padding:4px 10px;border-radius:20px;border:1px solid var(--teal);background:var(--teal-l);color:var(--teal-d);cursor:pointer;font-size:11px;font-weight:600}
 </style>
 </head>
 <body>
@@ -67,6 +81,7 @@ input:focus,select:focus,textarea:focus{border-color:rgba(0,0,0,0.5)}
   <div class="header">
     <h1>Wellness Hub</h1>
     <p id="today-str"></p>
+    <div style="height:3px;margin:8px -1rem 0;background:linear-gradient(90deg,#D4537E 0%,#1A9E8F 100%);border-radius:0"></div>
   </div>
   <div class="tabs" id="tabs"></div>
   <div class="content" id="content"></div>
@@ -1304,6 +1319,66 @@ const SYMPTOM_LIST=["Cramps","Bloating","Spotting","Heavy flow","Light flow","Br
 const STORAGE_KEY="wellness_hub_v5";
 const TODAY=new Date().toISOString().split("T")[0];
 
+// ── DATE NAVIGATION ──────────────────────────────────────────────────────────
+// Each section has its own "viewing date" so you can backfill any day
+let viewDate={
+  nutrition: TODAY,
+  steps:     TODAY,
+  workouts:  TODAY,
+  habits:    TODAY,
+  water:     TODAY
+};
+
+function fmtDate(d){
+  const dt=new Date(d+"T00:00:00");
+  const opts={weekday:"short",day:"numeric",month:"short",year:"numeric"};
+  return dt.toLocaleDateString("en-GB",opts);
+}
+
+function shiftDate(section, delta){
+  const d=new Date(viewDate[section]+"T00:00:00");
+  d.setDate(d.getDate()+delta);
+  const nd=d.toISOString().split("T")[0];
+  viewDate[section]=nd;
+  render();
+}
+
+function makeDateNav(section){
+  const isToday=viewDate[section]===TODAY;
+  const wrap=document.createElement("div");
+  wrap.className="date-nav";
+  // Prev
+  const prev=document.createElement("button");
+  prev.className="date-nav-btn";prev.textContent="← Prev";
+  prev.addEventListener("click",()=>shiftDate(section,-1));
+  // Label
+  const lbl=document.createElement("div");
+  lbl.className="date-nav-label";
+  lbl.innerHTML=isToday
+    ? "<span style='color:var(--rose)'>Today</span><br><span class='date-nav-sub'>"+fmtDate(viewDate[section])+"</span>"
+    : fmtDate(viewDate[section])+"<br><span class='date-nav-sub'>"+(viewDate[section])+"</span>";
+  // Next (only up to today)
+  const nxt=document.createElement("button");
+  nxt.className="date-nav-btn";nxt.textContent="Next →";
+  nxt.style.opacity=isToday?"0.35":"1";
+  nxt.style.pointerEvents=isToday?"none":"auto";
+  nxt.addEventListener("click",()=>shiftDate(section,1));
+  // Today shortcut
+  const todayBtn=document.createElement("button");
+  todayBtn.className="date-today-btn";todayBtn.textContent="Today";
+  todayBtn.style.display=isToday?"none":"inline-block";
+  todayBtn.addEventListener("click",()=>{viewDate[section]=TODAY;render();});
+  wrap.appendChild(prev);wrap.appendChild(lbl);wrap.appendChild(nxt);
+  if(!isToday) wrap.appendChild(todayBtn);
+  return wrap;
+}
+
+// Helper: get data for a specific date from history arrays
+function getDayData(section){
+  const d=viewDate[section];
+  return d===TODAY ? null : d; // null = use live state, string = use history
+}
+
 const TABS=[
   {id:"nutrition",label:"Nutrition",icon:"ti-salad"},
   {id:"workouts",label:"Workouts",icon:"ti-barbell"},
@@ -1319,8 +1394,39 @@ let state={
   habits:{water:false,devotion:false,sleep:0,bedtime:"",wakeTime:""},
   goals:{calories:2000,water:2500,steps:10000,sleep:8,protein:150,monthlySteps:300000},
   programs:[],workoutSessions:[],weightLog:[],goalWeight:null,heightCm:null,
-  cycle:{periodDates:[],ovulationDates:[],symptoms:{},avgCycleLength:28,avgPeriodDuration:5}
+  cycle:{periodDates:[],ovulationDates:[],symptoms:{},avgCycleLength:28,avgPeriodDuration:5},
+  // ── history stores: { "YYYY-MM-DD": {foods,water,habits} }
+  history:{}
 };
+
+// ── HISTORY HELPERS ──────────────────────────────────────────────────────────
+function getHistDay(date){
+  if(!state.history) state.history={};
+  if(!state.history[date]) state.history[date]={foods:[],water:0,habits:{water:false,devotion:false,sleep:0,bedtime:"",wakeTime:""},steps:0};
+  return state.history[date];
+}
+
+// Return foods/water/habits/steps for the given date (today = live state, past = history)
+function getFoods(date){ return date===TODAY ? state.foods : (getHistDay(date).foods||[]); }
+function getWater(date){ return date===TODAY ? state.water : (getHistDay(date).water||0); }
+function getHabits(date){ return date===TODAY ? state.habits : (getHistDay(date).habits||{water:false,devotion:false,sleep:0,bedtime:"",wakeTime:""}); }
+function getStepsForDate(date){
+  if(date===TODAY) return state.steps;
+  const h=(state.stepHistory||[]).find(x=>x.date===date);
+  return h?h.steps:0;
+}
+
+function setFoods(date,foods){ if(date===TODAY){state.foods=foods;}else{getHistDay(date).foods=foods;} save(); }
+function setWater(date,water){ if(date===TODAY){state.water=water;}else{getHistDay(date).water=water;} save(); }
+function setHabits(date,habits){ if(date===TODAY){state.habits=habits;}else{getHistDay(date).habits=habits;} save(); }
+function setStepsForDate(date,steps){
+  if(date===TODAY){ state.steps=steps; }
+  const nh=(state.stepHistory||[]).filter(h=>h.date!==date);
+  nh.push({date,steps});
+  state.stepHistory=nh.slice(-365);
+  if(date===TODAY) state.steps=steps;
+  save();
+}
 
 let activeTab="nutrition";
 
@@ -1341,10 +1447,19 @@ function loadState(){
     if(!raw) return;
     const s=JSON.parse(raw);
     if(s.date!==TODAY){
+      // Archive yesterday into history before resetting
+      if(!s.history) s.history={};
+      if(s.date && s.date!==TODAY){
+        if(!s.history[s.date]) s.history[s.date]={};
+        if(s.foods&&s.foods.length) s.history[s.date].foods=s.foods;
+        if(s.water>0) s.history[s.date].water=s.water;
+        if(s.habits) s.history[s.date].habits={...s.habits};
+      }
       s.date=TODAY;s.foods=[];s.water=0;s.steps=0;
       s.habits={water:false,devotion:false,sleep:0,bedtime:"",wakeTime:""};
     }
     state={...state,...s};
+    if(!state.history) state.history={};
   }catch(e){ console.log("State load error:", e); }
 }
 
@@ -1635,11 +1750,18 @@ function render(){
 // ── NUTRITION ──────────────────────────────────────────────────────────────────
 function renderNutrition(){
   const div=el("div");
-  const totalCals=state.foods.reduce((s,f)=>s+(f.calories||0),0);
-  const totalProt=state.foods.reduce((s,f)=>s+(f.protein||0),0);
-  const totalCarbs=state.foods.reduce((s,f)=>s+(f.carbs||0),0);
-  const totalFat=state.foods.reduce((s,f)=>s+(f.fat||0),0);
-  const totalFibre=state.foods.reduce((s,f)=>s+(f.fibre||0),0);
+  const vd=viewDate.nutrition;
+  const isToday=vd===TODAY;
+
+  // Date navigator
+  div.appendChild(makeDateNav("nutrition"));
+
+  const foods=getFoods(vd);
+  const totalCals=foods.reduce((s,f)=>s+(f.calories||0),0);
+  const totalProt=foods.reduce((s,f)=>s+(f.protein||0),0);
+  const totalCarbs=foods.reduce((s,f)=>s+(f.carbs||0),0);
+  const totalFat=foods.reduce((s,f)=>s+(f.fat||0),0);
+  const totalFibre=foods.reduce((s,f)=>s+(f.fibre||0),0);
 
   // Calorie card
   const calCard=el("div",{class:"card"});
@@ -1832,7 +1954,8 @@ function renderNutrition(){
         const g=smartToGrams(parseFloat(qtyInp.value)||100,unitSel.value,food);
         const factor=g/100;
         const unitLabel=(unitSel.value==="item"&&food.note)?food.note:`${qtyInp.value} ${unitSel.value}`;
-        state.foods.push({
+        const fd=getFoods(vd).slice();
+        fd.push({
           name:food.name,
           calories:Math.round(food.cal*factor),
           protein:Math.round(food.pro*factor*10)/10,
@@ -1841,7 +1964,7 @@ function renderNutrition(){
           fibre:Math.round((food.fibre||0)*factor*10)/10,
           serving:unitLabel
         });
-        save();render();
+        setFoods(vd,fd);render();
       });
       addRow.appendChild(qtyInp);addRow.appendChild(unitSel);addRow.appendChild(estSpan);addRow.appendChild(addBtn);
       row.appendChild(addRow);
@@ -1876,8 +1999,9 @@ function renderNutrition(){
   const addManBtn=btn("+ Add","","btn primary");
   addManBtn.addEventListener("click",()=>{
     if(!nameInp.value.trim()) return;
-    state.foods.push({name:nameInp.value,calories:parseInt(calsInp.value)||0,protein:parseFloat(protInp.value)||0,carbs:parseFloat(carbInp.value)||0,fat:parseFloat(fatInp.value)||0,fibre:parseFloat(fibInp.value)||0,serving:`${qtyInp.value} ${unitSel.value}`});
-    save();render();
+    const mfd=getFoods(vd).slice();
+    mfd.push({name:nameInp.value,calories:parseInt(calsInp.value)||0,protein:parseFloat(protInp.value)||0,carbs:parseFloat(carbInp.value)||0,fat:parseFloat(fatInp.value)||0,fibre:parseFloat(fibInp.value)||0,serving:`${qtyInp.value} ${unitSel.value}`});
+    setFoods(vd,mfd);render();
   });
   r2.appendChild(addManBtn);
   manCard.appendChild(r1);manCard.appendChild(r2);
@@ -1888,29 +2012,31 @@ function renderNutrition(){
   waterCard.appendChild(cardTitle("ti-droplet","Water Intake"));
   const waterRow=el("div",{class:"row",style:{marginBottom:10}});
   const waterInp=el("input",{type:"number",placeholder:"ml"});
-  function addWater(ml){state.water+=ml;save();render();}
+  function addWater(ml){const cur=getWater(vd);setWater(vd,cur+ml);render();}
   [250,500,750].forEach(ml=>{const b=btn("+"+ml+"ml","","btn");b.addEventListener("click",()=>addWater(ml));waterRow.appendChild(b);});
   const custBtn=btn("+","","btn primary");
   custBtn.addEventListener("click",()=>{const v=parseInt(waterInp.value)||0;if(v>0){addWater(v);waterInp.value="";}});
   waterRow.insertBefore(waterInp,waterRow.firstChild);waterRow.appendChild(custBtn);
   waterCard.appendChild(waterRow);
-  waterCard.appendChild(pbar(state.water,state.goals.water,"#1D9E75"));
-  waterCard.appendChild(el("p",{style:{fontSize:12,color:"#666",marginTop:4}},[state.water.toLocaleString()+" / "+state.goals.water.toLocaleString()+" ml"]));
+  const wv=getWater(vd);
+  waterCard.appendChild(pbar(wv,state.goals.water,"#1D9E75"));
+  waterCard.appendChild(el("p",{style:{fontSize:12,color:"#666",marginTop:4}},[wv.toLocaleString()+" / "+state.goals.water.toLocaleString()+" ml"]));
   div.appendChild(waterCard);
 
   // Food log
   const logCard=el("div",{class:"card"});
-  logCard.appendChild(cardTitle("ti-list","Today's Food Log"));
-  if(!state.foods.length){
+  const vdLabel=vd===TODAY?"Today's":fmtDate(vd);
+  logCard.appendChild(cardTitle("ti-list",vdLabel+" Food Log"));
+  if(!foods.length){
     logCard.appendChild(el("p",{style:{fontSize:13,color:"#666"}},["Nothing logged yet."]));
   } else {
-    state.foods.forEach((f,i)=>{
+    foods.forEach((f,i)=>{
       const row=el("div",{class:"food-row"+(i===state.foods.length-1?" last":"")});
       const info=el("div");
       info.appendChild(el("p",{style:{fontSize:14,fontWeight:500}},[f.name]));
       info.appendChild(el("p",{style:{fontSize:12,color:"#666"}},[(f.serving?f.serving+" · ":"")+f.calories+" kcal · "+f.protein+"g P · "+f.carbs+"g C · "+f.fat+"g F"+(f.fibre?" · "+f.fibre+"g fibre":"")]));
       const delBtn=el("button",{class:"btn danger small"},["x"]);
-      delBtn.addEventListener("click",()=>{state.foods.splice(i,1);save();render();});
+      delBtn.addEventListener("click",()=>{const fd2=getFoods(vd).slice();fd2.splice(i,1);setFoods(vd,fd2);render();});
       row.appendChild(info);row.appendChild(delBtn);
       logCard.appendChild(row);
     });
@@ -1934,6 +2060,8 @@ function renderWorkouts(){
 
 function renderWorkoutPrograms(){
   const div=el("div");
+  // Date nav for workouts
+  div.appendChild(makeDateNav("workouts"));
   const btns=el("div",{class:"row",style:{marginBottom:12}});
   const hb=btn("Session History ("+((state.workoutSessions||[]).length)+")","","btn");hb.style.flex="1";hb.style.justifyContent="center";hb.addEventListener("click",()=>{workoutView="history";render();});
   btns.appendChild(hb);div.appendChild(btns);
@@ -2109,7 +2237,8 @@ function renderWorkoutSession(){
   saveBtn.addEventListener("click",()=>{
     const exercises=sessionProg.exercises.map((e,i)=>({name:e.name,sets:(sessionSets[i]||[]).filter(s=>s.reps||s.weight)}));
     if(!state.workoutSessions) state.workoutSessions=[];
-    state.workoutSessions.push({id:Date.now().toString(),date:TODAY,programName:sessionProg.name,programId:sessionProg.id,exercises,notes:sessionNotes});
+    const sessDate=viewDate.workouts||TODAY;
+    state.workoutSessions.push({id:Date.now().toString(),date:sessDate,programName:sessionProg.name,programId:sessionProg.id,exercises,notes:sessionNotes});
     save();workoutView="programs";render();
   });
   div.appendChild(saveBtn);
@@ -2120,31 +2249,42 @@ function renderWorkoutSession(){
 let stepsHistView="monthly";
 function renderSteps(){
   const div=el("div");
+  const vd=viewDate.steps;
+  const isToday=vd===TODAY;
+
+  // Date navigator
+  div.appendChild(makeDateNav("steps"));
+
   const stepHistory=state.stepHistory||[];
   const mGoal=state.goals.monthlySteps||(state.goals.steps*30);
   const curMonth=TODAY.slice(0,7);
   const bm={};stepHistory.forEach(h=>{const m=h.date.slice(0,7);if(!bm[m])bm[m]={total:0,days:0};bm[m].total+=h.steps;bm[m].days+=1;});
+  const viewSteps=getStepsForDate(vd);
   const curTotal=(bm[curMonth]||{total:state.steps}).total;
 
   const grid=el("div",{class:"metric-grid"});
-  grid.appendChild(mcard("Today",state.steps.toLocaleString(),"steps","#534AB7"));
+  grid.appendChild(mcard(isToday?"Today":fmtDate(vd),viewSteps.toLocaleString(),"steps","#534AB7"));
   grid.appendChild(mcard("Daily goal",state.goals.steps.toLocaleString(),"steps"));
   grid.appendChild(mcard("This month",curTotal.toLocaleString(),"/ "+mGoal.toLocaleString(),"#1D9E75"));
-  grid.appendChild(mcard("Burned",Math.round(state.steps*0.04),"kcal est.","#D85A30"));
+  grid.appendChild(mcard("Burned",Math.round(viewSteps*0.04),"kcal est.","#D85A30"));
   div.appendChild(grid);
 
   const logCard=el("div",{class:"card"});
-  logCard.appendChild(cardTitle("ti-shoe","Log Steps"));
-  const stepsInp=el("input",{type:"number",placeholder:"Number of steps"});
+  const logTitle=isToday?"Log Steps":"Log Steps for "+fmtDate(vd);
+  logCard.appendChild(cardTitle("ti-shoe",logTitle));
+  if(!isToday){
+    const pastNote=el("p",{style:{fontSize:12,color:"var(--rose-d)",background:"var(--rose-l)",padding:"6px 10px",borderRadius:8,marginBottom:8}},["Editing past date: "+vd]);
+    logCard.appendChild(pastNote);
+  }
+  const stepsInp=el("input",{type:"number",placeholder:"Number of steps",value:viewSteps||""});
   const logBtn=btn("Log","","btn primary");
   logBtn.addEventListener("click",()=>{
     const v=parseInt(stepsInp.value)||0;if(!v)return;
-    const nh=stepHistory.filter(h=>h.date!==TODAY);nh.push({date:TODAY,steps:v});
-    state.steps=v;state.stepHistory=nh.slice(-365);save();render();
+    setStepsForDate(vd,v);render();
   });
   logCard.appendChild(el("div",{class:"row",style:{marginBottom:10}},[stepsInp,logBtn]));
-  logCard.appendChild(pbar(state.steps,state.goals.steps,"#534AB7"));
-  logCard.appendChild(el("p",{style:{fontSize:12,color:"#666",marginTop:4}},[state.steps.toLocaleString()+" / "+state.goals.steps.toLocaleString()+" today"]));
+  logCard.appendChild(pbar(viewSteps,state.goals.steps,"#534AB7"));
+  logCard.appendChild(el("p",{style:{fontSize:12,color:"#666",marginTop:4}},[viewSteps.toLocaleString()+" / "+state.goals.steps.toLocaleString()+(isToday?" today":" on "+vd)]));
   logCard.appendChild(el("div",{style:{marginTop:10}},[pbar(curTotal,mGoal,"#1D9E75"),el("p",{style:{fontSize:12,color:"#666",marginTop:4}},[curTotal.toLocaleString()+" / "+mGoal.toLocaleString()+" this month"])]));
   div.appendChild(logCard);
 
@@ -2194,55 +2334,68 @@ function renderSteps(){
 // ── HABITS ─────────────────────────────────────────────────────────────────────
 function renderHabits(){
   const div=el("div");
+  const vd=viewDate.habits;
+  const isToday=vd===TODAY;
+  const hb=getHabits(vd);
+  const wv=getWater(vd);
+
+  // Date navigator
+  div.appendChild(makeDateNav("habits"));
+  if(!isToday){
+    const pastNote=el("p",{style:{fontSize:12,color:"var(--rose-d)",background:"var(--rose-l)",padding:"6px 10px",borderRadius:8,marginBottom:8}},["Editing habits for "+fmtDate(vd)]);
+    div.appendChild(pastNote);
+  }
+
   const mainCard=el("div",{class:"card"});
   mainCard.appendChild(cardTitle("ti-checklist","Daily Habits"));
 
   // Water
-  const waterRow=el("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}});
-  waterRow.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:10}},[el("i",{class:"ti ti-droplet",style:{fontSize:18,color:"#185FA5"}}),el("div",[el("p",{style:{fontSize:14,fontWeight:500}},["Water intake"]),el("p",{style:{fontSize:12,color:"#666"}},[state.water+" / "+state.goals.water+" ml"])])]));
-  const waterTog=toggle(state.habits.water,()=>{if(state.water>=state.goals.water){state.habits.water=!state.habits.water;save();render();}});
+  const waterRow=el("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 0",borderBottom:"1px solid var(--rose-m)"}});
+  waterRow.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:10}},[el("i",{class:"ti ti-droplet",style:{fontSize:18,color:"#185FA5"}}),el("div",[el("p",{style:{fontSize:14,fontWeight:500}},["Water intake"]),el("p",{style:{fontSize:12,color:"var(--muted)"}},[wv+" / "+state.goals.water+" ml"])])]));
+  const waterTog=toggle(hb.water,()=>{if(wv>=state.goals.water){const nh=Object.assign({},hb);nh.water=!hb.water;setHabits(vd,nh);render();}});
   waterRow.appendChild(waterTog);mainCard.appendChild(waterRow);
 
   // Devotion
-  const devRow=el("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 0",borderBottom:"0.5px solid rgba(0,0,0,0.08)"}});
-  devRow.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:10}},[el("i",{class:"ti ti-book",style:{fontSize:18,color:"#3B6D11"}}),el("div",[el("p",{style:{fontSize:14,fontWeight:500}},["Daily devotion"]),el("p",{style:{fontSize:12,color:"#666"}},["Spiritual time today"])])]));
-  const devTog=toggle(state.habits.devotion,()=>{state.habits.devotion=!state.habits.devotion;save();render();});
+  const devRow=el("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 0",borderBottom:"1px solid var(--rose-m)"}});
+  devRow.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:10}},[el("i",{class:"ti ti-book",style:{fontSize:18,color:"#3B6D11"}}),el("div",[el("p",{style:{fontSize:14,fontWeight:500}},["Daily devotion"]),el("p",{style:{fontSize:12,color:"var(--muted)"}},["Spiritual time today"])])]));
+  const devTog=toggle(hb.devotion,()=>{const nh=Object.assign({},hb);nh.devotion=!hb.devotion;setHabits(vd,nh);render();});
   devRow.appendChild(devTog);mainCard.appendChild(devRow);
 
   // Sleep
   const sleepRow=el("div",{style:{padding:"10px 0"}});
   const sleepHdr=el("div",{style:{display:"flex",alignItems:"center",gap:10,marginBottom:10}});
   sleepHdr.appendChild(el("i",{class:"ti ti-moon",style:{fontSize:18,color:"#534AB7"}}));
-  sleepHdr.appendChild(el("div",[el("p",{style:{fontSize:14,fontWeight:500}},["Sleep"]),el("p",{style:{fontSize:12,color:"#666"}},[state.habits.sleep>0?state.habits.sleep+" hrs"+(state.habits.bedtime?" · "+state.habits.bedtime+" to "+state.habits.wakeTime:""):"Not logged"])]));
+  sleepHdr.appendChild(el("div",[el("p",{style:{fontSize:14,fontWeight:500}},["Sleep"]),el("p",{style:{fontSize:12,color:"var(--muted)"}},[hb.sleep>0?hb.sleep+" hrs"+(hb.bedtime?" · "+hb.bedtime+" to "+hb.wakeTime:""):"Not logged"])]));
   sleepRow.appendChild(sleepHdr);
   const timeRow=el("div",{class:"row",style:{flexWrap:"wrap",alignItems:"flex-end",gap:8}});
-  const bedInp=el("input",{type:"time",value:state.habits.bedtime||""});bedInp.style.flex="1 1 110px";
-  const wakeInp=el("input",{type:"time",value:state.habits.wakeTime||""});wakeInp.style.flex="1 1 110px";
+  const bedInp=el("input",{type:"time",value:hb.bedtime||""});bedInp.style.flex="1 1 110px";
+  const wakeInp=el("input",{type:"time",value:hb.wakeTime||""});wakeInp.style.flex="1 1 110px";
   const hrsSpan=el("span",{style:{fontSize:12,color:"#534AB7",fontWeight:500}});
   function updateHrs(){
     const bed=bedInp.value,wake=wakeInp.value;
-    if(bed&&wake){const[bh,bm]=bed.split(":").map(Number);const[wh,wm]=wake.split(":").map(Number);let mins=(wh*60+wm)-(bh*60+bm);if(mins<0)mins+=1440;hrsSpan.textContent=(Math.round(mins/60*10)/10)+" hrs";}
+    if(bed&&wake){const[bh,bm2]=bed.split(":").map(Number);const[wh,wm2]=wake.split(":").map(Number);let mins=(wh*60+wm2)-(bh*60+bm2);if(mins<0)mins+=1440;hrsSpan.textContent=(Math.round(mins/60*10)/10)+" hrs";}
     else hrsSpan.textContent="";
   }
   bedInp.addEventListener("input",updateHrs);wakeInp.addEventListener("input",updateHrs);
   const saveSleepBtn=btn("Save","","btn primary small");
   saveSleepBtn.addEventListener("click",()=>{
     const bed=bedInp.value,wake=wakeInp.value;if(!bed||!wake)return;
-    const[bh,bm]=bed.split(":").map(Number);const[wh,wm]=wake.split(":").map(Number);let mins=(wh*60+wm)-(bh*60+bm);if(mins<0)mins+=1440;
-    state.habits.sleep=Math.round(mins/60*10)/10;state.habits.bedtime=bed;state.habits.wakeTime=wake;save();render();
+    const[bh,bm2]=bed.split(":").map(Number);const[wh,wm2]=wake.split(":").map(Number);let mins=(wh*60+wm2)-(bh*60+bm2);if(mins<0)mins+=1440;
+    const nh=Object.assign({},hb);nh.sleep=Math.round(mins/60*10)/10;nh.bedtime=bed;nh.wakeTime=wake;
+    setHabits(vd,nh);render();
   });
-  const bedDiv=el("div",{style:{flex:"1 1 110px"}});bedDiv.appendChild(el("p",{style:{fontSize:11,color:"#666",marginBottom:3}},["Bedtime"]));bedDiv.appendChild(bedInp);
-  const wakeDiv=el("div",{style:{flex:"1 1 110px"}});wakeDiv.appendChild(el("p",{style:{fontSize:11,color:"#666",marginBottom:3}},["Wake up"]));wakeDiv.appendChild(wakeInp);
+  const bedDiv=el("div",{style:{flex:"1 1 110px"}});bedDiv.appendChild(el("p",{style:{fontSize:11,color:"var(--muted)",marginBottom:3}},["Bedtime"]));bedDiv.appendChild(bedInp);
+  const wakeDiv=el("div",{style:{flex:"1 1 110px"}});wakeDiv.appendChild(el("p",{style:{fontSize:11,color:"var(--muted)",marginBottom:3}},["Wake up"]));wakeDiv.appendChild(wakeInp);
   timeRow.appendChild(bedDiv);timeRow.appendChild(wakeDiv);
   timeRow.appendChild(el("div",{style:{display:"flex",flexDirection:"column",gap:4}},[hrsSpan,saveSleepBtn]));
   sleepRow.appendChild(timeRow);
-  if(state.habits.sleep>0){sleepRow.appendChild(pbar(state.habits.sleep,state.goals.sleep,"#534AB7"));sleepRow.appendChild(el("p",{style:{fontSize:11,color:"#666",marginTop:3}},[state.habits.sleep+" / "+state.goals.sleep+" hrs goal"]));}
+  if(hb.sleep>0){sleepRow.appendChild(pbar(hb.sleep,state.goals.sleep,"#534AB7"));sleepRow.appendChild(el("p",{style:{fontSize:11,color:"var(--muted)",marginTop:3}},[hb.sleep+" / "+state.goals.sleep+" hrs goal"]));}
   mainCard.appendChild(sleepRow);div.appendChild(mainCard);
 
   // Summary
   const sumCard=el("div",{class:"card"});
   sumCard.appendChild(cardTitle("ti-chart-bar","Today's Summary"));
-  [{label:"Water goal",done:state.habits.water},{label:"Sleep logged",done:state.habits.sleep>0},{label:"Devotion",done:state.habits.devotion}].forEach((h,i,arr)=>{
+  [{label:"Water goal",done:hb.water},{label:"Sleep logged",done:hb.sleep>0},{label:"Devotion",done:hb.devotion}].forEach((h,i,arr)=>{
     const row=el("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 0",borderBottom:i<arr.length-1?"0.5px solid rgba(0,0,0,0.08)":"none"}});
     row.appendChild(el("span",{style:{fontSize:14}},[h.label]));
     row.appendChild(tag(h.done?"Done":"Pending",h.done?"green":"amber"));
@@ -2250,17 +2403,7 @@ function renderHabits(){
   });
   div.appendChild(sumCard);
 
-  // AI insights
-  const aiCard=el("div",{class:"card"});
-  aiCard.appendChild(cardTitle("ti-sparkles","AI Habit Insights"));
-  const aiDiv=el("div");
-  const insBtn=btn("Get insights","","btn");
-  insBtn.addEventListener("click",async()=>{
-    aiDiv.innerHTML="<div class='ai-box'>Thinking...</div>";
-    try{const r=await callAI(`Wellness coach. Water:${state.water}ml (goal ${state.goals.water}ml), Sleep:${state.habits.sleep}hrs, Devotion:${state.habits.devotion}. 3 warm personalised habit tips.`);aiDiv.innerHTML="<div class='ai-box'>"+r+"</div>";}
-    catch{aiDiv.innerHTML="<div class='ai-box'>Could not load.</div>";}
-  });
-  aiCard.appendChild(insBtn);aiCard.appendChild(aiDiv);div.appendChild(aiCard);
+  
   return div;
 }
 
@@ -2289,10 +2432,10 @@ function renderGoals(){
 
   const progCard=el("div",{class:"card"});
   progCard.appendChild(cardTitle("ti-chart-dots","Today's Progress"));
-  [{label:"Calories",current:totalCals,goal:state.goals.calories,unit:"kcal",color:"#D85A30"},
-   {label:"Protein",current:totalProt,goal:state.goals.protein||150,unit:"g",color:"#534AB7"},
-   {label:"Water",current:state.water,goal:state.goals.water,unit:"ml",color:"#1D9E75"},
-   {label:"Steps",current:state.steps,goal:state.goals.steps,unit:"steps",color:"#185FA5"},
+  [{label:"Calories",current:totalCals,goal:state.goals.calories,unit:"kcal",color:"#D4537E"},
+   {label:"Protein",current:totalProt,goal:state.goals.protein||150,unit:"g",color:"#9B5DE5"},
+   {label:"Water",current:state.water,goal:state.goals.water,unit:"ml",color:"#00BBF9"},
+   {label:"Steps",current:state.steps,goal:state.goals.steps,unit:"steps",color:"#1D9E75"},
    {label:"Sleep",current:state.habits.sleep,goal:state.goals.sleep,unit:"hrs",color:"#BA7517"}
   ].forEach(item=>{
     const pct=Math.min(100,item.goal>0?Math.round(item.current/item.goal*100):0);
@@ -2303,16 +2446,6 @@ function renderGoals(){
   });
   div.appendChild(progCard);
 
-  const aiCard=el("div",{class:"card"});
-  aiCard.appendChild(cardTitle("ti-sparkles","Personalised Advice"));
-  const aiDiv=el("div");
-  const advBtn=btn("Get advice","","btn");
-  advBtn.addEventListener("click",async()=>{
-    aiDiv.innerHTML="<div class='ai-box'>Thinking...</div>";
-    try{const r=await callAI(`Wellness coach. Calories:${totalCals}/${state.goals.calories}, Protein:${totalProt.toFixed(0)}/${state.goals.protein||150}g, Water:${state.water}/${state.goals.water}ml, Steps:${state.steps}/${state.goals.steps}, Sleep:${state.habits.sleep}/${state.goals.sleep}hrs. 3-4 specific encouraging suggestions.`);aiDiv.innerHTML="<div class='ai-box'>"+r+"</div>";}
-    catch{aiDiv.innerHTML="<div class='ai-box'>Could not load.</div>";}
-  });
-  aiCard.appendChild(advBtn);aiCard.appendChild(aiDiv);div.appendChild(aiCard);
   return div;
 }
 
@@ -2446,26 +2579,7 @@ function renderCycle(){
     } else {
       div.appendChild(el("div",{class:"card"},[el("p",{style:{fontSize:14,color:"#666"}},["Log your first period in the Log Period tab to get started."])]));
     }
-    const aiCard=el("div",{class:"card"});aiCard.appendChild(cardTitle("ti-sparkles","AI Phase Recommendations"));
-    const aiDiv=el("div");
-    if(!info){aiDiv.appendChild(el("p",{style:{fontSize:13,color:"#666"}},["Log a period first."]));}
-    else{
-      const advBtn=btn("Get food, workout and self-care advice","","btn");
-      advBtn.addEventListener("click",async()=>{
-        aiDiv.innerHTML="<div class='ai-box'>Thinking... (this may take a few seconds)</div>";
-        const todaySymp=(cycle.symptoms||{})[TODAY];
-        const symStr=todaySymp?"Today's symptoms: "+todaySymp.checklist.join(", ")+(todaySymp.notes?". "+todaySymp.notes:"")+".":" No symptoms logged today.";
-        try{
-          const r=await callAI("Women's health and fitness expert. The user is in the "+info.name+" phase of their menstrual cycle (day "+info.dayOfCycle+" of "+info.avgLen+"). "+symStr+" Give personalised recommendations for: 1) WORKOUTS - best exercises and intensity for this phase with specific examples. 2) FOOD AND NUTRITION - specific foods, nutrients and eating patterns to support this phase. 3) SELF-CARE AND MOOD - energy, mood and lifestyle tips. Be warm, practical and specific. Use clear headings.");
-          aiDiv.innerHTML="<div class='ai-box'>"+r+"</div>";
-        }catch(err){
-          aiDiv.innerHTML="<div class='ai-box'>Could not load recommendations. Please check your internet connection and try again. Error: "+(err.message||"unknown")+"</div>";
-        }
-      });
-      aiDiv.appendChild(advBtn);
     }
-    aiCard.appendChild(aiDiv);div.appendChild(aiCard);
-  }
 
   else if(cycleSection==="log"){
     const card=el("div",{class:"card"});card.appendChild(cardTitle("ti-calendar-plus","Log Period"));
